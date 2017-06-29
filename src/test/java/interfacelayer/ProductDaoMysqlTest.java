@@ -5,6 +5,8 @@
  */
 package interfacelayer;
 
+import interfacelayer.dao.ProductDao;
+import interfacelayer.dao.DaoFactory;
 import domain.Product;
 import java.math.BigDecimal;
 import java.sql.Connection;
