@@ -18,14 +18,15 @@ public class Product {
     private BigDecimal price;
     private int stock;
 
-    // Default no-arg constructor
-    public Product() {
-        this(0, "", new BigDecimal("0.00"), 0);        
+    // Default no-arg constructor will leave all member fields on their default
+    // except for the id field which will be invalidated to a negative value
+    public Product() { 
+        this.id = -1;
     }
     
-    // Constructor without id
+    // Constructor without id, id will be invalidated to a negative value
     public Product(String name, BigDecimal price, int stock) {
-        this(0, name, price, stock);
+        this(-1, name, price, stock);
     }
     
     // Constructor with all member fields
@@ -38,10 +39,6 @@ public class Product {
     
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -70,8 +67,11 @@ public class Product {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.name);
+        int hash = 5;
+        hash = 73 * hash + this.id;
+        hash = 73 * hash + Objects.hashCode(this.name);
+        hash = 73 * hash + Objects.hashCode(this.price);
+        hash = 73 * hash + this.stock;
         return hash;
     }
 
@@ -87,10 +87,21 @@ public class Product {
             return false;
         }
         final Product other = (Product) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.stock != other.stock) {
+            return false;
+        }
         if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.price, other.price)) {
             return false;
         }
         return true;
     }
+
+    
     
 }

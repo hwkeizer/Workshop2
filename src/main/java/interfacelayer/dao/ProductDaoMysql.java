@@ -7,16 +7,18 @@ package interfacelayer.dao;
 
 import domain.Product;
 import interfacelayer.DatabaseConnection;
+import interfacelayer.DuplicateProductException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * MySql implementation of the ProductDao interface
  * @author hwkei
  */
 public class ProductDaoMysql implements ProductDao {
@@ -30,15 +32,13 @@ public class ProductDaoMysql implements ProductDao {
     private static final String SQL_UPDATE = "UPDATE product SET name=?, price=?, stock=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM product WHERE id = ?";
     
+    /**
+     * Insert a new product in the database.
+     * @param product
+     * @throws DuplicateProductException
+     */
     @Override
-    public void insertProduct(Product product) {
-        
-        // Do nothing if the product name already exists in the database
-        if (findProductByName(product.getName()) != null) {
-            log.error("Productnaam '{}' bestaat al in de database en kan niet "
-                    + "nogmaals worden toegevoegd!", product.getName());
-            return;
-        }
+    public void insertProduct(Product product) throws DuplicateProductException {
         
         try (
             Connection connection = DatabaseConnection.getInstance().getConnection();
@@ -57,10 +57,21 @@ public class ProductDaoMysql implements ProductDao {
                 log.debug("Product toegevoegd: {} {}", product.getName());
             }
         } catch (SQLException ex) {
-            log.error("SQL error: ", ex);
+            // If we find errorCode 1062 (duplicate value) we throw that, else we have an unknown ConstraintException and we log that for debugging
+            if(ex.getErrorCode() == 1062){
+                throw new DuplicateProductException("Product with name = " + product.getName() + " is already in the database");
+            } else {
+                log.error("SQL error: ", ex);
+            }
+            
         }        
     }
     
+    /**
+     * Update a product with new value(s). The product id cannot be changed and
+     * is used to identify the product
+     * @param product
+     */
     @Override
     public void updateProduct(Product product) {
         
@@ -89,6 +100,11 @@ public class ProductDaoMysql implements ProductDao {
         }
     }
     
+    /**
+     * Delete the given product from the database. The product is identified by
+     * the id value.
+     * @param product
+     */
     @Override
     public void deleteProduct(Product product) {
         try (
@@ -109,8 +125,13 @@ public class ProductDaoMysql implements ProductDao {
         }
     }
     
+    /**
+     * Find a product in the database by id
+     * @param productId
+     * @return Optional<Product>
+     */
     @Override
-    public Product findProductById(int productId) {
+    public Optional<Product> findProductById(int productId) {
         try (
             Connection connection = DatabaseConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
@@ -118,16 +139,22 @@ public class ProductDaoMysql implements ProductDao {
             statement.setString(1, ((Integer)productId).toString());
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                return map(resultSet);
+                return Optional.ofNullable(map(resultSet));
             }            
         } catch (SQLException ex) {
             log.error("SQL error: ", ex);
         }
+        // Nothing found
         return null; 
     }
     
+    /**
+     * Find a product in the database by name
+     * @param name
+     * @return Optional<Product>
+     */
     @Override
-    public Product findProductByName(String name) {
+    public Optional<Product> findProductByName(String name) {
         try (
             Connection connection = DatabaseConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_NAME);){
@@ -135,21 +162,21 @@ public class ProductDaoMysql implements ProductDao {
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                return map(resultSet);
+                return Optional.ofNullable(map(resultSet));
             }            
         } catch (SQLException ex) {
             log.error("SQL error: ", ex);
         }
+        // nothing found
         return null;
     }
     
     // Helper methode to map the current row of the given ResultSet to a Product instance
     private Product map(ResultSet resultSet) throws SQLException {
-        Product product = new Product();
-        product.setId(resultSet.getInt("id"));
-        product.setName(resultSet.getString("name"));
-        product.setPrice(new BigDecimal(resultSet.getString("price")));
-        product.setStock(resultSet.getInt("stock"));
-        return product;
+        int id = resultSet.getInt("id");
+        String name = resultSet.getString("name");
+        BigDecimal price = new BigDecimal(resultSet.getString("price"));
+        int stock = resultSet.getInt("stock");
+        return new Product(id, name, price, stock);
     }
 }

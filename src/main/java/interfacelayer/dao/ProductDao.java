@@ -6,6 +6,9 @@
 package interfacelayer.dao;
 
 import domain.Product;
+import interfacelayer.DuplicateProductException;
+import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  *
@@ -13,13 +16,13 @@ import domain.Product;
  */
 public interface ProductDao {
     
-    void insertProduct(Product product);
+    void insertProduct(Product product) throws DuplicateProductException;
     
     void updateProduct(Product product);
     
     void deleteProduct(Product product);
     
-    Product findProductById(int productId);
+    Optional<Product> findProductById(int productId);
     
-    Product findProductByName(String name);
+    Optional<Product> findProductByName(String name);
 }

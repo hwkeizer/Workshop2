@@ -16,7 +16,7 @@ public abstract class DaoFactory {
     
     // DAO's that can be produced. The concrete factories will implement
     // these methods.
-    public abstract ProductDao getProductDAO();
+    public abstract ProductDao createProductDAO();
     
     // Deliver the correct factory based on the given factoryType
     public static DaoFactory getDAOFactory(int factoryType) {
