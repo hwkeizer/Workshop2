@@ -12,7 +12,32 @@ package interfacelayer.dao;
 public class DaoFactoryMysql extends DaoFactory {
     
     @Override
-    public ProductDao createProductDAO() {
+    public AccountDao createAccountDao() {
+        return new AccountDaoMysql();
+    }
+//
+//    @Override
+//    public CustomerDao createCustomerDao() {
+//        return new CustomerDaoMysql();
+//    }
+//
+//    @Override
+//    public AddressDao createAddressDao() {
+//        return new AddressDaoMysql();
+//    }
+//
+//    @Override
+//    public OrderDao createOrderDao() {
+//        return new OrderDaoMysql();
+//    }
+//
+//    @Override
+//    public OrderItemDao createOrderItemDao() {
+//        return new OrderItemDaoMysql();
+//    }
+    
+    @Override
+    public ProductDao createProductDao() {
         return new ProductDaoMysql();
     }
 }
