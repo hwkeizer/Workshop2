@@ -17,10 +17,10 @@ public abstract class DaoFactory {
     // DAO's that can be produced. The concrete factories will implement
     // these methods.
     public abstract AccountDao createAccountDao();
-//    public abstract CustomerDao createCustomerDao();
-//    public abstract AddressDao createAddressDao();
-//    public abstract OrderDao createOrderDao();
-//    public abstract OrderItemDao createOrderItemDao();
+    public abstract CustomerDao createCustomerDao();
+    public abstract AddressDao createAddressDao();
+    public abstract OrderDao createOrderDao();
+    public abstract OrderItemDao createOrderItemDao();
     public abstract ProductDao createProductDao();
     
     // Deliver the correct factory based on the given factoryType
