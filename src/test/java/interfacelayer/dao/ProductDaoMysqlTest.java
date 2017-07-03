@@ -112,8 +112,8 @@ public class ProductDaoMysqlTest {
         int countBefore = getTableCount("product");
         
         // Add the prepared product to the database
-        ProductDao productDAO = DaoFactory.getDAOFactory(DaoFactory.MYSQL).createProductDAO();
-        productDAO.insertProduct(testProduct);        
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        productDao.insertProduct(testProduct);        
         
         // Count the records after the insert and compare with before
         assertEquals("Number of products should be increased by one.", countBefore + 1, getTableCount("product"));
@@ -156,8 +156,8 @@ public class ProductDaoMysqlTest {
         
         // Add the prepared product to the database
         try {
-            ProductDao productDAO = DaoFactory.getDAOFactory(DaoFactory.MYSQL).createProductDAO();
-            productDAO.insertProduct(testProduct);
+            ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+            productDao.insertProduct(testProduct);
             fail("Adding an existing product should have thrown a DuplicateProductException");
         } catch (DuplicateProductException ex) {
             // Assert expected exception
@@ -177,8 +177,8 @@ public class ProductDaoMysqlTest {
         Product expectedProduct = new Product(2, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
         String searchString = expectedProduct.getName();
         
-        ProductDao productDAO = DaoFactory.getDAOFactory(DaoFactory.MYSQL).createProductDAO();
-        Optional<Product> optionalProduct = productDAO.findProductByName(searchString);
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        Optional<Product> optionalProduct = productDao.findProductByName(searchString);
         
         // Assert we found the product and it is the product we expected
         assertTrue(optionalProduct.isPresent());
@@ -196,8 +196,8 @@ public class ProductDaoMysqlTest {
         Product expectedProduct = new Product(2, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
         int searchId = expectedProduct.getId();
         
-        ProductDao productDAO = DaoFactory.getDAOFactory(DaoFactory.MYSQL).createProductDAO();
-        Optional<Product> optionalProduct = productDAO.findProductById(searchId);
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        Optional<Product> optionalProduct = productDao.findProductById(searchId);
         
         // Assert we found the product and it is the product we expected
         assertTrue(optionalProduct.isPresent());
@@ -243,8 +243,8 @@ public class ProductDaoMysqlTest {
         int countBefore = getTableCount("product");
         
         // Perform the deletion of the product
-        ProductDao productDAO = DaoFactory.getDAOFactory(DaoFactory.MYSQL).createProductDAO();        
-        productDAO.deleteProduct(testProduct);
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();        
+        productDao.deleteProduct(testProduct);
         
         // Count the records after the deletion and compare with before
         assertEquals("Number of products should be decreased by one.", countBefore - 1, getTableCount("product"));
@@ -313,8 +313,8 @@ public class ProductDaoMysqlTest {
         testProduct.setStock(newStock);
         
         // Perform the update in the databse
-        ProductDao productDAO = DaoFactory.getDAOFactory(DaoFactory.MYSQL).createProductDAO();
-        productDAO.updateProduct(testProduct);
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        productDao.updateProduct(testProduct);
                 
         // Validate the update        
         final String query = "SELECT * FROM `product` WHERE `id`=? AND `name`=? AND `price`=? AND `stock`=?";
