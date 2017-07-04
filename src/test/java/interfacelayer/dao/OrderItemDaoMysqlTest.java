@@ -5,8 +5,7 @@
  */
 package interfacelayer.dao;
 
-import domain.Order;
-import domain.Product;
+import domain.OrderItem;
 import interfacelayer.DatabaseConnection;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -14,29 +13,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Optional;
-import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.Ignore;
 
 /**
  *
  * @author hwkei
  */
 //@Ignore("Temporary ignore to speed up testing of other DAO's")
-public class OrderDaoMysqlTest {
-    private final String database = "applikaasie";
-    private final int initialNumberOfOrders = 9; // Initial number of products
+public class OrderItemDaoMysqlTest {
     
-    @Before
+    private final String database = "applikaasie";
+    private final int initialNumberOfOrderItems = 15; // Initial number of products
+    
+        @Before
     public void initializeDatabase() {        
         // Prepare the SQL statements to drop the database and recreate it
         String dropDatabase = "DROP DATABASE IF EXISTS " + database;
@@ -95,44 +90,38 @@ public class OrderDaoMysqlTest {
         }
     }
     
-    @After
-    public void tearDown() {
-    }
-    
+    /**
+     * Test of insertOrderItem method, of class OrderItemDaoMysql.
+     */
     @Test
-    public void testInsertOrder() {
-        System.out.println("insertOrder");
+    public void testInsertOrderItem(){
+        System.out.println("insertOrderItem");
         
-        // Prepare an order to add to the database        
-        BigDecimal testTotalPrice = new BigDecimal("13.55");
-        Integer testCustomerId = 3;
-        Integer year = 2016;
-        Integer month = 8;
-        Integer day = 22;
-        LocalDateTime testDate = LocalDate.of(year,month,day).atTime(LocalTime.now());
-        Integer testOrderStatusId = 2;
-        Order testOrder = new Order(testTotalPrice, testCustomerId, testDate, testOrderStatusId); 
+        // Prepare an order item to add to the database        
+        Integer testOrderId = 3;
+        Integer testProductId = 1;
+        Integer testAmount = 12;
+        BigDecimal testSubTotal = new BigDecimal("145.78");
+        OrderItem testOrderItem = new OrderItem(testOrderId, testProductId, testAmount, testSubTotal);
         
         // Count the records before the insert
-        int countBefore = getTableCount("order");
+        int countBefore = getTableCount("order_item");
         
-        // Add the prepared order to the database
-        OrderDao orderDAO = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
-        orderDAO.insertOrder(testOrder);        
+        // Add the prepared product to the database
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();
+        orderItemDao.insertOrderItem(testOrderItem);        
         
         // Count the records after the insert and compare with before
-        assertEquals("Number of orders should be increased by one.", countBefore + 1, getTableCount("order"));
+        assertEquals("Number of order items should be increased by one.", countBefore + 1, getTableCount("order_item"));
         
-        // Try to fetch the order from the database. If it exists and ID is not the same as allready present in database, we have succesfully created a new order
-        final String query = "SELECT * FROM `order` WHERE `id` NOT BETWEEN 1 and " + initialNumberOfOrders + " AND `total_price`=? AND `customer_id`=? AND year(date)=? AND month(date)=? AND day(date)=? AND `order_status_id`=?";
+        // Try to fetch the order item from the database. If it exists and ID is not the same as already present in database, we have succesfully created a new order item
+        final String query = "SELECT * FROM `order_item` WHERE `id` NOT BETWEEN 1 and " + initialNumberOfOrderItems + " AND `order_id`=? AND `product_id`=? AND `amount`=? AND `subtotal`=?";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
-            PreparedStatement stat = connection.prepareStatement(query);
-            stat.setString(1,testTotalPrice.toString());
-            stat.setString(2,testCustomerId.toString());
-            stat.setString(3, year.toString());
-            stat.setString(4, month.toString());
-            stat.setString(5, day.toString());
-            stat.setString(6,testOrderStatusId.toString());
+            PreparedStatement stat = connection.prepareStatement(query);            
+            stat.setString(1,testOrderId.toString());
+            stat.setString(2,testProductId.toString());
+            stat.setString(3,testAmount.toString());
+            stat.setString(4,testSubTotal.toString());
             try (ResultSet resultSet = stat.executeQuery()) {
                 // Assert we have at least one matching result
                 assertTrue(resultSet.next()); 
@@ -148,111 +137,58 @@ public class OrderDaoMysqlTest {
         }     
     }
     
+    /**
+     * Test of updateOrderItem method, of class OrderItemDaoMysql.
+     */
     @Test
-    public void testUpdateOrder() {
-        System.out.println("updateOrder");
+    public void testUpdateOrderItem() {
+        System.out.println("updateOrderItem");
         
-        // Prepare a product to update in the database
-        Integer testId = 2;
-        BigDecimal testTotalPrice = new BigDecimal("62.97");
-        Integer testCustomerId = 1;
-        Integer year = 2016;
-        Integer month = 5;
-        Integer day = 2;
-        LocalDateTime testDate = LocalDate.of(year,month,day).atTime(LocalTime.now());
-        Integer testOrderStatusId = 3;
+        // Prepare an order item to update in the database
+        Integer testId = 9;
+        Integer testOrderId = 6;
+        Integer testProductId = 1;
+        Integer testAmount = 3;
+        BigDecimal testSubTotal = new BigDecimal("35.31");
+        OrderItem testOrderItem = new OrderItem(testId, testOrderId, testProductId, testAmount, testSubTotal);
         
-        Order testOrder = new Order(testId, testTotalPrice, testCustomerId, testDate, testOrderStatusId);
-        
-        // Set a new price, customer_id, date and order_status_id
-        BigDecimal newTotalPrice = new BigDecimal("52.97");
-        Integer newCustomerId = 2;
-        Integer newYear = 2017;
-        Integer newMonth = 5;
-        Integer newDay = 2;
-        LocalDateTime newDate = LocalDate.of(newYear, newMonth, newDay).atTime(LocalTime.now());
-        Integer newOrderStatusId = 3;
-        
-        testOrder.setTotalPrice(newTotalPrice);
-        testOrder.setCustomerId(newCustomerId);
-        testOrder.setDate(newDate);
-        testOrder.setOrderStatusId(newOrderStatusId);
+        // Set a new name, price and stock
+        Integer newOrderId = 5;
+        Integer newProductId = 5;
+        Integer newAmount = 5;
+        BigDecimal newSubTotal = new BigDecimal("55.55");              
+        testOrderItem.setOrderId(newOrderId);
+        testOrderItem.setProductId(newProductId);
+        testOrderItem.setAmount(newAmount);
+        testOrderItem.setSubTotal(newSubTotal);
         
         // Perform the update in the databse
-        OrderDao orderDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
-        orderDao.updateOrder(testOrder);
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();
+        orderItemDao.updateOrderItem(testOrderItem);
                 
         // Validate the update        
-        final String query = "SELECT * FROM `order` WHERE `id`=? AND `total_price`=? AND `customer_id`=? AND year(date)=? AND month(date)=? AND day(date)=? AND `order_status_id`=?";
+        final String query = "SELECT * FROM `order_item` WHERE `id`=? AND `order_id`=? AND `product_id`=? AND `amount`=? AND `subtotal`=?";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
-            // Try to find the order with the old values in the database. This should fail
+            // Try to find the order item with the old values in the database. This should fail
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setString(1,testId.toString());
-            stat.setString(2,testTotalPrice.toString());
-            stat.setString(3,testCustomerId.toString());
-            stat.setString(4, year.toString());
-            stat.setString(5, month.toString());
-            stat.setString(6, day.toString());
-            stat.setString(7,testOrderStatusId.toString());
+            stat.setString(2,testOrderId.toString());
+            stat.setString(3,testProductId.toString());
+            stat.setString(4,testAmount.toString());
+            stat.setString(5,testSubTotal.toString());
             try (ResultSet resultSet = stat.executeQuery()) {
                 // Assert we have no matching result
                 assertFalse(resultSet.next()); 
             } catch (SQLException ex) {
                 System.out.println("SQL Exception: " + ex.getMessage());
             }
-            // Then try to find the order with the new values in the database. This should succeed
+            // Then try to find the order item with the new values in the database. This should succeed
             stat = connection.prepareStatement(query);
             stat.setString(1,testId.toString());
-            stat.setString(2,newTotalPrice.toString());
-            stat.setString(3,newCustomerId.toString());
-            stat.setString(4, newYear.toString());
-            stat.setString(5, newMonth.toString());
-            stat.setString(6, newDay.toString());
-            stat.setString(7,newOrderStatusId.toString());
-            try (ResultSet resultSet = stat.executeQuery()) {
-                // Assert we have at least one matching result
-                assertTrue(resultSet.next()); 
-                
-                // Assert we have at most one matching result
-                resultSet.last(); // advance cursor to last row
-                assertEquals(1, resultSet.getRow()); // check if it is row number 1
-            } catch (SQLException ex) {
-                System.out.println("SQL Exception: " + ex.getMessage());
-            }
-        } catch (SQLException ex) {
-            System.out.println("SQL Exception: " + ex.getMessage());
-        } 
-    }
-    
-     /**
-     * Test of deleteOrder method, of class OrderDaoMysql.
-     */
-    @Test
-    public void testDeleteOrder() {
-        System.out.println("deleteOrder");
-        
-        // Prepare an order to delete from the database 
-        Integer testId = 7;
-        BigDecimal testTotalPrice = new BigDecimal("46.08");
-        Integer testCustomerId = 3;
-        Integer year = 2017;
-        Integer month = 6;
-        Integer day = 7;
-        LocalDateTime testDate = LocalDate.of(year,month,day).atTime(LocalTime.now());
-        Integer testOrderStatusId = 2;
-        Order testOrder = new Order(testId, testTotalPrice, testCustomerId, testDate, testOrderStatusId); 
-        
-        // Try to fetch the product from the database. It must exist or testing will make no sence
-        final String query = "SELECT * FROM `order` WHERE `id`=? AND `total_price`=? AND `customer_id`=? AND year(date)=? AND month(date)=? AND day(date)=? AND `order_status_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
-            PreparedStatement stat = connection.prepareStatement(query);
-            stat.setString(1,testId.toString());
-            stat.setString(2,testTotalPrice.toString());
-            stat.setString(3,testCustomerId.toString());
-            stat.setString(4, year.toString());
-            stat.setString(5, month.toString());
-            stat.setString(6, day.toString());
-            stat.setString(7,testOrderStatusId.toString());
+            stat.setString(2,newOrderId.toString());
+            stat.setString(3,newProductId.toString());
+            stat.setString(4,newAmount.toString());
+            stat.setString(5,newSubTotal.toString());
             try (ResultSet resultSet = stat.executeQuery()) {
                 // Assert we have at least one matching result
                 assertTrue(resultSet.next());                 
@@ -264,64 +200,101 @@ public class OrderDaoMysqlTest {
             }
         } catch (SQLException ex) {
             System.out.println("SQL Exception: " + ex.getMessage());
-        }        
+        }     
+    }
+    
+    /**
+     * Test of deleteOrderItem method, of class OrderItemDaoMysql.
+     */
+    @Test
+    public void testDeleteOrderItem() {
+        System.out.println("deleteOrderItem");
         
-        // Count the records before the deletion
-        int countBefore = getTableCount("order");
+        // Prepare an order item to be deleted from the database
+        Integer testId = 2;
+        Integer testOrderId = 1;
+        Integer testProductId = 1;
+        Integer testAmount = 26;
+        BigDecimal testSubTotal = new BigDecimal("345.20");
+        OrderItem testOrderItem = new OrderItem(testId, testOrderId, testProductId, testAmount, testSubTotal);
         
-        // Delete the prepared order from the database
-        OrderDao orderDAO = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
-        orderDAO.deleteOrder(testOrder);        
+        // Try to fetch the product from the database. It must exist or testing will make no sence
+        final String query = "SELECT * FROM `order_item` WHERE `id`=? AND `order_id`=? AND `product_id`=? AND `amount`=? AND `subtotal`=?";
+        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+            PreparedStatement stat = connection.prepareStatement(query);
+            stat.setInt(1, testId);
+            stat.setInt(2, testOrderId);
+            stat.setInt(3,testProductId);
+            stat.setInt(4,testAmount);
+            stat.setString(5, testSubTotal.toString());
+            try (ResultSet resultSet = stat.executeQuery()) {
+                // Assert we have at least one matching result
+                assertTrue("Product should exist before testing delete", resultSet.next());                 
+                // Assert we have at most one matching result
+                resultSet.last(); // advance cursor to last row
+                assertEquals("Product should only exist once before a valid delete test can be done", 1, resultSet.getRow()); // check if it is row number 1
+            } catch (SQLException ex) {
+                System.out.println("SQL Exception: " + ex.getMessage());
+            }
+        } catch (SQLException ex) {
+            System.out.println("SQL Exception: " + ex.getMessage());
+        }   
+        
+        // Count the records bedore the deletion
+        int countBefore = getTableCount("order_item");
+        
+        // Perform the deletion of the product
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();        
+        orderItemDao.deleteOrderItem(testOrderItem);
         
         // Count the records after the deletion and compare with before
-        assertEquals("Number of orders should be decreased by one.", countBefore - 1, getTableCount("order"));        
+        assertEquals("Number of products should be decreased by one.", countBefore - 1, getTableCount("order_item"));
         
         // Try to fetch the product from the database. If it does not exist we have succesfully deleted the product
-        final String queryForDeleted = "SELECT * FROM `order` WHERE `id`=? AND `total_price`=? AND `customer_id`=? AND year(date)=? AND month(date)=? AND day(date)=? AND `order_status_id`=?";
+        final String queryForDeleted = "SELECT * FROM `order_item` WHERE `id`=? AND `order_id`=? AND `product_id`=? AND `amount`=? AND `subtotal`=?";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
             PreparedStatement stat = connection.prepareStatement(queryForDeleted);
-            stat.setString(1,testId.toString());
-            stat.setString(2,testTotalPrice.toString());
-            stat.setString(3,testCustomerId.toString());
-            stat.setString(4, year.toString());
-            stat.setString(5, month.toString());
-            stat.setString(6, day.toString());
-            stat.setString(7,testOrderStatusId.toString());
+            stat.setInt(1, testId);
+            stat.setInt(2, testOrderId);
+            stat.setInt(3,testProductId);
+            stat.setInt(4,testAmount);
+            stat.setString(5, testSubTotal.toString());
             try (ResultSet resultSet = stat.executeQuery()) {
                 // Assert we have no matching result
                 assertFalse(resultSet.next()); 
             } catch (SQLException ex) {
                 System.out.println("SQL Exception: " + ex.getMessage());
-            }            
-        }  catch (SQLException ex) {
+            }
+        } catch (SQLException ex) {
             System.out.println("SQL Exception: " + ex.getMessage());
-        }  
-    }
-    
-   /**
-     * Test of findOrderById method, of class OrderDaoMysql.
-     */
-    @Test
-    public void testFindOrderById() {
-        System.out.println("findOrderById");
-        
-        // Define the product to be searched
-        Integer year = 2017;
-        Integer month = 4;
-        Integer day = 8;
-        LocalDateTime testDate = LocalDate.of(year,month,day).atTime(LocalTime.now());
-        Order expectedOrder = new Order(4, new BigDecimal("78.23"), 2, testDate, 3);
-        int searchId = expectedOrder.getId();
-        
-        OrderDao orderDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
-        Optional<Order> optionalOrder = orderDao.findOrderById(searchId);
-        
-        // Assert we found the product and it is the product we expected
-        assertTrue(optionalOrder.isPresent());
-        assertEquals(expectedOrder, optionalOrder.get());
+        }   
     }
     
     /**
+     * Test of findOrderItemById method, of class OrderItemDaoMysql.
+     */
+    @Test
+    public void testFindOrderItemById() {
+        System.out.println("findOrderItemById");
+        
+        // Prepare an order item to be deleted from the database
+        Integer testId = 13;
+        Integer testOrderId = 8;
+        Integer testProductId = 4;
+        Integer testAmount = 23;
+        BigDecimal testSubTotal = new BigDecimal("167.32");
+        OrderItem expectedOrderItem = new OrderItem(testId, testOrderId, testProductId, testAmount, testSubTotal);
+        int searchId = expectedOrderItem.getId();
+        
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();
+        Optional<OrderItem> optionalOrderItem = orderItemDao.findOrderItemById(searchId);
+        
+        // Assert we found the product and it is the product we expected
+        assertTrue(optionalOrderItem.isPresent());
+        assertEquals(expectedOrderItem, optionalOrderItem.get());
+    }
+    
+     /**
      * Helper function to get the number of records from a table
      */
     int getTableCount(String table) {
@@ -334,10 +307,10 @@ public class OrderDaoMysqlTest {
                     return resultSet.getInt(1);
                 }
             } catch (SQLException ex) {
-                System.out.println("SQL Exception: " + ex.getMessage());
+                System.out.println("SQL Exception: 3" + ex.getMessage());
             }            
         } catch (SQLException ex) {
-            System.out.println("SQL Exception: " + ex.getMessage());
+            System.out.println("SQL Exception: 4" + ex.getMessage());
         }
         return -1;
     }

@@ -5,10 +5,21 @@
  */
 package interfacelayer.dao;
 
+import domain.OrderItem;
+import java.util.Optional;
+
 /**
  *
  * @author thoma
  */
 public interface OrderItemDao {
+    
+    void insertOrderItem(OrderItem orderItem);
+    
+    void updateOrderItem(OrderItem orderItem);
+    
+    void deleteOrderItem(OrderItem orderItem);
+    
+    Optional<OrderItem> findOrderItemById(int orderItemId);
     
 }
