@@ -5,32 +5,35 @@
  */
 package domain;
 
+
+import java.util.Objects;
+
 /**
  *
  * @author thoma
  */
 public class Account {
     private int id;
-    private String userName;
+    private String username;
     private String password;
-    private int accountType;
+    private int accountTypeId;
     
     public Account(){
         this.id = -1;
     }
 
-    public Account(String userName, String password, int accountType) {
+    public Account(String username, String password, int accountTypeId) {
         this.id = -1;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
-        this.accountType = accountType;
+        this.accountTypeId = accountTypeId;
     }
 
-    public Account(int id, String userName, String password, int accountType) {
+    public Account(int id, String username, String password, int accountTypeId) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
-        this.accountType = accountType;
+        this.accountTypeId = accountTypeId;
         
     }
     
@@ -43,11 +46,11 @@ public class Account {
     }
 
     public String getUsername() {
-        return userName;
+        return username;
     }
 
-    public void setUsername(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -58,12 +61,49 @@ public class Account {
         this.password = password;
     }
 
-    public int getAccountType() {
-        return accountType;
+    public int getAccountTypeId() {
+        return accountTypeId;
     }
 
-    public void setAccountType(int accountType) {
-        this.accountType = accountType;
+    public void setAccountType(int accountTypeId) {
+        this.accountTypeId = accountTypeId;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 73 * hash + this.id;
+        hash = 73 * hash + Objects.hashCode(this.username);
+        hash = 73 * hash + Objects.hashCode(this.password);
+        hash = 73 * hash + this.accountTypeId;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Account other = (Account) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.accountTypeId != other.accountTypeId) {
+            return false;
+        }
+        if (!Objects.equals(this.username, other.username)) {
+            return false;
+        }
+        if (!Objects.equals(this.password, other.password)) {
+            return false;
+        }
+        return true;
     }
     
     

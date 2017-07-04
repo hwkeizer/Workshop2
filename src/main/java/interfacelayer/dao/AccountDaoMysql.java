@@ -6,11 +6,8 @@
 package interfacelayer.dao;
 
 import domain.Account;
-import domain.Product;
 import interfacelayer.DatabaseConnection;
 import interfacelayer.DuplicateAccountException;
-import interfacelayer.DuplicateProductException;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,10 +24,10 @@ public class AccountDaoMysql implements AccountDao {
     
     private static final Logger log = LoggerFactory.getLogger(AccountDaoMysql.class);
     
-    private static final String SQL_INSERT = "INSERT INTO account (username, password, account_type) VALUES (?, ?, ?)";
-    private static final String SQL_FIND_BY_NAME = "SELECT id, username, password, account_type FROM account WHERE username = ?";
-    private static final String SQL_FIND_BY_ID = "SELECT id, username, password, account_type FROM account WHERE id = ?";
-    private static final String SQL_UPDATE = "UPDATE account SET username=?, password=?, account_type=? WHERE id = ?";
+    private static final String SQL_INSERT = "INSERT INTO account (username, password, account_type_id) VALUES (?, ?, ?)";
+    private static final String SQL_FIND_BY_NAME = "SELECT id, username, password, account_type_id FROM account WHERE username = ?";
+    private static final String SQL_FIND_BY_ID = "SELECT id, username, password, account_type_id FROM account WHERE id = ?";
+    private static final String SQL_UPDATE = "UPDATE account SET username=?, password=?, account_type_id=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM account WHERE id = ?";
 
     @Override
@@ -42,7 +39,7 @@ public class AccountDaoMysql implements AccountDao {
             
             statement.setString(1, account.getUsername());
             statement.setString(2, account.getPassword());
-            statement.setString(3, ((Integer)account.getAccountType()).toString());
+            statement.setInt(3, account.getAccountTypeId());
             
             // Execute the prepared query and validate the affected rows
             int affectedRows = statement.executeUpdate();
@@ -66,9 +63,9 @@ public class AccountDaoMysql implements AccountDao {
     @Override
     public void updateAccount(Account account) {
         
-        // Do nothing if the product cannot be found in the database
+        // Do nothing if the account cannot be found in the database
         if ((findAccountById(account.getId())) == null) {
-            log.error("Productid '{}' bestaat niet in de database en kan dus "
+            log.error("AccountId '{}' bestaat niet in de database en kan dus "
                     + "ook niet worden bijgewerkt!", account.getId());
             return;
         }
@@ -79,7 +76,7 @@ public class AccountDaoMysql implements AccountDao {
             
             statement.setString(1, account.getUsername());
             statement.setString(2, account.getPassword());
-            statement.setString(3, ((Integer)account.getAccountType()).toString());
+            statement.setString(3, ((Integer)account.getAccountTypeId()).toString());
             statement.setString(4, ((Integer)account.getId()).toString());
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
@@ -97,7 +94,7 @@ public class AccountDaoMysql implements AccountDao {
             Connection connection = DatabaseConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_DELETE);) {
             
-            statement.setString(1, ((Integer)account.getId()).toString());
+            statement.setInt(1, account.getId());
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 log.error("Het verwijderen van account {} is helaas mislukt!", 
@@ -131,7 +128,7 @@ public class AccountDaoMysql implements AccountDao {
 
     
     /**
-     * Find a product in the database by name
+     * Find a account in the database by name
      * @param username
      * @return Optional<Account>
      */
@@ -158,7 +155,7 @@ public class AccountDaoMysql implements AccountDao {
         int id = resultSet.getInt("id");
         String username = resultSet.getString("username");
         String password = resultSet.getString("password");
-        int accountType = resultSet.getInt("account_type");
+        int accountType = resultSet.getInt("account_type_id");
         return new Account(id, username, password, accountType);
     }
   

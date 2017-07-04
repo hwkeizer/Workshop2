@@ -5,10 +5,24 @@
  */
 package interfacelayer.dao;
 
+
+import domain.Customer;
+import interfacelayer.DuplicateCustomerException;
+import java.util.Optional;
+
 /**
  *
  * @author thoma
  */
 public interface CustomerDao {
     
+    void insertCustomer(Customer customer) throws DuplicateCustomerException;
+    
+    void updateCustomer(Customer customer);
+    
+    void deleteCustomer(Customer customer);
+    
+    Optional<Customer> findCustomerById(int customerId);
+    
+    Optional<Customer> findCustomerByLastName(String userName);
 }
