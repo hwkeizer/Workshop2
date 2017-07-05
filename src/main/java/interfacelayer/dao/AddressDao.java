@@ -5,10 +5,22 @@
  */
 package interfacelayer.dao;
 
+import domain.Address;
+import java.util.Optional;
+
 /**
  *
  * @author thoma
  */
 public interface AddressDao {
     
+    void insertAddress(Address address);
+    
+    void updateAddress(Address address);
+    
+    void deleteAddress(Address address);
+    
+    Optional<Address> findAddressById(int AddressId);
+    
+    Optional<Address> findAddressByCustomerId(int customerId);
 }
