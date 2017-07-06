@@ -3,16 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.workshop1;
+package interfacelayer;
 
 /**
  *
  * @author hwkei
  */
-public class Test {
-    
-    public static void main(String[] args) {
-        System.out.println("Testing...");
-    }
-    
-}
+public enum MenuActions {SHOW_SUBMENU, LOGOUT, PREVIOUS_SCREEN, MAIN_SCREEN_EMPLOYEE,
+    CREATE_PRODUCT_BY_EMPLOYEE, UPDATE_PRODUCT_BY_EMPLOYEE, DELETE_PRODUCT_BY_EMPLOYEE}

@@ -3,16 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.workshop1;
+package interfacelayer.view;
 
 /**
  *
- * @author thoma
+ * @author hwkei
  */
-public class TestClass {
-    String doesItWork;
+public class AccountView {
     
-    TestClass(){
-        this.doesItWork = "I hope so";
-    }
 }
