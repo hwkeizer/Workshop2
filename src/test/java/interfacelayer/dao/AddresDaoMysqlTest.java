@@ -181,11 +181,11 @@ public class AddresDaoMysqlTest {
 //    }
 
     /**
-     * Test of findAddressById method, of class AddressDaoMysql.
+     * Test of findExistingAddressById method, of class AddressDaoMysql.
      */
     @Test
-    public void testFindAddressById() {
-        System.out.println("findAddressByUsername");
+    public void testFindExistingAddressById() {
+        System.out.println("findExistingAddressById");
         
         // Define the address to be searched
         Address expectedAddress = new Address(3, "Torenstraat", 82, null, "7620CX", "Best", 2, 2);
@@ -195,8 +195,26 @@ public class AddresDaoMysqlTest {
         Optional<Address> optionalAddress = addressDao.findAddressById(searchId);
         
         // Assert we found the address and it is the address we expected
-        assertTrue(optionalAddress.isPresent());
-        assertEquals(expectedAddress, optionalAddress.get());
+        assertTrue("Existing Address should be present", optionalAddress.isPresent());
+        assertEquals("Existing Address should be as expected", expectedAddress, optionalAddress.get());
+    }
+    
+    /**
+     * Test of findNonExistingAddressById method, of class AddressDaoMysql.
+     */
+    @Test
+    public void testFindNonExistingAddressById() {
+        System.out.println("findNonExistingAddressById");
+        
+        // Define the address to be searched
+        Address expectedAddress = new Address(30, "Torenstraat", 82, null, "7620CX", "Best", 2, 2);
+        int searchId = expectedAddress.getId();
+        
+        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
+        Optional<Address> optionalAddress = addressDao.findAddressById(searchId);
+        
+        // Assert we did not find the address
+        assertFalse("Non existing Address should not be present", optionalAddress.isPresent());
     }
     
 //    /**

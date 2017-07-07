@@ -298,12 +298,12 @@ public class OrderDaoMysqlTest {
         }  
     }
     
-   /**
-     * Test of findOrderById method, of class OrderDaoMysql.
+    /**
+     * Test of findExistingOrderById method, of class OrderDaoMysql.
      */
     @Test
-    public void testFindOrderById() {
-        System.out.println("findOrderById");
+    public void testFindExistingOrderById() {
+        System.out.println("findExistingOrderById");
         
         // Define the product to be searched
         Integer year = 2017;
@@ -317,10 +317,31 @@ public class OrderDaoMysqlTest {
         Optional<Order> optionalOrder = orderDao.findOrderById(searchId);
         
         // Assert we found the product and it is the product we expected
-        assertTrue(optionalOrder.isPresent());
-        assertEquals(expectedOrder, optionalOrder.get());
+        assertTrue("Existing order should be present", optionalOrder.isPresent());
+        assertEquals("Existing found order should be as expected", expectedOrder, optionalOrder.get());
     }
     
+    /**
+     * Test of findNonExistingOrderById method, of class OrderDaoMysql.
+     */
+    @Test
+    public void testFindNonExistingOrderById() {
+        System.out.println("findNonExistingOrderById");
+        
+        // Define the product to be searched
+        Integer year = 2017;
+        Integer month = 4;
+        Integer day = 8;
+        LocalDateTime testDate = LocalDate.of(year,month,day).atTime(LocalTime.now());
+        Order expectedOrder = new Order(40, new BigDecimal("78.23"), 2, testDate, 3);
+        int searchId = expectedOrder.getId();
+        
+        OrderDao orderDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
+        Optional<Order> optionalOrder = orderDao.findOrderById(searchId);
+        
+        // Assert we did not find the order
+        assertFalse("Non existing order should not be present", optionalOrder.isPresent());
+    }
     /**
      * Helper function to get the number of records from a table
      */

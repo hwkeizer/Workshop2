@@ -179,11 +179,11 @@ public class CustomerDaoMysqlTest {
 //    }
 
     /**
-     * Test of findCustomerById method, of class CustomerDaoMysql.
+     * Test of findExistingCustomerById method, of class CustomerDaoMysql.
      */
     @Test
-    public void testFindCustomerByLastName() {
-        System.out.println("findCustomerByLastName");
+    public void testFindExistingCustomerByLastName() {
+        System.out.println("findExistingCustomerByLastName");
         
         // Define the customer to be searched
         Customer expectedCustomer = new Customer(3, "Jan", "Jansen", null, 3);
@@ -193,16 +193,34 @@ public class CustomerDaoMysqlTest {
         Optional<Customer> optionalCustomer = customerDao.findCustomerByLastName(searchString);
         
         // Assert we found the customer and it is the customer we expected
-        assertTrue(optionalCustomer.isPresent());
-        assertEquals(expectedCustomer, optionalCustomer.get());
+        assertTrue("Existing Customer should be found", optionalCustomer.isPresent());
+        assertEquals("Existing Customer should be as expected", expectedCustomer, optionalCustomer.get());
     }
     
     /**
-     * Test of findCustomerById method, of class CustomerDaoMysql.
+     * Test of findNonExistingCustomerById method, of class CustomerDaoMysql.
      */
     @Test
-    public void testFindCustomerById() {
-        System.out.println("findCustomerById");
+    public void testFindNonExistingCustomerByLastName() {
+        System.out.println("findNonExistingCustomerByLastName");
+        
+        // Define the customer to be searched
+        Customer expectedCustomer = new Customer(3, "Jan", "Onbekend", null, 3);
+        String searchString = expectedCustomer.getLastName();
+        
+        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        Optional<Customer> optionalCustomer = customerDao.findCustomerByLastName(searchString);
+        
+        // Assert we found the customer and it is the customer we expected
+        assertFalse("Non existing Customer should be found", optionalCustomer.isPresent());
+    }
+    
+    /**
+     * Test of findExistingCustomerById method, of class CustomerDaoMysql.
+     */
+    @Test
+    public void testFindExistingCustomerById() {
+        System.out.println("findExistingCustomerById");
         
         // Define the customer to be searched
         Customer expectedCustomer = new Customer(3, "Jan", "Jansen", null, 3);
@@ -212,8 +230,26 @@ public class CustomerDaoMysqlTest {
         Optional<Customer> optionalCustomer = customerDao.findCustomerById(searchId);
         
         // Assert we found the customer and it is the customer we expected
-        assertTrue(optionalCustomer.isPresent());
-        assertEquals(expectedCustomer, optionalCustomer.get());
+        assertTrue("Existing Customer should be present", optionalCustomer.isPresent());
+        assertEquals("Existing Customer should be as expected", expectedCustomer, optionalCustomer.get());
+    }
+    
+    /**
+     * Test of findNonExistingCustomerById method, of class CustomerDaoMysql.
+     */
+    @Test
+    public void testFindNonExistingCustomerById() {
+        System.out.println("findNonExistingCustomerById");
+        
+        // Define the customer to be searched
+        Customer expectedCustomer = new Customer(30, "Jan", "Jansen", null, 3);
+        int searchId = expectedCustomer.getId();
+        
+        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        Optional<Customer> optionalCustomer = customerDao.findCustomerById(searchId);
+        
+        // Assert we found the customer and it is the customer we expected
+        assertFalse("Non existing Customer should not be present", optionalCustomer.isPresent());
     }
     
     /**

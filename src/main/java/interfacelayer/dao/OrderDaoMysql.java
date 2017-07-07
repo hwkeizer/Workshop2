@@ -114,7 +114,7 @@ public class OrderDaoMysql implements OrderDao {
             log.error("SQL error: ", ex);
         }
         // Nothing found
-        return null; 
+        return Optional.empty(); 
     }
     
     // Helper methode to map the current row of the given ResultSet to a Product instance

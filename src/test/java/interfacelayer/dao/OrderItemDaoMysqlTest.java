@@ -271,11 +271,11 @@ public class OrderItemDaoMysqlTest {
     }
     
     /**
-     * Test of findOrderItemById method, of class OrderItemDaoMysql.
+     * Test of findExistingOrderItemById method, of class OrderItemDaoMysql.
      */
     @Test
-    public void testFindOrderItemById() {
-        System.out.println("findOrderItemById");
+    public void testFindExistingOrderItemById() {
+        System.out.println("findExistingOrderItemById");
         
         // Prepare an order item to be deleted from the database
         Integer testId = 13;
@@ -290,8 +290,31 @@ public class OrderItemDaoMysqlTest {
         Optional<OrderItem> optionalOrderItem = orderItemDao.findOrderItemById(searchId);
         
         // Assert we found the product and it is the product we expected
-        assertTrue(optionalOrderItem.isPresent());
-        assertEquals(expectedOrderItem, optionalOrderItem.get());
+        assertTrue("Existing OrderItem should be found", optionalOrderItem.isPresent());
+        assertEquals("Existing OrderItem should be the expected OrderItem", expectedOrderItem, optionalOrderItem.get());
+    }
+    
+    /**
+     * Test of findExistingOrderItemById method, of class OrderItemDaoMysql.
+     */
+    @Test
+    public void testFindNonExistingOrderItemById() {
+        System.out.println("findNonExistingOrderItemById");
+        
+        // Prepare an order item to be deleted from the database
+        Integer testId = 130;
+        Integer testOrderId = 8;
+        Integer testProductId = 4;
+        Integer testAmount = 23;
+        BigDecimal testSubTotal = new BigDecimal("167.32");
+        OrderItem expectedOrderItem = new OrderItem(testId, testOrderId, testProductId, testAmount, testSubTotal);
+        int searchId = expectedOrderItem.getId();
+        
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();
+        Optional<OrderItem> optionalOrderItem = orderItemDao.findOrderItemById(searchId);
+        
+        // Assert we did not find the OrderItem
+        assertFalse("Non existing OrderItem should not be found", optionalOrderItem.isPresent());
     }
     
      /**

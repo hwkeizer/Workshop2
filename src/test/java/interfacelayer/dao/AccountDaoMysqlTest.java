@@ -170,11 +170,11 @@ public class AccountDaoMysqlTest {
 //    }
 //
     /**
-     * Test of findAccountById method, of class AccountDaoMysql.
+     * Test of findExistingAccountById method, of class AccountDaoMysql.
      */
     @Test
-    public void testFindAccountByUsername() {
-        System.out.println("findAccountByUsername");
+    public void testFindExistingAccountByUsername() {
+        System.out.println("findExistingAccountByUsername");
         
         // Define the account to be searched
         Account expectedAccount = new Account(2, "klaas", "welkom", 2);
@@ -184,16 +184,34 @@ public class AccountDaoMysqlTest {
         Optional<Account> optionalAccount = accountDao.findAccountByUsername(searchString);
         
         // Assert we found the account and it is the account we expected
-        assertTrue(optionalAccount.isPresent());
-        assertEquals(expectedAccount, optionalAccount.get());
+        assertTrue("Existing Account should be present", optionalAccount.isPresent());
+        assertEquals("Existing Account should be as expected", expectedAccount, optionalAccount.get());
     }
     
     /**
-     * Test of findAccountById method, of class AccountDaoMysql.
+     * Test of findNonExistingAccountById method, of class AccountDaoMysql.
      */
     @Test
-    public void testFindAccountById() {
-        System.out.println("findAccountById");
+    public void testFindNonExistingAccountByUsername() {
+        System.out.println("findNonExistingAccountByUsername");
+        
+        // Define the account to be searched
+        Account expectedAccount = new Account(2, "onbekend", "welkom", 2);
+        String searchString = expectedAccount.getUsername();
+        
+        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        Optional<Account> optionalAccount = accountDao.findAccountByUsername(searchString);
+        
+        // Assert we did not find the account
+        assertFalse("Non existing Account should not be present", optionalAccount.isPresent());
+    }
+    
+    /**
+     * Test of findExistingAccountById method, of class AccountDaoMysql.
+     */
+    @Test
+    public void testFindExistingAccountById() {
+        System.out.println("findExistingAccountById");
         
         // Define the account to be searched
         Account expectedAccount = new Account(2, "klaas", "welkom", 2);
@@ -203,8 +221,26 @@ public class AccountDaoMysqlTest {
         Optional<Account> optionalAccount = accountDao.findAccountById(searchId);
         
         // Assert we found the account and it is the account we expected
-        assertTrue(optionalAccount.isPresent());
-        assertEquals(expectedAccount, optionalAccount.get());
+        assertTrue("Existing Account should be present", optionalAccount.isPresent());
+        assertEquals("Existing Account should be as expected", expectedAccount, optionalAccount.get());
+    }
+    
+    /**
+     * Test of findNonExistingAccountById method, of class AccountDaoMysql.
+     */
+    @Test
+    public void testFindNonExistingAccountById() {
+        System.out.println("findNonExistingAccountById");
+        
+        // Define the account to be searched
+        Account expectedAccount = new Account(20, "klaas", "welkom", 2);
+        int searchId = expectedAccount.getId();
+        
+        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        Optional<Account> optionalAccount = accountDao.findAccountById(searchId);
+        
+        // Assert we did not find the account
+        assertFalse("Non existing Account should not be present", optionalAccount.isPresent());
     }
     
     /**

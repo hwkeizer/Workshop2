@@ -169,11 +169,11 @@ public class ProductDaoMysqlTest {
     }
     
     /**
-     * Test of findProductByName method, of class ProductDaoMysql.
+     * Test of findExistingProductByName method, of class ProductDaoMysql.
      */
     @Test
-    public void testFindProductByName() {
-        System.out.println("findProductByName");
+    public void testFindExistingProductByName() {
+        System.out.println("findExistingProductByName");
        
         // Define the product to be searched
         Product expectedProduct = new Product(2, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
@@ -183,16 +183,34 @@ public class ProductDaoMysqlTest {
         Optional<Product> optionalProduct = productDao.findProductByName(searchString);
         
         // Assert we found the product and it is the product we expected
-        assertTrue(optionalProduct.isPresent());
-        assertEquals(expectedProduct, optionalProduct.get());
+        assertTrue("Existing product should be present", optionalProduct.isPresent());
+        assertEquals("Existing product should be the expected product", expectedProduct, optionalProduct.get());
+    }
+    
+    /**
+     * Test of findNonExistingProductByName method, of class ProductDaoMysql.
+     */
+    @Test
+    public void testFindNonExistingProductByName() {
+        System.out.println("findNonExistingProductByName");
+       
+        // Define the product to be searched
+        Product expectedProduct = new Product(2, "verkeerde naam", new BigDecimal("14.70"), 239);
+        String searchString = expectedProduct.getName();
+        
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        Optional<Product> optionalProduct = productDao.findProductByName(searchString);
+        
+        // Assert we did not find the product
+        assertFalse("Non existing product should not be present", optionalProduct.isPresent());
     }
 
     /**
-     * Test of findProductById method, of class ProductDaoMysql.
+     * Test of findExistingProductById method, of class ProductDaoMysql.
      */
     @Test
-    public void testFindProductById() {
-        System.out.println("findProductById");
+    public void testFindExistingProductById() {
+        System.out.println("findExistingProductById");
         
         // Define the product to be searched
         Product expectedProduct = new Product(2, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
@@ -202,9 +220,28 @@ public class ProductDaoMysqlTest {
         Optional<Product> optionalProduct = productDao.findProductById(searchId);
         
         // Assert we found the product and it is the product we expected
-        assertTrue(optionalProduct.isPresent());
-        assertEquals(expectedProduct, optionalProduct.get());
+        assertTrue("Existing product should be present", optionalProduct.isPresent());
+        assertEquals("Existing product should be the expected product",expectedProduct, optionalProduct.get());
     }
+    
+    /**
+     * Test of findNonExistingProductById method, of class ProductDaoMysql.
+     */
+    @Test
+    public void testFindNonExistingProductById() {
+        System.out.println("findNonExistingProductById");
+        
+        // Define the product to be searched
+        Product expectedProduct = new Product(20, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
+        int searchId = expectedProduct.getId();
+        
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        Optional<Product> optionalProduct = productDao.findProductById(searchId);
+        
+        // Assert we did not find the product
+        assertFalse("Non Existing product should not be present", optionalProduct.isPresent());
+    }
+
 
     /**
      * Test of deleteProduct method, of class ProductDaoMysql.

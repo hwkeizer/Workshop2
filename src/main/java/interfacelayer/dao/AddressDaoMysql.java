@@ -135,7 +135,7 @@ public class AddressDaoMysql implements AddressDao {
             log.error("SQL error: ", ex);
         }
         // Nothing found
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -153,7 +153,7 @@ public class AddressDaoMysql implements AddressDao {
             log.error("SQL error: ", ex);
         }
         // Nothing found
-        return null;
+        return Optional.empty();
     }
     
     private Address map(ResultSet resultSet) throws SQLException {
