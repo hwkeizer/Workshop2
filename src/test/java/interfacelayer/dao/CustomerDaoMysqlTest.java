@@ -5,9 +5,11 @@
  */
 package interfacelayer.dao;
 
-import domain.Customer;
-import interfacelayer.DatabaseConnection;
-import interfacelayer.DuplicateCustomerException;
+import workshop1.interfacelayer.dao.DuplicateCustomerException;
+import workshop1.interfacelayer.dao.DaoFactory;
+import workshop1.interfacelayer.dao.CustomerDao;
+import workshop1.domain.Customer;
+import workshop1.interfacelayer.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;

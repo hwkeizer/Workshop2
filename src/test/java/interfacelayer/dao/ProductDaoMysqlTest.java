@@ -5,9 +5,11 @@
  */
 package interfacelayer.dao;
 
-import domain.Product;
-import interfacelayer.DatabaseConnection;
-import interfacelayer.DuplicateProductException;
+import workshop1.interfacelayer.dao.DaoFactory;
+import workshop1.interfacelayer.dao.ProductDao;
+import workshop1.interfacelayer.dao.DuplicateProductException;
+import workshop1.domain.Product;
+import workshop1.interfacelayer.DatabaseConnection;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -5,8 +5,10 @@
  */
 package interfacelayer.dao;
 
-import domain.OrderItem;
-import interfacelayer.DatabaseConnection;
+import workshop1.interfacelayer.dao.DaoFactory;
+import workshop1.interfacelayer.dao.OrderItemDao;
+import workshop1.domain.OrderItem;
+import workshop1.interfacelayer.DatabaseConnection;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
