@@ -26,8 +26,9 @@ public class FrontEndController {
     }
     
     public void login() {
-       menuController.login();
+       if (menuController.login()) {
        showMenu();
+       }
     }
     
     public void showMenu() {

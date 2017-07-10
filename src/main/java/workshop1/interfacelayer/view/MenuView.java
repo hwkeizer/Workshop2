@@ -27,52 +27,72 @@ public class MenuView {
         System.out.println("Type een ! en enter om af te breken");
     }
     
-    public String showUserNameRequest() {        
-        System.out.print("\nGeef uw gebruikersnaam gevolgd door enter> ");
-        return input.nextLine();
-    }
-
-    public String showUserPasswordRequest() {
-        System.out.print("Geef uw wachtwoord gevolgd door enter> ");
-        return input.nextLine();
-    }
-    
     public void showSuccesfulLogin(String userName) {
         System.out.println("U bent ingelogd met gebruikersnaam " + userName);
     }
     
-    public void showInvalidRespons() {
-        System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
+    public void showUnsuccesfulLogin() {
+        System.out.println("Uw gebruikersnaam en/of wachtwoord klopt niet\n");
     }
-
+    
     public void showLogoutMessage() {
         System.out.println("\nU bent uitgelogd\n"
                 + "Bedankt voor het gebruik van Applikaasie!\n");
     }
-
-    public void showInvalidMenuChoice() {
-        System.out.println("\nOngeldige waarde, druk op enter en probeer het astublieft opnieuw.\n");
-        input.nextLine();
-    }
     
-    public void showDivider() {
-        System.out.println("\n-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-");
-    }
-
     public void showCurrentMenuHeader(String name, String userName) {
         showDivider();
         showSuccesfulLogin(userName);
         System.out.println("U bent nu in: " + name + "\n");
         System.out.println("Kies de gewenste menu optie en druk op enter\n");
     }
-
-    public void showUnsuccesfulLogin() {
-        System.out.println("Uw gebruikersnaam en/of wachtwoord klopt niet\n");
+    
+    public void showInvalidMenuChoice() {
+        System.out.println("\nOngeldige waarde, druk op enter en probeer het astublieft opnieuw.");
+        input.nextLine();
+    }
+    
+    public MenuItem buildCustomerMenu() {
+        MenuItem customerMenu = new MenuItem(null, 3, "Hoofdscherm", MenuActions.SHOW_SUBMENU, false);
+        return customerMenu;
+    }    
+    
+    public String requestUserName() {        
+        
+        printRequestForUserNameInput();
+        String respons =  input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidNameString(respons)) {
+            showInvalidRespons();
+            printRequestForUserNameInput();            
+            respons = input.nextLine();
+            if (respons.equals("!")) return null; // User initiated abort
+        }
+        return respons;
     }
 
+    public String requestPassword() {
+        printRequestForPasswordInput();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidNameString(respons)) {
+            showInvalidRespons();
+            printRequestForPasswordInput();            
+            respons = input.nextLine();
+            if (respons.equals("!")) return null; // User initiated abort
+        }
+        return respons;
+    }
+    
     public String showRequestForMenuChoice() {
         System.out.print("\nuw keuze> ");
-        return input.nextLine();
+        String respons = input.nextLine();
+        while (!Validator.isValidInt(respons)) {
+            showInvalidMenuChoice();
+            System.out.print("\nuw keuze> ");
+            respons = input.nextLine();
+        }        
+        return respons;
     }
 
     public MenuItem buildAdminMenu() {
@@ -104,9 +124,20 @@ public class MenuView {
         employeeCustomer.addSubMenu(new MenuItem(employeeProduct, 230, "Naar hoofdscherm", MenuActions.MAIN_SCREEN_EMPLOYEE, false));
         return employeeMenu;
     }
+    
+    private void printRequestForUserNameInput() {
+        System.out.print("\nGeef uw gebruikersnaam gevolgd door enter> ");
+    }
+    
+    private void printRequestForPasswordInput() {
+        System.out.print("Geef uw wachtwoord gevolgd door enter> ");
+    }
+    
+    private void showInvalidRespons() {
+        System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.");
+    }
 
-    public MenuItem buildCustomerMenu() {
-        MenuItem customerMenu = new MenuItem(null, 3, "Hoofdscherm", MenuActions.SHOW_SUBMENU, false);
-        return customerMenu;
+    private void showDivider() {
+        System.out.println("\n-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-");
     }
 }

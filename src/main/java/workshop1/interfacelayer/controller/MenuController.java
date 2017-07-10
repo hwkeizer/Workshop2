@@ -9,7 +9,6 @@ import workshop1.interfacelayer.MenuActions;
 import workshop1.interfacelayer.MenuItem;
 import workshop1.interfacelayer.view.AccountView;
 import workshop1.interfacelayer.view.MenuView;
-import workshop1.interfacelayer.view.Validator;
 
 /**
  *
@@ -27,13 +26,13 @@ public class MenuController {
         initMenu();
     }
     
-    public void login() {
+    public boolean login() {
         // Show welcome and get the user credentials
         menuView.showWelcome();
-        userName = getUserNameFromUser();
-        if (userName == null) return;
-        String password = getUserPasswordFromUser();
-        if (password == null) return;
+        userName = menuView.requestUserName();
+        if (userName == null) return false;
+        String password = menuView.requestPassword();
+        if (password == null) return false;
         
         // Validate the user credentials
         AccountController accountController = new AccountController(new AccountView());
@@ -51,18 +50,17 @@ public class MenuController {
                 case "klant" : {
                     currentMenu = menuView.buildCustomerMenu();
                     break;
-                }
-                
+                }                
             }
         } else {
             // TODO: Maak een lus dat gebruiker opnieuw kan aanloggen in plaats van programma stop
             menuView.showUnsuccesfulLogin();
-            return;
-        }  
+            return false;
+        } 
+        return true;
     }    
     
-    public MenuActions getMenuAction() {
-        
+    public MenuActions getMenuAction() {        
         while (!currentMenu.isAction())            
             switch (currentMenu.getAction()) {
                 case SHOW_SUBMENU : {
@@ -94,44 +92,16 @@ public class MenuController {
                     currentMenu = currentMenu.getMainScreen();
                     break;
                 }
-            }
-    
+            }    
         MenuActions executeAction = currentMenu.getAction();
         currentMenu = currentMenu.getParent();
-        return executeAction;
-                    
+        return executeAction;                    
     }
     
     public void logout() {
         menuView.showLogoutMessage();
     }
-
-    
-    private String getUserNameFromUser() {        
-        String name = menuView.showUserNameRequest();
-        if (name.equals("!")) return null; // User interuption
-        while (!Validator.isValidNameString(name)) {
-            menuView.showInvalidRespons();            
-            name = menuView.showUserNameRequest();
-            if (name.equals("!")) return null; // User interuption
-        }
-        return name;
-    }
-    
-    private String getUserPasswordFromUser() {
-        String password = menuView.showUserPasswordRequest();
-        if (password.equals("!")) return null; // User interuption
-        while (!Validator.isValidNameString(password)) {
-            menuView.showInvalidRespons();            
-            password = menuView.showUserPasswordRequest();
-            if (password.equals("!")) return null; // User interuption
-        }
-        return password;
-    }
     
     private void initMenu() {
-                
-
-
     }
 }
