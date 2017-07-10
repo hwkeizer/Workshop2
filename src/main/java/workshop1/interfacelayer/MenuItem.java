@@ -67,7 +67,6 @@ public class MenuItem {
     public MenuItem getMainScreen() {
         MenuItem item = this;
         while (!item.getName().equals("Hoofdscherm")) {
-            System.out.println("NAAM: " + item.getName());
             item = item.getParent();
         }
         return item;

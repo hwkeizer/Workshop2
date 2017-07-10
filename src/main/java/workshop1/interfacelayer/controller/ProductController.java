@@ -29,58 +29,24 @@ public class ProductController {
                 
         productView.showNewProductScreen();
         
-        String name = getProductNameFromUser(); 
+        String name = productView.requestNameInput(); 
         if (name == null) return; // User interupted createProduct proces
-        String price = getProductPriceFromUser();
+        BigDecimal price = productView.requestPriceInput();
         if (price == null) return; // User interupted createProduct proces
-        String stock = getProductStockFromUser();
+        Integer stock = productView.requestStockInput();
         if (stock == null) return;  // User interupted createProduct proces
-        
+
         // Prepare the product with the validated values and add it to the database
-        product = new Product(name, new BigDecimal(price), Integer.parseInt(stock));
+        product = new Product(name, price, stock);
         ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
         try {
             productDao.insertProduct(product);
         } catch(DuplicateProductException e) {
-            System.out.println("\nFout: U probeert een product toe te voegen dat al bestaat in de database.\n"
-                    + "Als u het bestaande product wilt wijzigen kies dan voor 'Wijzigen product'"); 
-        }        
+            productView.showDuplicateProductError();
+        }
     }
     public void deleteProduct() {}
     public void updateProduct() {}
     public void listAllProducts() {}
     public void searchProduct() {}
-    
-    private String getProductNameFromUser() {        
-        String name = productView.showNameRequest();
-        if (name.equals("!")) return null; // User interuption
-        while (!Validator.isValidNameString(name)) {
-            productView.showInvalidRespons();            
-            name = productView.showNameRequest();
-            if (name.equals("!")) return null; // User interuption
-        }
-        return name;
-    }
-    
-    private String getProductPriceFromUser() {        
-        String price = productView.showPriceRequest();
-        if (price.equals("!")) return null; // User interuption
-        while (!Validator.isValidBigDecimal(price)) {
-            productView.showInvalidRespons();            
-            price = productView.showPriceRequest();
-            if (price.equals("!")) return null; // User interuption
-        }
-        return price;
-    }
-    
-    private String getProductStockFromUser() {        
-        String stock = productView.showStockRequest();
-        if (stock.equals("!")) return null; // User interuption
-        while (!Validator.isValidInt(stock)) {
-            productView.showInvalidRespons();            
-            stock = productView.showStockRequest();
-            if (stock.equals("!")) return null; // User interuption
-        }
-        return stock;
-    }       
 }

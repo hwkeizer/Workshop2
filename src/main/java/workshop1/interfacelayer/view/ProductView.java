@@ -5,6 +5,7 @@
  */
 package workshop1.interfacelayer.view;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 /**
@@ -21,26 +22,79 @@ public class ProductView {
                 + "naar het menu. Al ingevulde gegevens worden dan niet bewaard!\n\n ");
     }
     
-    public String showNameRequest() {        
-        System.out.println("Geef de naam van het product gevolgd door enter:");
-        System.out.print("> ");
-        return input.nextLine();
+    public void showDuplicateProductError() {
+        System.out.println("\nFout: U probeert een product toe te voegen dat al bestaat in de database.\n"
+                + "Als u het bestaande product wilt wijzigen kies dan voor 'Wijzigen product'\n"
+                + "Druk op <enter> om door te gaan>");
+        input.nextLine();
+    }
+    
+    /**
+     * Returns a valid product name or null if the user aborts
+     * @return 
+     */
+    public String requestNameInput() {        
+        printRequestForNameInput();
+        String respons =  input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidNameString(respons)) {
+            showInvalidRespons();
+            printRequestForNameInput();            
+            respons = input.nextLine();
+            if (respons.equals("!")) return null; // User initiated abort
+        }
+        return respons;
+    }
+    
+    /**
+     * Returns a valid product price or null if the user aborts
+     * @return 
+     */
+    public BigDecimal requestPriceInput() {
+        printRequestForPriceInput();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidBigDecimal(respons)) {
+            showInvalidRespons();
+            printRequestForPriceInput();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null; // User initiated abort
+        }
+        return new BigDecimal(respons);
     }
 
-    public String showPriceRequest() {
-        System.out.println("\nGeef de prijs van het product gevolgd door enter:");
-        System.out.print("> ");
-        return input.nextLine();
+    /**
+     * Returns a valid product stock or null if the user aborts
+     * @return 
+     */
+    public Integer requestStockInput() {
+        printRequestForStockInput();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidInt(respons)) {
+            printRequestForStockInput();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }
+        return Integer.parseInt(respons);
     }
 
-    public String showStockRequest() {
-        System.out.println("\nGeef de voorraad van het product gevolgd door enter:");
-        System.out.print("> ");
-        return input.nextLine();
-    }
-
-    public void showInvalidRespons() {
+    private void showInvalidRespons() {
         System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
     }
     
+    private void printRequestForNameInput() {
+        System.out.println("Geef de naam van het product gevolgd door <enter>:");
+        System.out.print("> ");
+    } 
+    
+    private void printRequestForPriceInput() {
+        System.out.println("Geef de prijs van het product gevolgd door <enter>:");
+        System.out.print("> ");
+    } 
+    
+    private void printRequestForStockInput() {
+        System.out.println("Geef de voorraad van het product gevolgd door <enter>:");
+        System.out.print("> ");
+    }    
 }
