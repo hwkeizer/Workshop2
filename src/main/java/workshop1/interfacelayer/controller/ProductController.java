@@ -32,8 +32,7 @@ public class ProductController {
         this.productView = productView;
     }
     
-    public void createProduct() {
-                
+    public void createProduct() {                
         productView.showNewProductScreen();
         
         String name = productView.requestNameInput(); 
