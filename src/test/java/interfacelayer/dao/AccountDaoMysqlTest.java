@@ -29,7 +29,7 @@ import java.util.Optional;
 //@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class AccountDaoMysqlTest {
     
-    private final int initialNumberOfAccounts = 5; // Initial number of accounts
+    private final int initialNumberOfAccounts = 6; // Initial number of accounts
     
     public AccountDaoMysqlTest() {
     }
