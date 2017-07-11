@@ -51,4 +51,20 @@ public class Validator {
         }
         return true;
     }
+    
+    public static boolean isValidListIndex(int listSize, String respons) {
+        int responsInt;
+        try {
+            responsInt = Integer.parseInt(respons);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        
+        if(responsInt <= listSize && responsInt >= 1){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

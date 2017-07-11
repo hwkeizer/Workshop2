@@ -119,8 +119,7 @@ public class ProductView {
         printRequestForIdInput();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
-        System.out.println("" + productListSize);
-        while (!Validator.isValidInt(respons) && (Integer.parseInt(respons) <= productListSize)) {
+        while (!Validator.isValidListIndex(productListSize, respons)) {
             showInvalidRespons();
             printRequestForIdInput();
             respons = input.nextLine();

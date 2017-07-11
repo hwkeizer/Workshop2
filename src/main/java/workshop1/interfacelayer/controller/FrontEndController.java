@@ -35,15 +35,15 @@ public class FrontEndController {
         MenuActions currentAction = menuController.getMenuAction() ;
         while (currentAction != MenuActions.LOGOUT) {
             switch (currentAction) {                  
-                case CREATE_PRODUCT_BY_EMPLOYEE : {
+                case CREATE_PRODUCT : {
                     productController.createProduct();
                     break;
                 }
-                case UPDATE_PRODUCT_BY_EMPLOYEE : {
+                case UPDATE_PRODUCT : {
                     productController.updateProduct();
                     break;
                 }
-                case DELETE_PRODUCT_BY_EMPLOYEE : {
+                case DELETE_PRODUCT : {
                     productController.deleteProduct();
                     break;
                 }
