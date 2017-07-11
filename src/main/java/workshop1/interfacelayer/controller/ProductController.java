@@ -12,6 +12,7 @@ import workshop1.interfacelayer.dao.ProductDao;
 import workshop1.interfacelayer.view.ProductView;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
