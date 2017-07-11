@@ -5,8 +5,8 @@
  */
 package workshop1.interfacelayer.dao;
 
+import java.util.List;
 import workshop1.domain.Account;
-import workshop1.domain.Product;
 import java.util.Optional;
 
 /**
@@ -24,5 +24,9 @@ public interface AccountDao {
     Optional<Account> findAccountById(int AccountId);
     
     Optional<Account> findAccountByUsername(String userName);
+    
+    List<String> getAllAccountTypesAsList();
+    
+    List<Account> getAllAccountsAsList();
     
 }

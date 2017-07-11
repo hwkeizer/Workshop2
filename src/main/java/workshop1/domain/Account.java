@@ -69,6 +69,15 @@ public class Account {
         this.accountTypeId = accountTypeId;
     }
     
+     @Override
+    public String toString(){
+        return String.format("%-5d%-20s%-20s%-5d", this.getId(), this.getUsername(), this.getPassword(), this.getAccountTypeId());
+    }
+    
+    public String toStringNoId(){
+        return String.format("%-20s%-20s%-5d", this.getUsername(), this.getPassword(), this.getAccountTypeId());
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;

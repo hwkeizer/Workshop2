@@ -97,12 +97,34 @@ public class MenuView {
 
     public MenuItem buildAdminMenu() {
         MenuItem adminMenu = new MenuItem(null, 1, "Hoofdscherm", MenuActions.SHOW_SUBMENU, false);
+        MenuItem adminProduct = new MenuItem(adminMenu, 11, "Menu producten", MenuActions.SHOW_SUBMENU, false);
+        MenuItem adminOrder = new MenuItem(adminMenu, 12, "Menu bestellingen", MenuActions.SHOW_SUBMENU, false);        
+        MenuItem adminCustomer = new MenuItem(adminMenu, 13, "Menu klanten", MenuActions.SHOW_SUBMENU, false); 
+        MenuItem adminAccount = new MenuItem(adminMenu, 14, "Menu accounts", MenuActions.SHOW_SUBMENU, false);
+        MenuItem adminLogout = new MenuItem(adminMenu, 10, "Uitloggen", MenuActions.LOGOUT, true);
+        adminMenu.addSubMenu(adminProduct);
+        adminMenu.addSubMenu(adminOrder);
+        adminMenu.addSubMenu(adminCustomer);
+        adminMenu.addSubMenu(adminAccount);
+        adminMenu.addSubMenu(adminLogout);
+        
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 141, "Toevoegen account", MenuActions.CREATE_ACCOUNT, true));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 142, "Wijzigen account", MenuActions.UPDATE_ACCOUNT, true));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 143, "Verwijderen account", MenuActions.DELETE_ACCOUNT, true));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 149, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 140, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 111, "Toevoegen product", MenuActions.CREATE_PRODUCT, true));
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 112, "Wijzigen product", MenuActions.UPDATE_PRODUCT, true));
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 113, "Verwijderen product", MenuActions.DELETE_PRODUCT, true));
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 119, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 110, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         return adminMenu;
     }
 
     public MenuItem buildEmployeeMenu() {
         MenuItem employeeMenu = new MenuItem(null, 2, "Hoofdscherm", MenuActions.SHOW_SUBMENU, false);
-        MenuItem employeeProduct = new MenuItem(employeeMenu, 21, "Menu Producten", MenuActions.SHOW_SUBMENU, false);
+        MenuItem employeeProduct = new MenuItem(employeeMenu, 21, "Menu producten", MenuActions.SHOW_SUBMENU, false);
         MenuItem employeeOrder = new MenuItem(employeeMenu, 22, "Menu bestellingen", MenuActions.SHOW_SUBMENU, false);        
         MenuItem employeeCustomer = new MenuItem(employeeMenu, 23, "Menu klanten", MenuActions.SHOW_SUBMENU, false);        
         MenuItem employeeLogout = new MenuItem(employeeMenu, 20, "Uitloggen", MenuActions.LOGOUT, true);

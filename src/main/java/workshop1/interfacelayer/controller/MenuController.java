@@ -15,6 +15,9 @@ import workshop1.interfacelayer.view.MenuView;
  * @author hwkei
  */
 public class MenuController {
+    final int ADMIN = 1;
+    final int MEDEWERKER = 2;
+    final int KLANT = 3;
     
     MenuItem currentMenu;
     
@@ -37,17 +40,17 @@ public class MenuController {
         // Validate the user credentials
         AccountController accountController = new AccountController(new AccountView());
         if (accountController.validateAccount(userName, password)) {
-            String userRole = accountController.getUserRole(userName);
+            int userRole = accountController.getUserRole(userName);
             switch (userRole) {
-                case "admin" : {
+                case ADMIN : {
                     currentMenu = menuView.buildAdminMenu();
                     break;
                 }
-                case "medewerker" : {
+                case MEDEWERKER : {
                     currentMenu = menuView.buildEmployeeMenu();
                     break;                           
                 }
-                case "klant" : {
+                case KLANT : {
                     currentMenu = menuView.buildCustomerMenu();
                     break;
                 }                

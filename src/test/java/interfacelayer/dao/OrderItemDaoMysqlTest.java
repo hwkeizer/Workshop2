@@ -27,7 +27,7 @@ import org.junit.Ignore;
  *
  * @author hwkei
  */
-//@Ignore("Temporary ignore to speed up testing of other DAO's")
+@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class OrderItemDaoMysqlTest {
     
     private final int initialNumberOfOrderItems = 15; // Initial number of products
