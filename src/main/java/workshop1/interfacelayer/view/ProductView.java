@@ -13,7 +13,17 @@ import java.util.Scanner;
  * @author hwkei
  */
 public class ProductView {
-    Scanner input = new Scanner(System.in);
+    Scanner input;
+    
+    // Default public constructor will use System.in
+    public ProductView() {
+        input = new Scanner(System.in);
+    }
+    
+    // Package private constructor can be injected with Scanner for testing
+    ProductView(Scanner input) {
+        this.input = input;
+    }
      
     public void showNewProductScreen() {
         System.out.println("\n\nU gaat een nieuw product aan de database toevoegen.\n\n"
@@ -72,6 +82,7 @@ public class ProductView {
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isValidInt(respons)) {
+            showInvalidRespons();
             printRequestForStockInput();
             respons = input.nextLine();
             if (respons.equals("!")) return null;  // User initiated abort

@@ -11,7 +11,6 @@ import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.ProductDao;
 import workshop1.interfacelayer.view.ProductView;
 import java.math.BigDecimal;
-import workshop1.interfacelayer.view.Validator;
 
 /**
  *
@@ -25,8 +24,7 @@ public class ProductController {
         this.productView = productView;
     }
     
-    public void createProduct() {
-                
+    public void createProduct() {                
         productView.showNewProductScreen();
         
         String name = productView.requestNameInput(); 
