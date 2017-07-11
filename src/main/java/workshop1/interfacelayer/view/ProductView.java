@@ -6,7 +6,9 @@
 package workshop1.interfacelayer.view;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Scanner;
+import workshop1.domain.Product;
 
 /**
  *
@@ -27,6 +29,29 @@ public class ProductView {
                 + "Als u het bestaande product wilt wijzigen kies dan voor 'Wijzigen product'\n"
                 + "Druk op <enter> om door te gaan>");
         input.nextLine();
+    }
+    
+    
+    public void showListOfAllProducts(ArrayList<Product> productList) {
+        System.out.println("\nHieronder volgt een lijst met alle producten.\n");
+        System.out.printf("%-5s%-30s%-10s%-10s\n", "ID", "Naam", "Prijs", "Voorraad");
+        System.out.println("-------------------------------------------------------");
+        
+        int i = 1;
+        for(Product product: productList){
+            String id = String.format("%-5s", i);
+            System.out.println(id + product.toStringNoId());
+            i++;
+        }
+        System.out.println("");
+    }
+    
+    public void showProductToBeDeleted(Product product){
+        System.out.println("\nU heeft aangegeven het volgende product te willen verwijderen uit de database:\n\n");
+        
+        String.format("%-30s%-10s%-10s\n", "Naam", "Prijs", "Voorraad");
+        System.out.println("--------------------------------------------------");
+        System.out.println(product.toStringNoId());
     }
     
     /**
@@ -72,17 +97,50 @@ public class ProductView {
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isValidInt(respons)) {
+            showInvalidRespons();
             printRequestForStockInput();
             respons = input.nextLine();
             if (respons.equals("!")) return null;  // User initiated abort
         }
         return Integer.parseInt(respons);
     }
+    
+    public Integer requestProductIdInput(int productListSize){
+        printRequestForIdInput();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        System.out.println("" + productListSize);
+        while (!Validator.isValidInt(respons) && (Integer.parseInt(respons) <= productListSize)) {
+            showInvalidRespons();
+            printRequestForIdInput();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }
+        
+        //index of product in ArrayList<Product> productList
+        return Integer.parseInt(respons) - 1;
+        
+    }
+    
+    public Integer requestConfirmationToDelete(Product product) {
+        printRequestForConfirmation();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidInt(respons) &&
+                (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
+            showInvalidRespons();
+            printRequestForConfirmation();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }
+        
+        return Integer.parseInt(respons);
+    }
 
     private void showInvalidRespons() {
         System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
     }
-    
+        
     private void printRequestForNameInput() {
         System.out.println("Geef de naam van het product gevolgd door <enter>:");
         System.out.print("> ");
@@ -96,5 +154,20 @@ public class ProductView {
     private void printRequestForStockInput() {
         System.out.println("Geef de voorraad van het product gevolgd door <enter>:");
         System.out.print("> ");
-    }    
+    }
+    
+    private void printRequestForIdInput() {
+        System.out.println("Geef het ID van het product dat u wilt verwijderen gevolgd door <enter>:");
+        System.out.print("> ");
+    }
+
+    private void printRequestForConfirmation() {
+        System.out.println("Wilt u dit product echt verwijderen?");
+        System.out.println("1) Product verwijderen");
+        System.out.println("2) Product NIET verwijderen");
+        System.out.print("> ");
+    }
+
+
+ 
 }

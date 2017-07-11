@@ -7,6 +7,7 @@ package workshop1.interfacelayer.dao;
 
 import workshop1.domain.Product;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -24,4 +25,6 @@ public interface ProductDao {
     Optional<Product> findProductById(int productId);
     
     Optional<Product> findProductByName(String name);
+    
+    public ArrayList<Product> getAllProductsAsList();
 }

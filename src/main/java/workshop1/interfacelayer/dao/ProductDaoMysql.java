@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class ProductDaoMysql implements ProductDao {
     private static final String SQL_INSERT = "INSERT INTO product (name, price, stock) VALUES (?, ?, ?)";
     private static final String SQL_FIND_BY_NAME = "SELECT id, name, price, stock FROM product WHERE name = ?";
     private static final String SQL_FIND_BY_ID = "SELECT id, name, price, stock FROM product WHERE id = ?";
+    private static final String SQL_FIND_ALL = "SELECT id, name, price, stock FROM product";
     private static final String SQL_UPDATE = "UPDATE product SET name=?, price=?, stock=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM product WHERE id = ?";
     
@@ -168,6 +170,25 @@ public class ProductDaoMysql implements ProductDao {
         }
         // nothing found
         return Optional.empty();
+    }
+    
+    @Override
+    public ArrayList<Product> getAllProductsAsList(){
+        ArrayList<Product> productList = new ArrayList<>();
+        
+        try (
+            Connection connection = DatabaseConnection.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL);){
+            
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                productList.add(map(resultSet));
+            }           
+        } catch (SQLException ex) {
+            log.error("SQL error: ", ex);
+        }
+        
+        return productList;
     }
     
     // Helper methode to map the current row of the given ResultSet to a Product instance
