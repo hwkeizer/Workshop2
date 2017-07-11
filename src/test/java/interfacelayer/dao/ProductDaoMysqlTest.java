@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
@@ -206,7 +207,7 @@ public class ProductDaoMysqlTest {
         // Assert we did not find the product
         assertFalse("Non existing product should not be present", optionalProduct.isPresent());
     }
-
+    
     /**
      * Test of findExistingProductById method, of class ProductDaoMysql.
      */
@@ -224,7 +225,7 @@ public class ProductDaoMysqlTest {
         // Assert we found the product and it is the product we expected
         assertTrue("Existing product should be present", optionalProduct.isPresent());
         assertEquals("Existing product should be the expected product",expectedProduct, optionalProduct.get());
-    }
+    }    
     
     /**
      * Test of findNonExistingProductById method, of class ProductDaoMysql.
@@ -243,7 +244,28 @@ public class ProductDaoMysqlTest {
         // Assert we did not find the product
         assertFalse("Non Existing product should not be present", optionalProduct.isPresent());
     }
+    
+        /**
+     * Test of getAllProductsAsList method, of class ProductDaoMysql.
+     */
+    @Test
+    public void testGetAllProductsAsList() {
+        System.out.println("getAllProductsAsList");
+        
+        //declare and get the productlist to be tested
+        ArrayList<Product> productList = new ArrayList<>();
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        productList = productDao.getAllProductsAsList();
+        
 
+        
+        // Assert we found the productList and it is the productList we expected
+        assertEquals("Number of items in the list should equal initial number of products in database", initialNumberOfProducts, productList.size());
+        assertEquals("First product in the list equals first entry in the database", "Goudse belegen kaas" , productList.get(0).getName());
+        assertEquals("First product in the list equals first entry in the database", "14.65" , productList.get(2).getPrice().toString());
+        assertEquals("First product in the list equals first entry in the database", 256 , productList.get(3).getStock());
+
+    }
 
     /**
      * Test of deleteProduct method, of class ProductDaoMysql.

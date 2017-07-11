@@ -111,17 +111,17 @@ public class MenuView {
         employeeMenu.addSubMenu(employeeCustomer);
         employeeMenu.addSubMenu(employeeLogout);
         
-        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 211, "Toevoegen product", MenuActions.CREATE_PRODUCT_BY_EMPLOYEE, true));
-        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 212, "Wijzigen product", MenuActions.UPDATE_PRODUCT_BY_EMPLOYEE, true));
-        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 213, "Verwijderen product", MenuActions.DELETE_PRODUCT_BY_EMPLOYEE, true));
+        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 211, "Toevoegen product", MenuActions.CREATE_PRODUCT, true));
+        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 212, "Wijzigen product", MenuActions.UPDATE_PRODUCT, true));
+        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 213, "Verwijderen product", MenuActions.DELETE_PRODUCT, true));
         employeeProduct.addSubMenu(new MenuItem(employeeProduct, 219, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
-        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 210, "Naar hoofdscherm", MenuActions.MAIN_SCREEN_EMPLOYEE, false));
+        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 210, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         
         employeeOrder.addSubMenu(new MenuItem(employeeProduct, 229, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
-        employeeOrder.addSubMenu(new MenuItem(employeeProduct, 220, "Naar hoofdscherm", MenuActions.MAIN_SCREEN_EMPLOYEE, false));
+        employeeOrder.addSubMenu(new MenuItem(employeeProduct, 220, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         
         employeeCustomer.addSubMenu(new MenuItem(employeeProduct, 239, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
-        employeeCustomer.addSubMenu(new MenuItem(employeeProduct, 230, "Naar hoofdscherm", MenuActions.MAIN_SCREEN_EMPLOYEE, false));
+        employeeCustomer.addSubMenu(new MenuItem(employeeProduct, 230, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         return employeeMenu;
     }
     

@@ -88,7 +88,7 @@ public class MenuController {
                     currentMenu = currentMenu.getParent().getParent();
                     break;
                 }
-                case MAIN_SCREEN_EMPLOYEE : {
+                case MAIN_SCREEN : {
                     currentMenu = currentMenu.getMainScreen();
                     break;
                 }
