@@ -19,14 +19,17 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import org.junit.Ignore;
 
 
 /**
  *
  * @author thoma
  */
-//@Ignore("Temporary ignore to speed up testing of other DAO's")
+@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class AccountDaoMysqlTest {
     
     private final int initialNumberOfAccounts = 6; // Initial number of accounts
@@ -339,4 +342,39 @@ public class AccountDaoMysqlTest {
             System.out.println("SQL Exception: " + ex.getMessage());
         }     
     }
+    
+    /**
+     * Test of getAllAccountTypesAsList method, of class AccountDaoMysql.
+     */
+    @Test
+    public void testGetAllAccountTypesAsList() {
+        System.out.println("getAllAccountTypesAsList");
+        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        List<String> expectedAccountTypes = new ArrayList<>();
+        expectedAccountTypes.add("admin");
+        expectedAccountTypes.add("medewerker");
+        expectedAccountTypes.add("klant");        
+        List<String> allAccountTypes = accountDao.getAllAccountTypesAsList();
+        assertEquals("All AccountTypes should be as expected", expectedAccountTypes, allAccountTypes);
+        
+    }
+    
+    /**
+     * Test of getAllAccountsAsList method, of class AccountDaoMysql.
+     */
+    @Test
+    public void testGetAllAccountsAsList() {
+        System.out.println("getAllAccountsAsList");
+        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        List<Account> expectedAccounts = new ArrayList<>();
+        expectedAccounts.add(new Account(1,"piet","welkom",1));
+        expectedAccounts.add(new Account(2,"klaas","welkom",2));
+        expectedAccounts.add(new Account(3,"jan","welkom",3));
+        expectedAccounts.add(new Account(4,"fred","geheim",3));
+        expectedAccounts.add(new Account(5,"joost","welkom",3));
+        expectedAccounts.add(new Account(6,"jaap","welkom",3));
+        List<Account> allAccounts = accountDao.getAllAccountsAsList();
+        assertEquals("All Accounts should be as expected", expectedAccounts, allAccounts);
+        System.out.println(allAccounts);
+    }        
 }

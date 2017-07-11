@@ -11,6 +11,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,8 @@ public class AccountDaoMysql implements AccountDao {
     private static final String SQL_FIND_BY_ID = "SELECT id, username, password, account_type_id FROM account WHERE id = ?";
     private static final String SQL_UPDATE = "UPDATE account SET username=?, password=?, account_type_id=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM account WHERE id = ?";
+    private static final String SQL_LIST_ALL_ACCOUNTTYPES = "SELECT `type` FROM `account_type`";
+    private static final String SQL_LIST_ALL_ACCOUNTS = "SELECT `id`,`username`,`password`,`account_type_id` FROM `account`";
 
     @Override
     public void insertAccount(Account account) throws DuplicateAccountException {
@@ -156,6 +161,42 @@ public class AccountDaoMysql implements AccountDao {
         String password = resultSet.getString("password");
         int accountType = resultSet.getInt("account_type_id");
         return new Account(id, username, password, accountType);
+    }
+
+    @Override
+    public List<String> getAllAccountTypesAsList() {
+        List<String> allAccountTypes = new ArrayList<>();
+        try {
+            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();            
+            ResultSet resultSet = statement.executeQuery(SQL_LIST_ALL_ACCOUNTTYPES);            
+            while (resultSet.next()) {
+                allAccountTypes.add(resultSet.getString(1));
+            }
+        } catch (SQLException ex) {
+            log.error("SQL error: ", ex);
+        }
+        return allAccountTypes;
+    }
+
+    @Override
+    public List<Account> getAllAccountsAsList() {
+        List<Account> allAccounts = new ArrayList<>();
+        try {
+            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();            
+            ResultSet resultSet = statement.executeQuery(SQL_LIST_ALL_ACCOUNTS);            
+            while (resultSet.next()) {
+                allAccounts.add(new Account(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getInt(4)));
+            }
+        } catch (SQLException ex) {
+            log.error("SQL error: ", ex);
+        }
+        return allAccounts;
     }
   
 }

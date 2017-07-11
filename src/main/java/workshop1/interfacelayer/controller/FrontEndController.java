@@ -47,6 +47,12 @@ public class FrontEndController {
                     productController.deleteProduct();
                     break;
                 }
+                case CREATE_ACCOUNT : {
+                    accountController.createAccount();
+                }
+                case DELETE_ACCOUNT : {
+                    accountController.deleteAccount();
+                }
             }
             currentAction = menuController.getMenuAction() ;
         }

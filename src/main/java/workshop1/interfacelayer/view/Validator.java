@@ -52,6 +52,23 @@ public class Validator {
         return true;
     }
     
+    /**
+     * Validates if the given string is a valid positive int
+     * A valid positive int is:
+     * - non-negative Integer 
+     * @param option
+     * @return 
+     */
+    public static boolean isPositiveInteger(String option) {
+        Integer intOption;
+        try {
+            intOption = Integer.parseInt(option);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return (intOption >= 0);
+    }
+    
     public static boolean isValidListIndex(int listSize, String respons) {
         int responsInt;
         try {
