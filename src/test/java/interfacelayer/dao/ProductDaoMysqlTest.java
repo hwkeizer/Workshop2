@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
@@ -199,7 +200,7 @@ public class ProductDaoMysqlTest {
         System.out.println("getAllProductsAsList");
         
         //declare and get the productlist to be tested
-        ArrayList<Product> productList = new ArrayList<>();
+        List<Product> productList = new ArrayList<>();
         ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
         productList = productDao.getAllProductsAsList();
         

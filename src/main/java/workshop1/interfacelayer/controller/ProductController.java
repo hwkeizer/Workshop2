@@ -54,21 +54,18 @@ public class ProductController {
     
     public void deleteProduct() {
         //Prompt for which product to delete
-        ArrayList<Product> productList = listAllProducts();
+        List<Product> productList = listAllProducts();
         int productListSize = productList.size();
-        log.debug("productListSize is " + productListSize);
-        Integer index = productView.requestProductIdInput(productListSize);
-        if (index == null) return;
-        int id = productList.get(index).getId();
         
-        //Retreive the product to delete from the database
+        Integer index = productView.requestProductIdToDeleteInput(productListSize);
+        if (index == null) return;
+        
+        Product product = productList.get(index);
         ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
-        Optional<Product> optionalProduct = productDao.findProductById(id);
-        Product product = optionalProduct.get();
         
         //Promp for confirmation if this is indeed the product to delete
         productView.showProductToBeDeleted(product);
-        Integer confirmed = productView.requestConfirmationToDelete(product);
+        Integer confirmed = productView.requestConfirmationToDelete();
         if (confirmed == null || confirmed == 2){
             return;
         }
@@ -76,23 +73,60 @@ public class ProductController {
             productDao.deleteProduct(product);
         }
     }
+            
+    public void updateProduct() {
+        //Prompt for which product to update
+        List<Product> productList = listAllProducts();
+        int productListSize = productList.size();
+        
+        Integer index = productView.requestProductIdToUpdateInput(productListSize);
+        if (index == null) return;
+        
+        Product productBeforeUpdate = productList.get(index);
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        
+        productView.showProductToBeUpdated(productBeforeUpdate);
+        
+        int iD = productBeforeUpdate.getId();
+        String newName = productView.requestNewNameInput(); 
+        if (newName == null) {
+            newName = productBeforeUpdate.getName();
+        } 
+        BigDecimal newPrice = productView.requestNewPriceInput();
+        if (newPrice == null){
+            newPrice = productBeforeUpdate.getPrice();
+        } 
+        Integer newStock = productView.requestNewStockInput();
+        if (newStock == null){
+            newStock = productBeforeUpdate.getStock();
+        }
+
+        Product productAfterUpdate = new Product(iD, newName, newPrice, newStock);
+        
+        
+        //Promp for confirmation of the selected update
+        productView.showProductUpdateChanges(productBeforeUpdate, productAfterUpdate);
+        Integer confirmed = productView.requestConfirmationToUpdate();
+        if (confirmed == null || confirmed == 2){
+            return;
+        }
+        else {
+            productDao.updateProduct(productAfterUpdate);
+        }
+    }
+    
+    public void searchProduct() {
+    
+    }
     
     //returntype the list of products, required for verification of which product to delete
-    public ArrayList<Product> listAllProducts() {
-        ArrayList<Product> productList;
+    public List<Product> listAllProducts() {
+        List<Product> productList;
         ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
         productList = productDao.getAllProductsAsList();
         
         productView.showListOfAllProducts(productList);
         
         return productList;
-    }
-    
-    public void updateProduct() {
-    
-    }
-    
-    public void searchProduct() {
-    
     }
 }
