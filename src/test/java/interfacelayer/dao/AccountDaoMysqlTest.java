@@ -132,7 +132,7 @@ public class AccountDaoMysqlTest {
         String searchString = expectedAccount.getUsername();
         
         AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
-        Optional<Account> optionalAccount = accountDao.findAccountByUsername(searchString);
+        Optional<Account> optionalAccount = accountDao.findAccountByUserName(searchString);
         
         // Assert we found the account and it is the account we expected
         assertTrue("Existing Account should be present", optionalAccount.isPresent());
@@ -151,7 +151,7 @@ public class AccountDaoMysqlTest {
         String searchString = expectedAccount.getUsername();
         
         AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
-        Optional<Account> optionalAccount = accountDao.findAccountByUsername(searchString);
+        Optional<Account> optionalAccount = accountDao.findAccountByUserName(searchString);
         
         // Assert we did not find the account
         assertFalse("Non existing Account should not be present", optionalAccount.isPresent());

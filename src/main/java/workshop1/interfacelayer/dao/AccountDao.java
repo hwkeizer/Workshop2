@@ -23,7 +23,7 @@ public interface AccountDao {
     
     Optional<Account> findAccountById(int AccountId);
     
-    Optional<Account> findAccountByUsername(String userName);
+    Optional<Account> findAccountByUserName(String userName);
     
     List<String> getAllAccountTypesAsList();
     

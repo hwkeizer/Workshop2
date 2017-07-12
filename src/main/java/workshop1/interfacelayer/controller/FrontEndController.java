@@ -53,6 +53,9 @@ public class FrontEndController {
                 case DELETE_ACCOUNT : {
                     accountController.deleteAccount();
                 }
+                case CHANGE_OWN_PASSWORD : {
+                    accountController.changeOwnPassword(menuController.getLoggedInUserName());
+                }
             }
             currentAction = menuController.getMenuAction() ;
         }

@@ -84,4 +84,14 @@ public class Validator {
             return false;
         }
     }
+    
+    /**
+     * Validates if the given string is a valid password
+     * @param password
+     * @return 
+     */
+    public static boolean isValidPassword(String password) {
+        //TODO: moet nog geimplementeerd worden
+        return true;
+    }
 }

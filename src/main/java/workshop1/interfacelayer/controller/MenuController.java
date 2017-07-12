@@ -29,7 +29,6 @@ public class MenuController {
     
     public MenuController(MenuView menuView) {
         this.menuView = menuView;
-        initMenu();
     }
     
     public boolean login() {
@@ -110,7 +109,9 @@ public class MenuController {
     public void logout() {
         menuView.showLogoutMessage();
     }
-    
-    private void initMenu() {
+
+    public String getLoggedInUserName() {
+        return userName;
     }
+    
 }

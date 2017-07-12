@@ -137,7 +137,7 @@ public class AccountDaoMysql implements AccountDao {
      * @return Optional<Account>
      */
     @Override
-    public Optional<Account> findAccountByUsername(String username) {
+    public Optional<Account> findAccountByUserName(String username) {
             try (
             Connection connection = DatabaseConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_NAME);){

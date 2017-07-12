@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import workshop1.interfacelayer.dao.AccountDao;
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.DuplicateAccountException;
+import workshop1.interfacelayer.view.Validator;
 
 /**
  *
@@ -50,6 +51,26 @@ public class AccountController {
     
     public void changePassword() {}
     
+    public void changeOwnPassword(String userName) {
+        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
+        if (!optionalAccount.isPresent()) {
+            log.error("Gebruiker {} niet gevonden in de database!", userName);
+            return;
+        }
+        account = optionalAccount.get();
+        String oldPassword = accountView.requestOldPasswordInput();
+        if (validateAccount(userName, oldPassword)) {
+            String newPassword = accountView.requestNewPasswordInput();
+            if (newPassword != null && Validator.isValidPassword(newPassword)) {
+                account.setPassword(newPassword);
+                accountDao.updateAccount(account);
+            }
+        } else {
+            accountView.showInvalidOldPassword();
+        }
+    }
+    
     public void deleteAccount() {
         //Prompt for which account to delete
         List<Account> accountList = listAllAccounts();
@@ -76,14 +97,14 @@ public class AccountController {
         
     public boolean validateAccount(String userName, String password) {
         AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
-        Optional<Account> optionalAccount = accountDao.findAccountByUsername(userName);
+        Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
         if (!optionalAccount.isPresent()) return false;
         return optionalAccount.get().getPassword().equals(password);
     }
     
     public Integer getUserRole(String userName) {
         AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
-        Optional<Account> optionalAccount = accountDao.findAccountByUsername(userName);
+        Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
         if (optionalAccount.isPresent()) account = optionalAccount.get();
         return account.getAccountTypeId();
     }

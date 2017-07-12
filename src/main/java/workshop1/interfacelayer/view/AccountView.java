@@ -35,6 +35,12 @@ public class AccountView {
         input.nextLine();
     }
     
+    public void showInvalidOldPassword() {
+        System.out.println("\nHet oude wachtwoord is onjuist! De wachtwoordwijziging wordt afgebroken.");
+        System.out.println("Druk op <enter> om terug te gaan naar het menu>\"");
+        input.nextLine();
+    }
+    
     /**
      * Returns a valid username or null if the user aborts
      * @return 
@@ -63,6 +69,46 @@ public class AccountView {
         while (!Validator.isValidNameString(respons)) {
             showInvalidRespons();
             printRequestForPasswordInput();            
+            respons = input.nextLine();
+            if (respons.equals("!")) return null; // User initiated abort
+        }
+        return respons;
+    }
+    
+    /**
+     * Returns a valid old password or null if the user aborts
+     * @return 
+     */
+    public String requestOldPasswordInput() {        
+        printRequestForOldPasswordInput();
+        String respons =  input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidNameString(respons)) {
+            showInvalidRespons();
+            printRequestForOldPasswordInput();            
+            respons = input.nextLine();
+            if (respons.equals("!")) return null; // User initiated abort
+        }
+        return respons;
+    }
+    
+    /**
+     * Returns a valid new password or null if the user aborts
+     * @return 
+     */
+    public String requestNewPasswordInput() {        
+        printRequestForNewPasswordInput();
+        String respons =  input.nextLine();
+        printRepeatRequestForNewPasswordInput();
+        String responsCheck = input.nextLine();
+        if (!respons.equals(responsCheck)) {
+            printPasswordsNotEqual();
+            return null;
+        }
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidNameString(respons)) {
+            showInvalidRespons();
+            printRequestForOldPasswordInput();            
             respons = input.nextLine();
             if (respons.equals("!")) return null; // User initiated abort
         }
@@ -155,12 +201,33 @@ public class AccountView {
         
     
     private void printRequestForUsernameInput() {
-        System.out.println("Geef de gebruikersnaam gevolgd door <enter>:");
+        System.out.println("Geef uw gebruikersnaam gevolgd door <enter>:");
         System.out.print("> ");
     }
     
     private void printRequestForPasswordInput() {
-        System.out.println("Geef het wachtwoord gevolgd door <enter>:");
+        System.out.println("Geef uw wachtwoord gevolgd door <enter>:");
+        System.out.print("> ");
+    }
+    
+    private void printRequestForOldPasswordInput() {
+        System.out.println("Geef uw oude wachtwoord gevolgd door <enter>:");
+        System.out.print("> ");
+    }
+    
+    private void printRequestForNewPasswordInput() {
+        System.out.println("Geef uw nieuwe wachtwoord gevolgd door <enter>:");
+        System.out.print("> ");
+    }
+    
+    private void printPasswordsNotEqual() {
+        System.out.println("De nieuwe wachtwoorden komen niet overeen! Wachtwoord is niet gewijzigd.");
+        System.out.print("Druk op <enter> om door te gaan");
+        input.nextLine();
+    }
+    
+    private void printRepeatRequestForNewPasswordInput() {
+        System.out.println("Geef ter bevestiging nogmaals uw nieuwe wachtwoord gevolgd door <enter>:");
         System.out.print("> ");
     }
     
