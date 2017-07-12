@@ -67,11 +67,11 @@ public class Product {
     
     @Override
     public String toString(){
-        return String.format("%-5d%-30s%-10.2f%-10d", this.getId(), this.getName(), this.getPrice(), this.getStock());
+        return String.format("%-5d%-30s%10.2f%10d", this.getId(), this.getName(), this.getPrice(), this.getStock());
     }
     
     public String toStringNoId(){
-        return String.format("%-30s%-10.2f%-10d", this.getName(), this.getPrice(), this.getStock());
+        return String.format("%-30s%10.2f%10d", this.getName(), this.getPrice(), this.getStock());
     }
 
     @Override

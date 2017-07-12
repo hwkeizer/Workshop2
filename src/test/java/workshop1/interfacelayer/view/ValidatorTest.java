@@ -126,4 +126,86 @@ public class ValidatorTest {
         result = Validator.isPositiveInteger(option);
         assertFalse("Invalid formatted menuoption string should return false", result);
     }
+    
+    /**
+     * Test of isValidListIndex method, of class Validator.
+     */
+    @Test
+    public void testIsValidListIndex() {
+        System.out.println("isValidListIndex");
+        String listIndex = "4";
+        int listSize = 5;
+        boolean result = Validator.isValidListIndex(listSize, listIndex);
+        assertTrue("Valid integer string should return true", result);
+    }
+    
+    /**
+     * Test of isInvalidListIndex method, of class Validator.
+     */
+    @Test
+    public void testIsInvalidListIndex() {
+        System.out.println("isInvalidListIndex");
+        String listIndex;
+        int listSize = 5;        
+        
+        //case listIndex larger than listSize
+        listIndex = "6";
+        boolean result = Validator.isValidListIndex(listSize, listIndex);
+        assertFalse("Index outside listSize should return false", result);
+        
+        //case listIndex smaller than listSize
+        listIndex = "0";
+        result = Validator.isValidListIndex(listSize, listIndex);
+        assertFalse("Index outside listSize should return false", result);
+        
+        //case listIndex not a number
+        listIndex = "1AB2";
+        result = Validator.isValidListIndex(listSize, listIndex);
+        assertFalse("Index outside listSize should return false", result);
+    }
+    
+    /**
+     * Test of isValidConfirmation method, of class Validator.
+     */
+    @Test
+    public void testIsValidConfirmation() {
+        System.out.println("isValidConfirmation");
+        String choice;
+                
+        choice = "1";
+        boolean result = Validator.isValidConfirmation(choice);
+        assertTrue("Valid integer string should return true", result);
+        
+        choice = "2";
+        result = Validator.isValidConfirmation(choice);
+        assertTrue("Valid integer string should return true", result);
+    }
+    
+    /**
+     * Test of isInvalidConfirmation method, of class Validator.
+     */
+    @Test
+    public void testIsInvalidConfirmation() {
+        System.out.println("isInvalidConfirmation");
+        String choice;
+             
+        
+        //case choice larger than listSize
+        choice = "6";
+        boolean result = Validator.isValidConfirmation(choice);
+        assertFalse("Index outside listSize should return false", result);
+        
+        //case choice smaller than listSize
+        choice = "0";
+        result = Validator.isValidConfirmation(choice);
+        assertFalse("Index outside listSize should return false", result);
+        
+        //case choice not a number
+        choice = "1AB2";
+        result = Validator.isValidConfirmation(choice);
+        assertFalse("Index outside listSize should return false", result);
+    }
+    
+    
+    
 }

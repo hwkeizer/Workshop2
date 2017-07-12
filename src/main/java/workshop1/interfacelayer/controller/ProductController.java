@@ -26,6 +26,7 @@ public class ProductController {
     
     private final ProductView productView;
     private Product product;
+    private ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
     
     public ProductController(ProductView productView) {
         this.productView = productView;
@@ -43,11 +44,17 @@ public class ProductController {
 
         // Prepare the product with the validated values and add it to the database
         product = new Product(name, price, stock);
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
-        try {
-            productDao.insertProduct(product);
-        } catch(DuplicateProductException e) {
-            productView.showDuplicateProductError();
+        productView.showProductToBeCreated(product);
+        Integer confirmed = productView.requestConfirmationToCreate();
+        if (confirmed == null || confirmed == 2){
+            return;
+        }
+        else {
+            try {
+                productDao.insertProduct(product);
+            } catch(DuplicateProductException e) {
+                productView.showDuplicateProductError();
+            }
         }
     }
     
@@ -59,8 +66,7 @@ public class ProductController {
         Integer index = productView.requestProductIdToDeleteInput(productListSize);
         if (index == null) return;
         
-        Product product = productList.get(index);
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        product = productList.get(index);
         
         //Promp for confirmation if this is indeed the product to delete
         productView.showProductToBeDeleted(product);
@@ -82,7 +88,6 @@ public class ProductController {
         if (index == null) return;
         
         Product productBeforeUpdate = productList.get(index);
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
         
         productView.showProductToBeUpdated(productBeforeUpdate);
         

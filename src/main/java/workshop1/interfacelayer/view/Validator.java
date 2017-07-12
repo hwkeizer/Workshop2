@@ -30,12 +30,10 @@ public class Validator {
      * @return 
      */
     public static boolean isValidBigDecimal(String price) {
-        try {
-            new BigDecimal(price);
-        } catch (NumberFormatException e) {
+        if(price.matches("\\d{0,10}[.]\\d{0,2}") || price.matches("\\d{0,10}"))
+            return true;
+        else
             return false;
-        }
-        return true;
     }
 
     /**
@@ -78,6 +76,22 @@ public class Validator {
         }
         
         if(responsInt <= listSize && responsInt >= 1){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    public static boolean isValidConfirmation(String respons) {
+        int responsInt;
+        try {
+            responsInt = Integer.parseInt(respons);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        
+        if(responsInt <= 2 && responsInt >= 1){
             return true;
         }
         else {
