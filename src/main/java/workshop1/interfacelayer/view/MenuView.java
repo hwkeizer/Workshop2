@@ -24,7 +24,7 @@ public class MenuView {
         System.out.println("");
         System.out.println("");
         System.out.println("Geef uw gebruikersnaam en wachtwoord om in te loggen. ");
-        System.out.println("Type een ! en enter om af te breken");
+        System.out.println("Type een ! en <enter> om af te breken");
     }
     
     public void showSuccesfulLogin(String userName) {
@@ -32,7 +32,9 @@ public class MenuView {
     }
     
     public void showUnsuccesfulLogin() {
-        System.out.println("Uw gebruikersnaam en/of wachtwoord klopt niet\n");
+        System.out.println("\nUw gebruikersnaam en/of wachtwoord klopt niet!\n");
+        System.out.println("Toets op <enter> en probeer het astublieft opnieuw.");
+        input.nextLine();
     }
     
     public void showLogoutMessage() {
@@ -44,11 +46,11 @@ public class MenuView {
         showDivider();
         showSuccesfulLogin(userName);
         System.out.println("U bent nu in: " + name + "\n");
-        System.out.println("Kies de gewenste menu optie en druk op enter\n");
+        System.out.println("Kies de gewenste menu optie en druk op <enter>\n");
     }
     
     public void showInvalidMenuChoice() {
-        System.out.println("\nOngeldige waarde, druk op enter en probeer het astublieft opnieuw.");
+        System.out.println("\nOngeldige waarde, druk op <enter> en probeer het astublieft opnieuw.");
         input.nextLine();
     }
     

@@ -112,9 +112,9 @@ public class AccountView {
     }
     
     public void showAccountToBeDeleted(Account account){
-        System.out.println("\nU heeft aangegeven het volgende product te willen verwijderen uit de database:\n\n");
+        System.out.println("\nU heeft aangegeven het volgende account te willen verwijderen uit de database:\n\n");
         
-        String.format("%-20s%-20s%-5s\n", "gebruikersnaam", "wachtwoord", "Account type");
+        System.out.printf("%-20s%-20s%-5s\n", "gebruikersnaam", "wachtwoord", "Account type");
         System.out.println("--------------------------------------------------");
         System.out.println(account.toStringNoId());
     }
@@ -129,8 +129,7 @@ public class AccountView {
             printRequestForConfirmation();
             respons = input.nextLine();
             if (respons.equals("!")) return null;  // User initiated abort
-        }
-        
+        }        
         return Integer.parseInt(respons);
     }
     

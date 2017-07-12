@@ -5,6 +5,8 @@
  */
 package workshop1.interfacelayer.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import workshop1.interfacelayer.MenuActions;
 import workshop1.interfacelayer.MenuItem;
 import workshop1.interfacelayer.view.AccountView;
@@ -15,6 +17,7 @@ import workshop1.interfacelayer.view.MenuView;
  * @author hwkei
  */
 public class MenuController {
+    private static final Logger log = LoggerFactory.getLogger(MenuController.class);
     final int ADMIN = 1;
     final int MEDEWERKER = 2;
     final int KLANT = 3;
@@ -33,9 +36,9 @@ public class MenuController {
         // Show welcome and get the user credentials
         menuView.showWelcome();
         userName = menuView.requestUserName();
-        if (userName == null) return false;
+        if (userName == null) return false; // User initiated abort
         String password = menuView.requestPassword();
-        if (password == null) return false;
+        if (password == null) return false; // User initiated abort
         
         // Validate the user credentials
         AccountController accountController = new AccountController(new AccountView());
@@ -53,12 +56,15 @@ public class MenuController {
                 case KLANT : {
                     currentMenu = menuView.buildCustomerMenu();
                     break;
-                }                
+                } 
+                default : {
+                    log.error("Onbekende gebruikersrol gevonden bij gebruiker {}!", userName);
+                    return false;
+                }
             }
         } else {
-            // TODO: Maak een lus dat gebruiker opnieuw kan aanloggen in plaats van programma stop
             menuView.showUnsuccesfulLogin();
-            return false;
+            return login(); // keep trying until user aborts
         } 
         return true;
     }    

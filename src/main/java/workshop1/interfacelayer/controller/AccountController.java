@@ -73,13 +73,12 @@ public class AccountController {
             accountDao.deleteAccount(account);
         }
     }
-    
-    
+        
     public boolean validateAccount(String userName, String password) {
         AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
         Optional<Account> optionalAccount = accountDao.findAccountByUsername(userName);
-        if (optionalAccount.isPresent()) account = optionalAccount.get();
-        return account.getPassword().equals(password);
+        if (!optionalAccount.isPresent()) return false;
+        return optionalAccount.get().getPassword().equals(password);
     }
     
     public Integer getUserRole(String userName) {
