@@ -5,6 +5,7 @@
  */
 package workshop1.interfacelayer.dao;
 
+import java.util.List;
 import workshop1.domain.Address;
 import java.util.Optional;
 
@@ -23,4 +24,8 @@ public interface AddressDao {
     Optional<Address> findAddressById(int AddressId);
     
     Optional<Address> findAddressByCustomerId(int customerId);
+    
+    List<String> getAllAddressTypesAsList();
+    
+    List<Address> getAllAddressesAsList();
 }

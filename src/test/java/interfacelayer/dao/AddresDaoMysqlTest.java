@@ -19,6 +19,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.Ignore;
 import org.slf4j.Logger;
@@ -379,6 +381,22 @@ public class AddresDaoMysqlTest {
         } catch (SQLException ex) {
             System.out.println("SQL Exception: " + ex.getMessage());
         }     
+    }
+    
+    /**
+     * Test of getAllAddressTypesAsList method, of class AddressDaoMysql.
+     */
+    @Test
+    public void testGetAllAddressTypesAsList() {
+        System.out.println("getAllAddressTypesAsList");
+        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
+        List<String> expectedAddressTypes = new ArrayList<>();
+        expectedAddressTypes.add("postadres");
+        expectedAddressTypes.add("factuuradres");
+        expectedAddressTypes.add("bezorgadres");        
+        List<String> allAddressTypes = addressDao.getAllAddressTypesAsList();
+        assertEquals("All addresstypes should be as expected", expectedAddressTypes, allAddressTypes);
+        
     }
     
      /**

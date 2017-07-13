@@ -18,10 +18,10 @@ public class Address {
     private String addition;
     private String postalCode;
     private String city;
-    private int customerId;
+    private Integer customerId;
     private int addressTypeId;
 
-    public Address(String streetName, int number, String addition, String postalCode, String city, int customerId, int addressTypeId) {
+    public Address(String streetName, int number, String addition, String postalCode, String city, Integer customerId, int addressTypeId) {
         this.streetName = streetName;
         this.number = number;
         this.addition = addition;
@@ -90,7 +90,7 @@ public class Address {
         this.city = city;
     }
 
-    public int getCustomerId() {
+    public Integer getCustomerId() {
         return customerId;
     }
 
@@ -104,6 +104,17 @@ public class Address {
 
     public void setAddressTypeId(int addressTypeId) {
         this.addressTypeId = addressTypeId;
+    }
+    
+    @Override
+    public String toString(){
+        return String.format("%-5d%-30s%-5d%-8s%-8s%-30s", getId(), getStreetName(), 
+                getNumber(), getAddition(), getPostalCode(), getCity());
+    }
+    
+    public String toStringNoId(){
+        return String.format("%-30s%-5d%-8s%-8s%-30s", getStreetName(), getNumber(), 
+                getAddition(), getPostalCode(), getCity());
     }
     
     @Override

@@ -11,6 +11,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,7 @@ public class AddressDaoMysql implements AddressDao {
     private static final String SQL_INSERT = "INSERT INTO address (street_name, number, addition, postal_code, city, customer_id, address_type_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_FIND_BY_CUSTOMER_ID = "SELECT id, username, password, address_type_id FROM address WHERE username = ?";
     private static final String SQL_FIND_BY_ID = "SELECT * FROM address WHERE id = ?";
+    private static final String SQL_LIST_ALL_ADDRESSTYPES = "SELECT `type` FROM `address_type`";
     private static final String SQL_UPDATE = "UPDATE address SET street_name=?, number=?, addition=?, postal_code=?, city=?, customer_id=?, address_type_id=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM address WHERE id = ?";
 
@@ -155,6 +159,27 @@ public class AddressDaoMysql implements AddressDao {
         return Optional.empty();
     }
     
+        @Override
+    public List<String> getAllAddressTypesAsList() {
+        List<String> allAddressTypes = new ArrayList<>();
+        try {
+            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();            
+            ResultSet resultSet = statement.executeQuery(SQL_LIST_ALL_ADDRESSTYPES);            
+            while (resultSet.next()) {
+                allAddressTypes.add(resultSet.getString(1));
+            }
+        } catch (SQLException ex) {
+            log.error("SQL error: ", ex);
+        }
+        return allAddressTypes;
+    }
+
+    @Override
+    public List<Address> getAllAddressesAsList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     private Address map(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         String streetName = resultSet.getString("street_name");
@@ -165,6 +190,5 @@ public class AddressDaoMysql implements AddressDao {
         int customerId = resultSet.getInt("customer_id");
         int addressTypeId = resultSet.getInt("address_type_id");
         return new Address(id, streetName, number, addition, postalCode, city, customerId, addressTypeId);
-    }
-    
+    }    
 }

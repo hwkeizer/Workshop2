@@ -118,4 +118,15 @@ public class CustomerController {
         customerView.showListOfAllCustomers(customerList);        
         return customerList;
     }
+    
+    Integer selectCustomerId() {
+         //Prompt for which customer to update
+        List<Customer> customerList = listAllCustomers();
+        int customerListSize = customerList.size();
+        
+        Integer index = customerView.requestCustomerId(customerListSize);
+        if (index == null) return null;
+        Customer selectedCustomer = customerList.get(index);
+        return selectedCustomer.getId();
+    }
 }

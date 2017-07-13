@@ -72,7 +72,7 @@ public class CustomerView {
     }
     
     public void showCustomerToBeCreated(Customer customer){
-        System.out.println("\nU heeft aangegeven de volgende customer te willen toevoegen:\n");
+        System.out.println("\nU heeft aangegeven de volgende klant te willen toevoegen:\n");
         
         System.out.printf("%-20s%-15s%-20s\n", "Voornaam", "Tussenvoegsel", "Achternaam");
         System.out.println("--------------------------------------------------");
@@ -264,6 +264,25 @@ public class CustomerView {
             i++;
         }
         System.out.println("");
+    }
+    
+    public Integer requestCustomerId(int customerListSize) {
+        printRequestForIdInput();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidListIndex(customerListSize, respons)) {
+            showInvalidRespons();
+            printRequestForIdInput();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }        
+        //index of product in ArrayList<Product> productList
+        return Integer.parseInt(respons) - 1;
+    }
+    
+    public void printRequestForIdInput() {
+        System.out.println("Selecteer het gewenste klant ID gevolgd door <enter>:");
+        System.out.print("> ");
     }
     
     private void showInvalidRespons() {
