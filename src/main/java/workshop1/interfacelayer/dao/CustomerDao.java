@@ -6,6 +6,7 @@
 package workshop1.interfacelayer.dao;
 
 
+import java.util.List;
 import workshop1.domain.Customer;
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
  */
 public interface CustomerDao {
     
-    void insertCustomer(Customer customer) throws DuplicateCustomerException;
+    void insertCustomer(Customer customer);
     
     void updateCustomer(Customer customer);
     
@@ -24,4 +25,6 @@ public interface CustomerDao {
     Optional<Customer> findCustomerById(int customerId);
     
     Optional<Customer> findCustomerByLastName(String userName);
+    
+    List<Customer> getAllCustomersAsList();
 }

@@ -71,11 +71,11 @@ public class Account {
     
      @Override
     public String toString(){
-        return String.format("%-5d%-20s%-20s%-5d", this.getId(), this.getUsername(), this.getPassword(), this.getAccountTypeId());
+        return String.format("%-5d%-20s%-20s%-5d", this.getId(), this.getUsername(), getPassword(), this.getAccountTypeId());
     }
     
     public String toStringNoId(){
-        return String.format("%-20s%-20s%-5d", this.getUsername(), this.getPassword(), this.getAccountTypeId());
+        return String.format("%-20s%-20s%-5d", this.getUsername(), "********", this.getAccountTypeId());
     }
     
     @Override

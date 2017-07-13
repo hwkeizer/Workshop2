@@ -24,9 +24,18 @@ public class AccountController {
     private static final Logger log = LoggerFactory.getLogger(AccountController.class);   
     private final AccountView accountView;
     private Account account;
-            
+    private AccountDao accountDao;
+    
+    // Public constructor only requires accountView parameter
     public AccountController(AccountView accountView) {
         this.accountView = accountView;
+        accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+    }
+    
+    // Package private constructor can be injected with accountView AND AccountDao for 
+    AccountController(AccountView accountView, AccountDao accountDao) {
+        this.accountView = accountView;
+        this.accountDao = accountDao;
     }
     
     public void createAccount() {
@@ -41,7 +50,6 @@ public class AccountController {
         
         // Prepare the account with the validated values and add it to the database
         account = new Account(name, password, accountType);
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
         try {
             accountDao.insertAccount(account);
         } catch(DuplicateAccountException e) {
@@ -49,10 +57,44 @@ public class AccountController {
         }
     }
     
-    public void changePassword() {}
+    public void updateAccount() {
+        // Prompt for which account to update
+        List<Account> accountList = listAllAccounts();
+        int accountListSize = accountList.size();
+        
+        Integer index = accountView.requestAccountIdToUpdateInput(accountListSize);
+        if (index == null) return;
+        
+        Account accountBeforeUpdate = accountList.get(index);
+        accountView.showAccountToBeUpdated(accountBeforeUpdate);
+        int Id = accountBeforeUpdate.getId();
+        String newName = accountView.requestUpdateUsernameInput();
+        if (newName == null) {
+            newName = accountBeforeUpdate.getUsername();
+        }
+        String newPassword = accountView.requestUpdatePasswordInput();
+        if (newPassword == null) {
+            newPassword = accountBeforeUpdate.getPassword();
+        }
+        Integer newAccountType = accountView.requestUpdateAccountType(getAvailableAccountTypes());
+        if (newAccountType == null) {
+            newAccountType = accountBeforeUpdate.getAccountTypeId();
+        }
+        
+        Account accountAfterUpdate = new Account(Id, newName, newPassword, newAccountType);
+        //Promp for confirmation of the selected update
+        accountView.showAccountUpdateChanges(accountBeforeUpdate, accountAfterUpdate);
+        Integer confirmed = accountView.requestConfirmationToUpdate();
+        if (confirmed == null || confirmed == 2){
+            return;
+        }
+        else {
+            log.debug(accountAfterUpdate.toString());
+            accountDao.updateAccount(accountAfterUpdate);
+        }
+    }
     
     public void changeOwnPassword(String userName) {
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
         Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
         if (!optionalAccount.isPresent()) {
             log.error("Gebruiker {} niet gevonden in de database!", userName);
@@ -81,7 +123,6 @@ public class AccountController {
         int id = accountList.get(index).getId();
         
         //Retreive the account to delete from the database
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
         Optional<Account> optionalAccount = accountDao.findAccountById(id);
         if (optionalAccount.isPresent()) account = optionalAccount.get();
         
@@ -96,27 +137,23 @@ public class AccountController {
     }
         
     public boolean validateAccount(String userName, String password) {
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
         Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
         if (!optionalAccount.isPresent()) return false;
         return optionalAccount.get().getPassword().equals(password);
     }
     
     public Integer getUserRole(String userName) {
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
         Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
         if (optionalAccount.isPresent()) account = optionalAccount.get();
         return account.getAccountTypeId();
     }
     
     public List<String> getAvailableAccountTypes() {
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
         return accountDao.getAllAccountTypesAsList();
     }
     
     public List<Account> listAllAccounts() {
         List<Account> accountList;
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
         accountList = accountDao.getAllAccountsAsList();        
         accountView.showListOfAllAccounts(accountList);        
         return accountList;

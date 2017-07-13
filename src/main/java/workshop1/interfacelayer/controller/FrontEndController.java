@@ -7,6 +7,7 @@ package workshop1.interfacelayer.controller;
 
 import workshop1.interfacelayer.MenuActions;
 import workshop1.interfacelayer.view.AccountView;
+import workshop1.interfacelayer.view.CustomerView;
 import workshop1.interfacelayer.view.MenuView;
 import workshop1.interfacelayer.view.ProductView;
 
@@ -18,11 +19,13 @@ public class FrontEndController {
     private final MenuController menuController;
     private final AccountController accountController;
     private final ProductController productController;
+    private final CustomerController customerController;
     
     public FrontEndController() {
         menuController = new MenuController(new MenuView());
         accountController = new AccountController(new AccountView());
         productController = new ProductController(new ProductView());
+        customerController = new CustomerController(new CustomerView());
     }
     
     public void login() {
@@ -49,12 +52,31 @@ public class FrontEndController {
                 }
                 case CREATE_ACCOUNT : {
                     accountController.createAccount();
+                    break;
+                }
+                case UPDATE_ACCOUNT : {
+                    accountController.updateAccount();
+                    break;
                 }
                 case DELETE_ACCOUNT : {
                     accountController.deleteAccount();
+                    break;
                 }
                 case CHANGE_OWN_PASSWORD : {
                     accountController.changeOwnPassword(menuController.getLoggedInUserName());
+                    break;
+                }
+                case CREATE_CUSTOMER : {
+                    customerController.createCustomer();
+                    break;
+                }
+                case DELETE_CUSTOMER : {
+                    customerController.deleteCustomer();
+                    break;
+                }
+                case UPDATE_CUSTOMER : {
+                    customerController.updateCustomer();
+                    break;
                 }
             }
             currentAction = menuController.getMenuAction() ;
