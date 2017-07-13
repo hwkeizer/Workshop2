@@ -104,8 +104,7 @@ public class ProductView {
         printRequestForCreateConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
-        while (!Validator.isValidInt(respons) &&
-                (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
+        while (!Validator.isValidConfirmation(respons)) {
             showInvalidRespons();
             printRequestForCreateConfirmation();
             respons = input.nextLine();
@@ -153,8 +152,7 @@ public class ProductView {
         printRequestForDeleteConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
-        while (!Validator.isValidInt(respons) &&
-                (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
+        while (!Validator.isValidConfirmation(respons)) {
             showInvalidRespons();
             printRequestForDeleteConfirmation();
             respons = input.nextLine();

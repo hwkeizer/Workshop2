@@ -7,6 +7,7 @@ package workshop1.interfacelayer.controller;
 
 import workshop1.interfacelayer.MenuActions;
 import workshop1.interfacelayer.view.AccountView;
+import workshop1.interfacelayer.view.AddressView;
 import workshop1.interfacelayer.view.CustomerView;
 import workshop1.interfacelayer.view.MenuView;
 import workshop1.interfacelayer.view.OrderView;
@@ -22,6 +23,8 @@ public class FrontEndController {
     private final ProductController productController;
     private final CustomerController customerController;
     private final OrderController orderController;
+    private final AddressController addressController;
+
     
     public FrontEndController() {
         menuController = new MenuController(new MenuView());
@@ -29,6 +32,7 @@ public class FrontEndController {
         productController = new ProductController(new ProductView());
         customerController = new CustomerController(new CustomerView());
         orderController = new OrderController(new OrderView());
+        addressController = new AddressController(new AddressView());
     }
     
     public void login() {
@@ -93,7 +97,7 @@ public class FrontEndController {
                     orderController.deleteOrder();
                     break;
                 }
-                case UPDATE_ORDER_EMPLOYEE : {
+                case UPDATE_ORDER_CUSTOMER : {
                     orderController.updateOrder();
                     break;
                 }
@@ -101,7 +105,9 @@ public class FrontEndController {
                     orderController.setOrderStatus();
                     break;
                 }
-                
+                case CREATE_ADDRESS : {
+                    addressController.createAddress(customerController);
+                }
             }
             currentAction = menuController.getMenuAction() ;
         }
