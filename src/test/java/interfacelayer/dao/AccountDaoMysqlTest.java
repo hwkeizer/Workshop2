@@ -97,29 +97,29 @@ public class AccountDaoMysqlTest {
      * Test of insertAccount method, of class AccountDaoMysql.
      * Test if inserting existing account will throw Exception
      */
-//    @Test
-//    public void testInsertExistingAccount() {
-//        System.out.println("insertExistingAccount");
-//        
-//        // Prepare a account to add to the database        
-//        Integer id = 3;
-//        String testUsername = "jan";
-//        String testPassword = "welkom";
-//        Integer testAccountTypeId = 3;
-//        Account testAccount = new Account(id, testUsername, testPassword, testAccountTypeId);
-//        
-//        // Add the prepared account to the database
-//        try {
-//            AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
-//            accountDao.insertAccount(testAccount);
-//            fail("Adding an existing account should have thrown a DuplicateAccountException");
-//        } catch (DuplicateAccountException ex) {
-//            // Assert expected exception
-//            assertTrue("Exception DuplicateAccountException should be thrown", ex instanceof DuplicateAccountException);
-//            assertEquals("Exception message should be as expected.", "Account with name = " + testAccount.getUsername() + " is already in the database", ex.getMessage());
-//        }       
-//    }
-//
+    @Test
+    public void testInsertExistingAccount() {
+        System.out.println("insertExistingAccount");
+        
+        // Prepare a account to add to the database        
+        Integer id = 3;
+        String testUsername = "jan";
+        String testPassword = "welkom";
+        Integer testAccountTypeId = 3;
+        Account testAccount = new Account(id, testUsername, testPassword, testAccountTypeId);
+        
+        // Add the prepared account to the database
+        try {
+            AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+            accountDao.insertAccount(testAccount);
+            fail("Adding an existing account should have thrown a DuplicateAccountException");
+        } catch (DuplicateAccountException ex) {
+            // Assert expected exception
+            assertTrue("Exception DuplicateAccountException should be thrown", ex instanceof DuplicateAccountException);
+            assertEquals("Exception message should be as expected.", "Account with name = " + testAccount.getUsername() + " is already in the database", ex.getMessage());
+        }       
+    }
+
     /**
      * Test of findExistingAccountById method, of class AccountDaoMysql.
      */

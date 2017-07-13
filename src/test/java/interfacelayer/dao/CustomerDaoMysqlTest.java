@@ -5,7 +5,6 @@
  */
 package interfacelayer.dao;
 
-import workshop1.interfacelayer.dao.DuplicateCustomerException;
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.CustomerDao;
 import workshop1.domain.Customer;
@@ -19,6 +18,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.Ignore;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoma
  */
-@Ignore("Temporary ignore to speed up testing of other DAO's")
+//@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class CustomerDaoMysqlTest {
     
     private static final Logger log = LoggerFactory.getLogger(CustomerDaoMysqlTest.class);
@@ -52,7 +53,7 @@ public class CustomerDaoMysqlTest {
      * Test of insertCustomer method, of class CustomerDaoMysql.
      */
     @Test
-    public void testInsertCustomer() throws DuplicateCustomerException {
+    public void testInsertCustomer() {
         
         System.out.println("insertCustomer");
         
@@ -391,4 +392,22 @@ public class CustomerDaoMysqlTest {
             System.out.println("SQL Exception: " + ex.getMessage());
         }     
     }
+    
+    /**
+     * Test of getAllCustomersAsList method, of class CustomerDaoMysql.
+     */
+    @Test
+    public void testGetAllCustomersAsList() {
+        System.out.println("getAllCustomersAsList");
+        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        List<Customer> expectedCustomers = new ArrayList<>();
+        expectedCustomers.add(new Customer(1,"Piet","Pietersen",null,1));
+        expectedCustomers.add(new Customer(2,"Klaas","Klaassen",null,2));
+        expectedCustomers.add(new Customer(3,"Jan","Jansen",null,3));
+        expectedCustomers.add(new Customer(4,"Fred","Boomsma",null,4));
+        expectedCustomers.add(new Customer(5,"Joost","Snel",null,5));
+        List<Customer> allCustomers = customerDao.getAllCustomersAsList();
+        assertEquals("All Customers should be as expected", expectedCustomers, allCustomers);
+        System.out.println(allCustomers);
+    }        
 }

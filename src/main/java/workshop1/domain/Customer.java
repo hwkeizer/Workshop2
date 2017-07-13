@@ -5,9 +5,6 @@
  */
 package workshop1.domain;
 
-import workshop1.interfacelayer.dao.DuplicateCustomerException;
-import workshop1.interfacelayer.dao.CustomerDao;
-import workshop1.interfacelayer.dao.DaoFactory;
 import java.util.Objects;
 
 /**
@@ -19,13 +16,13 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String lastNamePrefix;
-    private int accountId;
+    private Integer accountId;
     
     public Customer(){
         
     }
 
-    public Customer(String firstName, String lastName, String lastNamePrefix, int accountId) {
+    public Customer(String firstName, String lastName, String lastNamePrefix, Integer accountId) {
         this.id = -1;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,7 +30,7 @@ public class Customer {
         this.accountId = accountId;
     }
     
-    public Customer(int id, String firstName, String lastName, String lastNamePrefix, int accountId) {
+    public Customer(int id, String firstName, String lastName, String lastNamePrefix, Integer accountId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -73,12 +70,21 @@ public class Customer {
         this.lastNamePrefix = lastNamePrefix;
     }
 
-    public int getAccountId() {
+    public Integer getAccountId() {
         return accountId;
     }
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
+    }
+    
+    @Override
+    public String toString(){
+        return String.format("%-5d%-20s%-15s%-20s", getId(), getFirstName(), getLastNamePrefix(), getLastName());
+    }
+    
+    public String toStringNoId(){
+        return String.format("%-20s%-15s%-20s", getFirstName(), getLastNamePrefix(), getLastName());
     }
     
     @Override

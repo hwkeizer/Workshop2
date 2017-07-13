@@ -21,11 +21,20 @@ public class AccountView {
         input = new Scanner(System.in);
     }
     
+    // Package private constructor can be injected with Scanner for testing
+    AccountView(Scanner input) {
+        this.input = input;
+    }
+    
     public void showNewAccountScreen() {
         System.out.println("\n\nU gaat een nieuw account aan de database toevoegen.\n\n"
                 + "Vul de gevraagde gegevens in. Als u een uitroepteken invult\n"
                 + "wordt het toevoegen van een nieuw account afgebroken en gaat u terug\n"
                 + "naar het menu. Al ingevulde gegevens worden dan niet bewaard!\n\n ");
+    }
+    
+    public void showChangePasswordScreen() {
+        System.out.println("\nU wilt een wachtwoord wijzigen van een account");
     }
     
     public void showDuplicateAccountError() {
@@ -41,6 +50,60 @@ public class AccountView {
         input.nextLine();
     }
     
+    public Integer requestAccountIdToUpdateInput(int accountListSize) {
+        printRequestForIdToUpdateInput();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidListIndex(accountListSize, respons)) {
+            printInvalidRespons();
+            printRequestForIdToUpdateInput();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }        
+        //index of product in ArrayList<Product> productList
+        return Integer.parseInt(respons) - 1;
+    }
+    
+    public void showAccountToBeUpdated(Account account){
+        System.out.println("\nU heeft aangegeven het volgende account te willen wijzigen:\n\n");
+        System.out.printf("%-20s%-20s%-5s\n", "gebruikersnaam", "wachtwoord", "Account type");
+        System.out.println("--------------------------------------------------");
+        System.out.println(account.toStringNoId());        
+        System.out.println("\n\nHierna kunt u de gebruikersnaam, het wachtwoord of het accounttype wijzigen.\n"
+                + "Indien u voor een bepaald gegeven geen wijziging wenst door te voeren,\n"
+                + "vul dan een sterretje in en druk op <enter>.\n");
+    }
+    
+    public void showAccountUpdateChanges(Account accountBeforeUpdate, Account accountAfterUpdate){
+        System.out.println("\nU heeft aangegeven het volgende account te willen wijzigen:\n");
+        System.out.println("Geselecteerd account voor wijzigingen:\n");
+        
+        System.out.printf("%-20s%-20s%-5s\n", "gebruikersnaam", "wachtwoord", "Account type");
+        System.out.println("--------------------------------------------------");
+        System.out.println(accountBeforeUpdate.toStringNoId());
+        
+        System.out.println("\nGeselecteerd account na wijzigingen:\n");
+        
+        System.out.printf("%-20s%-20s%-5s\n", "gebruikersnaam", "wachtwoord", "Account type");
+        System.out.println("--------------------------------------------------");
+        System.out.println(accountAfterUpdate.toStringNoId());        
+        }
+    
+    public Integer requestConfirmationToUpdate() {
+        printRequestForUpdateConfirmation();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidInt(respons) &&
+                (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
+            printInvalidRespons();
+            printRequestForUpdateConfirmation();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }
+        
+        return Integer.parseInt(respons);
+    }
+    
     /**
      * Returns a valid username or null if the user aborts
      * @return 
@@ -50,10 +113,27 @@ public class AccountView {
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isValidNameString(respons)) {
-            showInvalidRespons();
+            printInvalidRespons();
             printRequestForUsernameInput();            
             respons = input.nextLine();
             if (respons.equals("!")) return null; // User initiated abort
+        }
+        return respons;
+    }
+    
+     /**
+     * Returns a valid username or null if the user aborts
+     * @return 
+     */
+    public String requestUpdateUsernameInput() {        
+        printRequestForUsernameInput();
+        String respons =  input.nextLine();
+        if (respons.equals("*")) return null; // User initiated abort
+        while (!Validator.isValidNameString(respons)) {
+            printInvalidRespons();
+            printRequestForUsernameInput();            
+            respons = input.nextLine();
+            if (respons.equals("*")) return null; // User initiated abort
         }
         return respons;
     }
@@ -67,10 +147,26 @@ public class AccountView {
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isValidNameString(respons)) {
-            showInvalidRespons();
+            printInvalidRespons();
             printRequestForPasswordInput();            
             respons = input.nextLine();
             if (respons.equals("!")) return null; // User initiated abort
+        }
+        return respons;
+    }
+    /**
+     * Returns a valid password or null if the user aborts
+     * @return 
+     */
+    public String requestUpdatePasswordInput() {        
+        printRequestForPasswordInput();
+        String respons =  input.nextLine();
+        if (respons.equals("*")) return null; // User initiated abort
+        while (!Validator.isValidNameString(respons)) {
+            printInvalidRespons();
+            printRequestForPasswordInput();            
+            respons = input.nextLine();
+            if (respons.equals("*")) return null; // User initiated abort
         }
         return respons;
     }
@@ -84,7 +180,7 @@ public class AccountView {
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isValidNameString(respons)) {
-            showInvalidRespons();
+            printInvalidRespons();
             printRequestForOldPasswordInput();            
             respons = input.nextLine();
             if (respons.equals("!")) return null; // User initiated abort
@@ -107,7 +203,7 @@ public class AccountView {
         }
         if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isValidNameString(respons)) {
-            showInvalidRespons();
+            printInvalidRespons();
             printRequestForOldPasswordInput();            
             respons = input.nextLine();
             if (respons.equals("!")) return null; // User initiated abort
@@ -131,10 +227,39 @@ public class AccountView {
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isPositiveInteger(respons)) {
-            showInvalidRespons();
+            printInvalidRespons();
             printRequestForAccountType();
             respons = input.nextLine();
             if (respons.equals("!")) return null; // User initiated abort
+        }
+        try {
+            types.get(Integer.parseInt(respons) - 1);
+            return Integer.parseInt(respons);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+    
+    /**
+     * Returns a valid accountType or null if the user aborts
+     * @param types
+     * @return Account type id
+     */
+    public Integer requestUpdateAccountType(List<String> types) {
+        System.out.println("De beschikbare account types zijn:");
+        System.out.printf("%-5s%-20s\n", "ID", "Account Type");
+        System.out.println("------------------------------");
+        for (int i = 0; i < types.size(); i++) {
+            System.out.printf("%-10s%-30s\n", i + 1, types.get(i));
+        }
+        printRequestForAccountType();
+        String respons =  input.nextLine();
+        if (respons.equals("*")) return null; // User initiated abort
+        while (!Validator.isPositiveInteger(respons)) {
+            printInvalidRespons();
+            printRequestForAccountType();
+            respons = input.nextLine();
+            if (respons.equals("*")) return null; // User initiated abort
         }
         try {
             types.get(Integer.parseInt(respons) - 1);
@@ -158,8 +283,7 @@ public class AccountView {
     }
     
     public void showAccountToBeDeleted(Account account){
-        System.out.println("\nU heeft aangegeven het volgende account te willen verwijderen uit de database:\n\n");
-        
+        System.out.println("\nU heeft aangegeven het volgende account te willen verwijderen uit de database:\n\n");        
         System.out.printf("%-20s%-20s%-5s\n", "gebruikersnaam", "wachtwoord", "Account type");
         System.out.println("--------------------------------------------------");
         System.out.println(account.toStringNoId());
@@ -171,7 +295,7 @@ public class AccountView {
         if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isValidInt(respons) &&
                 (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
-            showInvalidRespons();
+            printInvalidRespons();
             printRequestForConfirmation();
             respons = input.nextLine();
             if (respons.equals("!")) return null;  // User initiated abort
@@ -184,7 +308,7 @@ public class AccountView {
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isValidListIndex(accountListSize, respons)) {
-            showInvalidRespons();
+            printInvalidRespons();
             printRequestForIdInput();
             respons = input.nextLine();
             if (respons.equals("!")) return null;  // User initiated abort
@@ -201,12 +325,12 @@ public class AccountView {
         
     
     private void printRequestForUsernameInput() {
-        System.out.println("Geef uw gebruikersnaam gevolgd door <enter>:");
+        System.out.println("Geef gebruikersnaam gevolgd door <enter>:");
         System.out.print("> ");
     }
     
     private void printRequestForPasswordInput() {
-        System.out.println("Geef uw wachtwoord gevolgd door <enter>:");
+        System.out.println("Geef wachtwoord gevolgd door <enter>:");
         System.out.print("> ");
     }
     
@@ -231,7 +355,7 @@ public class AccountView {
         System.out.print("> ");
     }
     
-    private void showInvalidRespons() {
+    private void printInvalidRespons() {
         System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
     }
     
@@ -244,6 +368,18 @@ public class AccountView {
         System.out.println("Wilt u dit account echt verwijderen?");
         System.out.println("1) Account verwijderen");
         System.out.println("2) Account NIET verwijderen");
+        System.out.print("> ");
+    }
+    
+    private void printRequestForIdToUpdateInput() {
+        System.out.println("Geef het ID van het account dat u wilt wijzigen gevolgd door <enter>:");
+        System.out.print("> ");
+    }
+    
+    private void printRequestForUpdateConfirmation() {
+        System.out.println("\n\nWilt u deze wijziging opslaan?");
+        System.out.println("1) Opslaan");
+        System.out.println("2) NIET opslaan, ga terug naar menu");
         System.out.print("> ");
     }
 }
