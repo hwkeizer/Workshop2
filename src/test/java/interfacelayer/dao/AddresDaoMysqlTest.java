@@ -7,7 +7,6 @@ package interfacelayer.dao;
 
 import workshop1.interfacelayer.dao.AddressDao;
 import workshop1.interfacelayer.dao.DaoFactory;
-import workshop1.domain.Account;
 import workshop1.domain.Address;
 import workshop1.interfacelayer.DatabaseConnection;
 import java.sql.Connection;
@@ -103,33 +102,6 @@ public class AddresDaoMysqlTest {
             System.out.println("SQL Exception: " + ex.getMessage());
         }     
     }
-    
-    /**
-     * Test of insertAddress method, of class AddressDaoMysql.
-     * Test if inserting existing address will throw Exception
-     */
-//    @Test
-//    public void testInsertExistingAddress() {
-//        System.out.println("insertExistingAddress");
-//        
-//        // Prepare a address to add to the database        
-//        Integer id = 3;
-//        String testUsername = "jan";
-//        String testPassword = "welkom";
-//        Integer testAddressTypeId = 3;
-//        Address testAddress = new Address(id, testUsername, testPassword, testAddressTypeId);
-//        
-//        // Add the prepared address to the database
-//        try {
-//            AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
-//            addressDao.insertAddress(testAddress);
-//            fail("Adding an existing address should have thrown a DuplicateAddressException");
-//        } catch (DuplicateAddressException ex) {
-//            // Assert expected exception
-//            assertTrue("Exception DuplicateAddressException should be thrown", ex instanceof DuplicateAddressException);
-//            assertEquals("Exception message should be as expected.", "Address with name = " + testAddress.getUsername() + " is already in the database", ex.getMessage());
-//        }       
-//    }
 
     /**
      * Test of findExistingAddressById method, of class AddressDaoMysql.
@@ -168,24 +140,27 @@ public class AddresDaoMysqlTest {
         assertFalse("Non existing Address should not be present", optionalAddress.isPresent());
     }
     
-//    /**
-//     * Test of findAddressByCustomerId method, of class AddressDaoMysql.
-//     */
-//    @Test
-//    public void testFindAddressByCustomerId() {
-//        System.out.println("findAddressById");
-//        
-//        // Define the address to be searched
-//        Address expectedAddress = new Address(1, "Postweg", 201, "h", "3781JK", "Aalst", 1, 1);
-//        int searchCustomerId = expectedAddress.getCustomerId();
-//        
-//        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
-//        Optional<Address> optionalAddress = addressDao.findAddressById(searchCustomerId);
-//        
-//        // Assert we found the address and it is the address we expected
-//        assertTrue(optionalAddress.isPresent());
-//        assertEquals(expectedAddress, optionalAddress.get());
-//    }
+    /**
+     * Test of findAddressesByCustomerId method, of class AddressDaoMysql.
+     */
+    @Test
+    public void testFindAddressesByCustomerId() {
+        System.out.println("findAddressesByCustomerId");
+        
+        int customerId = 2;
+        // Define the addresses to be found
+        Address expectedAddress1 = new Address(2,"Snelweg",56,null,"3922JL","Ee",2,1);
+        Address expectedAddress2 = new Address(3,"Torenstraat",82,null,"7620CX","Best",2,2);
+        Address expectedAddress3 = new Address(4,"Valkstraat",9,"e","2424DF","Goorle",2,3);
+        
+        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
+        List<Address> listAddress = addressDao.findAddressesByCustomerId(customerId);
+        // Assert we found the addresses and it is the address we expected
+        assertEquals("Customer should have three addresses", 3, listAddress.size());
+        assertEquals("Type1 address is as expected", expectedAddress1, listAddress.get(0));
+        assertEquals("Type2 address is as expected", expectedAddress2, listAddress.get(1));
+        assertEquals("Type3 address is as expected", expectedAddress3, listAddress.get(2));
+    }
     
     /**
      * Test of deleteAddress method, of class AddressDaoMysql.

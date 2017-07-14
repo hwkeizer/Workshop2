@@ -10,7 +10,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop1.domain.Address;
-import workshop1.domain.Customer;
 import workshop1.interfacelayer.dao.AddressDao;
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.view.AddressView;
@@ -31,11 +30,11 @@ public class AddressController {
     }
     
     public void createAddress(CustomerController customerController) {        
-        // We first need a valid user to link to the new address
-        addressView.showNewAddressStartScreen();
+        // We first need a valid customer to link to the new address
+        addressView.showConstructAddressStartScreen();
         Integer customerId = customerController.selectCustomerIdByUser();
         if (customerId == null) {
-            
+            // No customer selected so we skip creating the address
             return;
         }
         Optional<Address> optionalAddress = addressView.constructAddress(customerId, getAvailableAddressTypes());   
@@ -44,11 +43,34 @@ public class AddressController {
         }       
     }
     
-    public void deleteAddress() {
-        
+    public void deleteAddress(CustomerController customerController) {
+        // We first need a valid customer to find the address to be deleted
+        addressView.showDeleteAddressStartScreen();
+        Integer customerId = customerController.selectCustomerIdByUser();
+        if (customerId == null) {
+            // No customer selected so we skip deleting the address
+            return;
+        }
+        List<Address> listAddresses = listAllAddressesFromCustomer(customerId);
+        Optional<Address> optionalAddress = addressView.selectAddressToDelete(listAddresses);
+        if (optionalAddress.isPresent()) {
+            addressDao.deleteAddress(optionalAddress.get());
+        }            
     }
     
-    public void updateAddress() {
+    public void updateAddress(CustomerController customerController) {
+        // We first need a valid customer to find the address to be deleted
+        addressView.showUpdateAddressStartScreen();
+        Integer customerId = customerController.selectCustomerIdByUser();
+        if (customerId == null) {
+            // No customer selected so we skip deleting the address
+            return;
+        }
+        List<Address> listAddresses = listAllAddressesFromCustomer(customerId);
+        Optional<Address> optionalAddress = addressView.selectAddressToUpdate(listAddresses);
+        if (optionalAddress.isPresent()) {
+            addressDao.updateAddress(optionalAddress.get());
+        }            
         
     }
     
@@ -56,9 +78,8 @@ public class AddressController {
         
     }
     
-    List<Address> listAllAddresses() {
-        
-        return null; // dummy
+    List<Address> listAllAddressesFromCustomer(int customerId) {
+        return addressDao.findAddressesByCustomerId(customerId);
     }
     
     List<String> getAvailableAddressTypes() {

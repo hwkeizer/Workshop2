@@ -28,11 +28,11 @@ public class CustomerView {
     }
     
     /*
-     * Methods related to createCustomer
+     * Methods related to constructCustomer
      */
     
     public Optional<Customer> constructCustomer() {
-        showNewCustomerScreen();
+        showConstructCustomerScreen();
         String firstName = requestFirstNameInput(); 
         if (firstName == null) return Optional.empty(); // User interupted createCustomer proces
         String lastName = requestLastNameInput();
@@ -50,7 +50,7 @@ public class CustomerView {
         return Optional.ofNullable(customer);
     }
     
-    void showNewCustomerScreen() {
+    void showConstructCustomerScreen() {
         System.out.println("\n\nU gaat een nieuwe klant aan de database toevoegen.\n\n"
                 + "Vul de gevraagde gegevens in. Als u een uitroepteken invult\n"
                 + "wordt het toevoegen van een nieuwe klant afgebroken en gaat u terug\n"
@@ -125,8 +125,8 @@ public class CustomerView {
      * Methods related to deleteCustomer
      */
     
-    public Optional<Customer> constructCustomerToDelete(List<Customer> customerList) {
-        //int customerListSize = customerList.size();
+    public Optional<Customer> selectCustomerToDelete(List<Customer> customerList) {
+        showListOfAllCustomers(customerList);
         Integer index = requestCustomerIdToDeleteInput(customerList.size());
         if (index == null) return Optional.empty();        
         Customer customer = customerList.get(index);
@@ -185,29 +185,29 @@ public class CustomerView {
         System.out.println("1) Klant verwijderen");
         System.out.println("2) Klant NIET verwijderen");
         System.out.print("> ");
-    }
-    
+    }    
      
     /*
      * Methods related to updateCustomer
      */
         
-    public Optional<Customer> constructCustomerToUpdate(List<Customer> customerList) {        
+    public Optional<Customer> selectCustomerToUpdate(List<Customer> customerList) { 
+        showListOfAllCustomers(customerList);
         Integer index = requestCustomerIdToUpdateInput(customerList.size());
         if (index == null) return Optional.empty();        
         Customer customerBeforeUpdate = customerList.get(index);        
         showCustomerToBeUpdated(customerBeforeUpdate);
         
         // request the user for values to update
-        String newFirstName = requestNewFirstNameInput(); 
+        String newFirstName = requestUpdateFirstNameInput(); 
         if (newFirstName == null) {
             newFirstName = customerBeforeUpdate.getFirstName();
         } 
-        String newLastName = requestNewLastNameInput();
+        String newLastName = requestUpdateLastNameInput();
         if (newLastName == null){
             newLastName = customerBeforeUpdate.getLastName();
         } 
-        String newPrefix = requestNewPrefixInput();
+        String newPrefix = requestUpdatePrefixInput();
         if (newPrefix == null){
             newPrefix = customerBeforeUpdate.getLastNamePrefix();
         }
@@ -280,21 +280,21 @@ public class CustomerView {
         return Integer.parseInt(respons);
     }
     
-    String requestNewFirstNameInput() {        
+    String requestUpdateFirstNameInput() {        
         printRequestForFirstNameInput();
         String respons =  input.nextLine();
         if (respons.isEmpty()) return null; // User initiated abort
         return respons;
     }
     
-    String requestNewLastNameInput() {        
+    String requestUpdateLastNameInput() {        
         printRequestForLastNameInput();
         String respons =  input.nextLine();
         if (respons.isEmpty()) return null; // User initiated abort
         return respons;
     }
     
-    String requestNewPrefixInput() {        
+    String requestUpdatePrefixInput() {        
         printRequestForPrefixInput();
         String respons =  input.nextLine();
         if (respons.isEmpty()) return null; // User initiated abort
@@ -313,10 +313,81 @@ public class CustomerView {
         System.out.print("> ");
     }
     
+    /*
+     * Methods related to selectCustomer
+     */
     
-    /****************************************************************
+    /**
+     * Select a customer based on the selection of the user from the given list
+     * @param customerList
+     * @return Optional<Customer>
+     */
+    public Optional<Customer> selectCustomer(List<Customer> customerList) {
+        showListOfAllCustomers(customerList);
+        Integer index = requestCustomerIdToSelectInput(customerList.size());
+        if (index == null) return Optional.empty();        
+        Customer customer = customerList.get(index);
+        //Promp for confirmation if this is indeed the customer to select
+        showCustomerToBeSelected(customer);
+        Integer confirmed = requestConfirmationToSelect();
+        if (confirmed == null || confirmed == 2){
+            return Optional.empty();
+        }
+        return Optional.ofNullable(customer);
+    }
+    
+    Integer requestCustomerIdToSelectInput(int customerListSize){
+        printRequestForIdToSelectInput();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidListIndex(customerListSize, respons)) {
+            showInvalidRespons();
+            printRequestForIdToSelectInput();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }        
+        //index of product in ArrayList<Product> productList
+        return Integer.parseInt(respons) - 1;
+    }
+    
+    void printRequestForIdToSelectInput() {
+        System.out.println("Selecteer het gewenste klant ID gevolgd door <enter>:");
+        System.out.print("> ");
+    }
+    
+    void showCustomerToBeSelected(Customer customer) {
+        System.out.println("\nU heeft de volgende klant geselecteerd:\n\n");        
+        System.out.printf("%-20s%-15s%-20s\n", "Voornaam", "Tussenvoegsel", "Achternaam");
+        System.out.println("--------------------------------------------------");
+        System.out.println(customer.toStringNoId());
+    }
+    
+    Integer requestConfirmationToSelect() {
+        printRequestForSelectConfirmation();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidInt(respons) &&
+                (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
+            showInvalidRespons();
+            printRequestForDeleteConfirmation();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }
+        
+        return Integer.parseInt(respons);
+    }
+    
+    void printRequestForSelectConfirmation() {
+        System.out.println("Wilt u deze klant selecteren?");
+        System.out.println("1) Klant selecteren");
+        System.out.println("2) Klant NIET selecteren");
+        System.out.print("> ");
+    }    
+    
+    
+    /*
     * General customerView methods not related to a specific action
-    *****************************************************************/
+    */
      
     public void showListOfAllCustomers(List<Customer> customerList) {
         System.out.println("\nHieronder volgt een lijst met alle klanten.\n");
@@ -330,48 +401,6 @@ public class CustomerView {
             i++;
         }
         System.out.println("");
-    }
-    
-    /**
-     * Constructs a customer based on the selection of the user from the given list
-     * @param customerList
-     * @return Optional<Customer>
-     */
-    public Optional<Customer> selectCustomer(List<Customer> customerList) {
-        printRequestForIdInput();
-        String respons = input.nextLine();
-        if (respons.equals("!")) {
-            showNoCustomerSelected();
-            return Optional.empty();
-        } // User initiated abort
-        while (!Validator.isValidListIndex(customerList.size(), respons)) {
-            showInvalidRespons();
-            printRequestForIdInput();
-            respons = input.nextLine();
-            if (respons.equals("!")) {
-                showNoCustomerSelected();
-                return Optional.empty();
-            }  // User initiated abort
-        }        
-        Optional<Customer> optionalCustomer = Optional.ofNullable(customerList.get(Integer.parseInt(respons)-1));
-        if (optionalCustomer.isPresent()) showSelectedCustomer(optionalCustomer.get());
-        return optionalCustomer;
-    }
-    
-    void showSelectedCustomer(Customer customer) {
-        System.out.println("\nU heeft de volgende klant geselecteerd:\n\n");        
-        System.out.printf("%-20s%-15s%-20s\n", "Voornaam", "Tussenvoegsel", "Achternaam");
-        System.out.println("--------------------------------------------------");
-        System.out.println(customer.toStringNoId());
-    }
-    
-    void showNoCustomerSelected() {
-        System.out.println("Er is geen gebruiker geselecteerd.");
-    }
-    
-    void printRequestForIdInput() {
-        System.out.println("Selecteer het gewenste klant ID gevolgd door <enter>:");
-        System.out.print("> ");
     }
     
     void showInvalidRespons() {

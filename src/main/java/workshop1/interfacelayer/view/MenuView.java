@@ -120,6 +120,8 @@ public class MenuView {
         adminCustomer.addSubMenu(new MenuItem(adminCustomer, 132, "Wijzigen klant", MenuActions.UPDATE_CUSTOMER, true));
         adminCustomer.addSubMenu(new MenuItem(adminCustomer, 133, "Verwijderen klant", MenuActions.DELETE_CUSTOMER, true));
         adminCustomer.addSubMenu(new MenuItem(adminCustomer, 134, "Adres toevoegen", MenuActions.CREATE_ADDRESS, true));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 135, "Adres verwijderen", MenuActions.DELETE_ADDRESS, true));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 136, "Adres aanpassen", MenuActions.UPDATE_ADDRESS, true));
         adminCustomer.addSubMenu(new MenuItem(adminCustomer, 139, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
         adminCustomer.addSubMenu(new MenuItem(adminCustomer, 130, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         
@@ -162,7 +164,9 @@ public class MenuView {
         employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 231, "Toevoegen klant", MenuActions.CREATE_CUSTOMER, true));
         employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 232, "Wijzigen klant", MenuActions.UPDATE_CUSTOMER, true));
         employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 233, "Verwijderen klant", MenuActions.DELETE_CUSTOMER, true));
-        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 234, "Toevoegen adres", MenuActions.CREATE_ADDRESS, true));        
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 234, "Toevoegen adres", MenuActions.CREATE_ADDRESS, true));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 235, "Verwijderen adres", MenuActions.DELETE_ADDRESS, true));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 236, "Aanpassen adres", MenuActions.UPDATE_ADDRESS, true));
         employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 239, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
         employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 230, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         

@@ -21,7 +21,8 @@ public class Address {
     private Integer customerId;
     private int addressTypeId;
 
-    public Address(String streetName, int number, String addition, String postalCode, String city, Integer customerId, int addressTypeId) {
+    public Address(String streetName, int number, String addition, String postalCode, 
+            String city, Integer customerId, int addressTypeId) {
         this.streetName = streetName;
         this.number = number;
         this.addition = addition;
@@ -31,7 +32,8 @@ public class Address {
         this.addressTypeId = addressTypeId;
     }
 
-    public Address(int id, String streetName, int number, String addition, String postalCode, String city, int customerId, int addressTypeId) {
+    public Address(int id, String streetName, int number, String addition, String postalCode, 
+            String city, int customerId, int addressTypeId) {
         this.id = id;
         this.streetName = streetName;
         this.number = number;
@@ -108,12 +110,12 @@ public class Address {
     
     @Override
     public String toString(){
-        return String.format("%-5d%-30s%-8d%-12s%-10s%-30s", getId(), getStreetName(), 
+        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s", getId(), getStreetName(), 
                 getNumber(), getAddition(), getPostalCode(), getCity());
     }
     
     public String toStringNoId(){
-        return String.format("%-30s%-8d%-12s%-10s%-30s", getStreetName(), getNumber(), 
+        return String.format("%-30s%-8d%-12s%-10s%-20s", getStreetName(), getNumber(), 
                 getAddition(), getPostalCode(), getCity());
     }
     

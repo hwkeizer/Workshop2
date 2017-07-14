@@ -37,14 +37,14 @@ public class CustomerController {
     }
     
     public void deleteCustomer() {
-        Optional<Customer> optionalCustomer = customerView.constructCustomerToDelete(listAllCustomers());
+        Optional<Customer> optionalCustomer = customerView.selectCustomerToDelete(listAllCustomers());
         if (optionalCustomer.isPresent()) {
             customerDao.deleteCustomer(optionalCustomer.get());
         }        
     }
     
     public void updateCustomer() {
-        Optional<Customer> optionalCustomer = customerView.constructCustomerToUpdate(listAllCustomers());
+        Optional<Customer> optionalCustomer = customerView.selectCustomerToUpdate(listAllCustomers());
         if (optionalCustomer.isPresent()) {
             customerDao.updateCustomer(optionalCustomer.get());
         }        
@@ -55,8 +55,7 @@ public class CustomerController {
     
     List<Customer> listAllCustomers() {
         List<Customer> customerList;
-        customerList = customerDao.getAllCustomersAsList();        
-        customerView.showListOfAllCustomers(customerList);        
+        customerList = customerDao.getAllCustomersAsList();               
         return customerList;
     }
     

@@ -27,12 +27,11 @@ public class AddressDaoMysql implements AddressDao {
     private static final Logger log = LoggerFactory.getLogger(AccountDaoMysql.class);
     
     private static final String SQL_INSERT = "INSERT INTO address (street_name, number, addition, postal_code, city, customer_id, address_type_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String SQL_FIND_BY_CUSTOMER_ID = "SELECT id, username, password, address_type_id FROM address WHERE username = ?";
+    private static final String SQL_FIND_BY_CUSTOMER_ID = "SELECT * FROM address WHERE `customer_id` = ?";
     private static final String SQL_FIND_BY_ID = "SELECT * FROM address WHERE id = ?";
     private static final String SQL_LIST_ALL_ADDRESSTYPES = "SELECT `type` FROM `address_type`";
     private static final String SQL_UPDATE = "UPDATE address SET street_name=?, number=?, addition=?, postal_code=?, city=?, customer_id=?, address_type_id=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM address WHERE id = ?";
-
     public AddressDaoMysql() {
     }
 
@@ -142,21 +141,20 @@ public class AddressDaoMysql implements AddressDao {
     }
 
     @Override
-    public Optional<Address> findAddressByCustomerId(int customerId) {
+    public List<Address> findAddressesByCustomerId(int customerId) {
+        List<Address> addressList = new ArrayList<>();
         try (
             Connection connection = DatabaseConnection.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
-            
+            PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_CUSTOMER_ID);){
             statement.setInt(1, customerId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                return Optional.ofNullable(map(resultSet));
+                addressList.add(map(resultSet));
             }            
         } catch (SQLException ex) {
             log.error("SQL error: ", ex);
         }
-        // Nothing found
-        return Optional.empty();
+        return addressList;
     }
     
         @Override
