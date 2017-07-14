@@ -108,12 +108,12 @@ public class Address {
     
     @Override
     public String toString(){
-        return String.format("%-5d%-30s%-5d%-8s%-8s%-30s", getId(), getStreetName(), 
+        return String.format("%-5d%-30s%-8d%-12s%-10s%-30s", getId(), getStreetName(), 
                 getNumber(), getAddition(), getPostalCode(), getCity());
     }
     
     public String toStringNoId(){
-        return String.format("%-30s%-5d%-8s%-8s%-30s", getStreetName(), getNumber(), 
+        return String.format("%-30s%-8d%-12s%-10s%-30s", getStreetName(), getNumber(), 
                 getAddition(), getPostalCode(), getCity());
     }
     

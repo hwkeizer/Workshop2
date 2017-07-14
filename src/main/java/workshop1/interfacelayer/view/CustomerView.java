@@ -6,6 +6,7 @@
 package workshop1.interfacelayer.view;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import workshop1.domain.Customer;
 
@@ -26,18 +27,37 @@ public class CustomerView {
         this.input = input;
     }
     
-    /*************************************
+    /*
      * Methods related to createCustomer
-     ************************************/
+     */
     
-    public void showNewCustomerScreen() {
+    public Optional<Customer> constructCustomer() {
+        showNewCustomerScreen();
+        String firstName = requestFirstNameInput(); 
+        if (firstName == null) return Optional.empty(); // User interupted createCustomer proces
+        String lastName = requestLastNameInput();
+        if (lastName == null) return Optional.empty(); // User interupted createCustomer proces
+        String prefix = requestPrefixInput();
+        if (prefix == null) return Optional.empty();  // User interupted createCustomer proces
+        
+        // The accountID is set to null initially, this must be added later
+        Customer customer = new Customer(firstName, lastName, prefix, null);
+        showCustomerToBeCreated(customer);
+        Integer confirmed = requestConfirmationToCreate();
+        if (confirmed == null || confirmed == 2){
+            return Optional.empty();
+        }
+        return Optional.ofNullable(customer);
+    }
+    
+    void showNewCustomerScreen() {
         System.out.println("\n\nU gaat een nieuwe klant aan de database toevoegen.\n\n"
                 + "Vul de gevraagde gegevens in. Als u een uitroepteken invult\n"
                 + "wordt het toevoegen van een nieuwe klant afgebroken en gaat u terug\n"
                 + "naar het menu. Al ingevulde gegevens worden dan niet bewaard!\n\n ");
     }
 
-    public String requestFirstNameInput() {
+    String requestFirstNameInput() {
         printRequestForFirstNameInput();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -50,7 +70,7 @@ public class CustomerView {
         return respons;
     }
 
-    public String requestLastNameInput() {
+    String requestLastNameInput() {
         printRequestForLastNameInput();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -63,7 +83,7 @@ public class CustomerView {
         return respons;
     }
 
-    public String requestPrefixInput() {
+    String requestPrefixInput() {
         printRequestForPrefixInput();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort 
@@ -71,7 +91,7 @@ public class CustomerView {
         return respons;
     }
     
-    public void showCustomerToBeCreated(Customer customer){
+    void showCustomerToBeCreated(Customer customer){
         System.out.println("\nU heeft aangegeven de volgende klant te willen toevoegen:\n");
         
         System.out.printf("%-20s%-15s%-20s\n", "Voornaam", "Tussenvoegsel", "Achternaam");
@@ -79,7 +99,7 @@ public class CustomerView {
         System.out.println(customer.toStringNoId());
     }
  
-    public Integer requestConfirmationToCreate() {
+    Integer requestConfirmationToCreate() {
         printRequestForCreateConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -94,25 +114,39 @@ public class CustomerView {
         return Integer.parseInt(respons);
     }
     
-    private void printRequestForCreateConfirmation() {
+    void printRequestForCreateConfirmation() {
         System.out.println("\nWilt u deze klant echt toevoegen?");
         System.out.println("1) Klant toevoegen");
         System.out.println("2) Klant NIET toevoegen");
         System.out.print("> ");
     }
     
-    /************************************
+    /*
      * Methods related to deleteCustomer
-     ***********************************/
+     */
     
-    public void showCustomerToBeDeleted(Customer customer) {
+    public Optional<Customer> constructCustomerToDelete(List<Customer> customerList) {
+        //int customerListSize = customerList.size();
+        Integer index = requestCustomerIdToDeleteInput(customerList.size());
+        if (index == null) return Optional.empty();        
+        Customer customer = customerList.get(index);
+        //Promp for confirmation if this is indeed the customer to delete
+        showCustomerToBeDeleted(customer);
+        Integer confirmed = requestConfirmationToDelete();
+        if (confirmed == null || confirmed == 2){
+            return Optional.empty();
+        }
+        return Optional.ofNullable(customer);
+    }
+    
+    void showCustomerToBeDeleted(Customer customer) {
         System.out.println("\nU heeft aangegeven de volgende klant te willen verwijderen:\n\n");        
         System.out.printf("%-20s%-15s%-20s\n", "Voornaam", "Tussenvoegsel", "Achternaam");
         System.out.println("--------------------------------------------------");
         System.out.println(customer.toStringNoId());
     }
     
-    public Integer requestCustomerIdToDeleteInput(int customerListSize) {
+    Integer requestCustomerIdToDeleteInput(int customerListSize) {
         printRequestForIdToDeleteInput();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -126,7 +160,7 @@ public class CustomerView {
         return Integer.parseInt(respons) - 1;
     }
     
-    public Integer requestConfirmationToDelete() {
+    Integer requestConfirmationToDelete() {
         printRequestForDeleteConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -141,12 +175,12 @@ public class CustomerView {
         return Integer.parseInt(respons);
     }
     
-    private void printRequestForIdToDeleteInput() {
+    void printRequestForIdToDeleteInput() {
         System.out.println("Geef het ID van de klant die u wilt verwijderen gevolgd door <enter>:");
         System.out.print("> ");
     }
     
-     private void printRequestForDeleteConfirmation() {
+    void printRequestForDeleteConfirmation() {
         System.out.println("Wilt u deze klant echt verwijderen?");
         System.out.println("1) Klant verwijderen");
         System.out.println("2) Klant NIET verwijderen");
@@ -154,11 +188,43 @@ public class CustomerView {
     }
     
      
-    /************************************
+    /*
      * Methods related to updateCustomer
-     ***********************************/
+     */
+        
+    public Optional<Customer> constructCustomerToUpdate(List<Customer> customerList) {        
+        Integer index = requestCustomerIdToUpdateInput(customerList.size());
+        if (index == null) return Optional.empty();        
+        Customer customerBeforeUpdate = customerList.get(index);        
+        showCustomerToBeUpdated(customerBeforeUpdate);
+        
+        // request the user for values to update
+        String newFirstName = requestNewFirstNameInput(); 
+        if (newFirstName == null) {
+            newFirstName = customerBeforeUpdate.getFirstName();
+        } 
+        String newLastName = requestNewLastNameInput();
+        if (newLastName == null){
+            newLastName = customerBeforeUpdate.getLastName();
+        } 
+        String newPrefix = requestNewPrefixInput();
+        if (newPrefix == null){
+            newPrefix = customerBeforeUpdate.getLastNamePrefix();
+        }
+        // The Id and accountId will not be updated       
+        Customer customerAfterUpdate = new Customer(customerBeforeUpdate.getId(), 
+                newFirstName, newLastName, newPrefix, customerBeforeUpdate.getAccountId());
+        
+        //Promp for confirmation of the selected update
+        showCustomerUpdateChanges(customerBeforeUpdate, customerAfterUpdate);
+        Integer confirmed = requestConfirmationToUpdate();
+        if (confirmed == null || confirmed == 2){
+            return Optional.empty();
+        }
+        return Optional.ofNullable(customerAfterUpdate);
+    }
     
-    public void showCustomerToBeUpdated(Customer customer) {
+    void showCustomerToBeUpdated(Customer customer) {
         System.out.println("\nU heeft aangegeven de volgende klant te willen wijzigen:\n\n");        
         System.out.printf("%-20s%-15s%-20s\n", "Voornaam", "Tussenvoegsel", "Achternaam");
         System.out.println("--------------------------------------------------");
@@ -166,10 +232,10 @@ public class CustomerView {
         
         System.out.println("\n\nHierna kunt u de voornaam, het tussenvoegsel of de achternaam wijzigen.\n"
                 + "Indien u voor een bepaald gegeven geen wijziging wenst door te voeren,\n"
-                + "vul dan een sterretje (*) in en druk op <enter>.\n");
+                + "laat het veld dan leeg en druk op <enter>.\n");
     }
     
-    public void showCustomerUpdateChanges(Customer customerBeforeUpdate, Customer customerAfterUpdate){
+    void showCustomerUpdateChanges(Customer customerBeforeUpdate, Customer customerAfterUpdate){
         System.out.println("\nU heeft aangegeven de volgende klant te willen wijzigen:\n");
         System.out.println("Geselecteerde klant voor wijzigingen:\n");
         
@@ -185,7 +251,7 @@ public class CustomerView {
         
     }
     
-    public Integer requestCustomerIdToUpdateInput(int customerListSize) {
+    Integer requestCustomerIdToUpdateInput(int customerListSize) {
         printRequestForIdToUpdateInput();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -199,7 +265,7 @@ public class CustomerView {
         return Integer.parseInt(respons) - 1;
     }
     
-    public Integer requestConfirmationToUpdate() {
+    Integer requestConfirmationToUpdate() {
         printRequestForUpdateConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -214,33 +280,33 @@ public class CustomerView {
         return Integer.parseInt(respons);
     }
     
-    public String requestNewFirstNameInput() {        
+    String requestNewFirstNameInput() {        
         printRequestForFirstNameInput();
         String respons =  input.nextLine();
         if (respons.isEmpty()) return null; // User initiated abort
         return respons;
     }
     
-    public String requestNewLastNameInput() {        
+    String requestNewLastNameInput() {        
         printRequestForLastNameInput();
         String respons =  input.nextLine();
         if (respons.isEmpty()) return null; // User initiated abort
         return respons;
     }
     
-    public String requestNewPrefixInput() {        
+    String requestNewPrefixInput() {        
         printRequestForPrefixInput();
         String respons =  input.nextLine();
         if (respons.isEmpty()) return null; // User initiated abort
         return respons;
     }
     
-    public void printRequestForIdToUpdateInput() {
+    void printRequestForIdToUpdateInput() {
         System.out.println("Geef het ID van de klant die u wilt wijzigen gevolgd door <enter>:");
         System.out.print("> ");
     }
     
-    public void printRequestForUpdateConfirmation() {
+    void printRequestForUpdateConfirmation() {
         System.out.println("\n\nWilt u deze wijziging opslaan?");
         System.out.println("1) Opslaan");
         System.out.println("2) NIET opslaan, ga terug naar menu");
@@ -266,49 +332,65 @@ public class CustomerView {
         System.out.println("");
     }
     
-    public Integer requestCustomerId(int customerListSize) {
+    /**
+     * Constructs a customer based on the selection of the user from the given list
+     * @param customerList
+     * @return Optional<Customer>
+     */
+    public Optional<Customer> selectCustomer(List<Customer> customerList) {
         printRequestForIdInput();
         String respons = input.nextLine();
-        if (respons.equals("!")) return null; // User initiated abort
-        while (!Validator.isValidListIndex(customerListSize, respons)) {
+        if (respons.equals("!")) {
+            showNoCustomerSelected();
+            return Optional.empty();
+        } // User initiated abort
+        while (!Validator.isValidListIndex(customerList.size(), respons)) {
             showInvalidRespons();
             printRequestForIdInput();
             respons = input.nextLine();
-            if (respons.equals("!")) return null;  // User initiated abort
+            if (respons.equals("!")) {
+                showNoCustomerSelected();
+                return Optional.empty();
+            }  // User initiated abort
         }        
-        //index of product in ArrayList<Product> productList
-        return Integer.parseInt(respons) - 1;
+        Optional<Customer> optionalCustomer = Optional.ofNullable(customerList.get(Integer.parseInt(respons)-1));
+        if (optionalCustomer.isPresent()) showSelectedCustomer(optionalCustomer.get());
+        return optionalCustomer;
     }
     
-    public void printRequestForIdInput() {
+    void showSelectedCustomer(Customer customer) {
+        System.out.println("\nU heeft de volgende klant geselecteerd:\n\n");        
+        System.out.printf("%-20s%-15s%-20s\n", "Voornaam", "Tussenvoegsel", "Achternaam");
+        System.out.println("--------------------------------------------------");
+        System.out.println(customer.toStringNoId());
+    }
+    
+    void showNoCustomerSelected() {
+        System.out.println("Er is geen gebruiker geselecteerd.");
+    }
+    
+    void printRequestForIdInput() {
         System.out.println("Selecteer het gewenste klant ID gevolgd door <enter>:");
         System.out.print("> ");
     }
     
-    private void showInvalidRespons() {
+    void showInvalidRespons() {
         System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
     }
 
-    private void printRequestForFirstNameInput() {
+    void printRequestForFirstNameInput() {
         System.out.println("Geef de voornaam van de klant gevolgd door <enter>:");
         System.out.print("> ");
     }
     
-    private void printRequestForLastNameInput() {
+    void printRequestForLastNameInput() {
         System.out.println("Geef de achternaam van de klant gevolgd door <enter>:");
         System.out.print("> ");
     }
     
-    private void printRequestForPrefixInput() {
+    void printRequestForPrefixInput() {
         System.out.println("Geef een eventueel tussenvoegsel van de klant gevolgd door <enter>:");
         System.out.print("> ");
-    }
-    
-
-    
-    
-    
-    
-    
+    }   
    
 }

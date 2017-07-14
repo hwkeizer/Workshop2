@@ -6,9 +6,11 @@
 package workshop1.interfacelayer.controller;
 
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop1.domain.Address;
+import workshop1.domain.Customer;
 import workshop1.interfacelayer.dao.AddressDao;
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.view.AddressView;
@@ -28,34 +30,18 @@ public class AddressController {
         addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
     }
     
-    public void createAddress(CustomerController customerController) {
-        
+    public void createAddress(CustomerController customerController) {        
+        // We first need a valid user to link to the new address
         addressView.showNewAddressStartScreen();
-        Integer customerId = customerController.selectCustomerId();
-        addressView.showNewAddressContinueScreen();
-        
-        String streetName = addressView.requestStreetNameInput(); 
-        if (streetName == null) return; // User interupted createAddress proces
-        Integer number = addressView.requestNumberInput();
-        if (number == null) return; // User interupted createAddress proces
-        String addition = addressView.requestAdditionInput();
-        if (addition == null) return;  // User interupted createAddress proces
-        String postalCode = addressView.requestPostalCodeInput();
-        if (postalCode == null) return;  // User interupted createAddress proces
-        String city = addressView.requestCityInput();
-        if (city == null) return;  // User interupted createAddress proces
-        Integer addressType = addressView.requestAddressType(getAvailableAddressTypes());
-        if (addressType == null) return;  // User interupted createAccount proces
-        
-        // Prepare the address with the validated values and add to the database
-        // The customerID is set to null initially, this must be added later
-        address = new Address(streetName, number, addition, postalCode, city, customerId, addressType);
-        addressView.showAddressToBeCreated(address);
-        Integer confirmed = addressView.requestConfirmationToCreate();
-        if (confirmed == null || confirmed == 2){
+        Integer customerId = customerController.selectCustomerIdByUser();
+        if (customerId == null) {
+            
             return;
         }
-        addressDao.insertAddress(address);
+        Optional<Address> optionalAddress = addressView.constructAddress(customerId, getAvailableAddressTypes());   
+        if (optionalAddress.isPresent()) {
+            addressDao.insertAddress(optionalAddress.get());
+        }       
     }
     
     public void deleteAddress() {
