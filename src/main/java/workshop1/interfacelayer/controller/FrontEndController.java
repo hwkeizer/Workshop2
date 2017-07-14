@@ -10,6 +10,7 @@ import workshop1.interfacelayer.view.AccountView;
 import workshop1.interfacelayer.view.AddressView;
 import workshop1.interfacelayer.view.CustomerView;
 import workshop1.interfacelayer.view.MenuView;
+import workshop1.interfacelayer.view.OrderView;
 import workshop1.interfacelayer.view.ProductView;
 
 /**
@@ -21,13 +22,16 @@ public class FrontEndController {
     private final AccountController accountController;
     private final ProductController productController;
     private final CustomerController customerController;
+    private final OrderController orderController;
     private final AddressController addressController;
+
     
     public FrontEndController() {
         menuController = new MenuController(new MenuView());
         accountController = new AccountController(new AccountView());
         productController = new ProductController(new ProductView());
         customerController = new CustomerController(new CustomerView());
+        orderController = new OrderController(new OrderView());
         addressController = new AddressController(new AddressView());
     }
     
@@ -79,6 +83,26 @@ public class FrontEndController {
                 }
                 case UPDATE_CUSTOMER : {
                     customerController.updateCustomer();
+                    break;
+                }
+                case CREATE_ORDER_EMPLOYEE : {
+                    orderController.createOrderEmployee();
+                    break;
+                }
+                case CREATE_ORDER_CUSTOMER : {
+                    orderController.createOrderCustomer(menuController.getLoggedInUserName());
+                    break;
+                }
+                case DELETE_ORDER_EMPLOYEE : {
+                    orderController.deleteOrder();
+                    break;
+                }
+                case UPDATE_ORDER_CUSTOMER : {
+                    orderController.updateOrder();
+                    break;
+                }
+                case SET_ORDER_STATUS : {
+                    orderController.setOrderStatus();
                     break;
                 }
                 case CREATE_ADDRESS : {

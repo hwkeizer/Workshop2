@@ -29,7 +29,7 @@ public class ProductDaoMysql implements ProductDao {
     private static final String SQL_INSERT = "INSERT INTO product (name, price, stock) VALUES (?, ?, ?)";
     private static final String SQL_FIND_BY_NAME = "SELECT id, name, price, stock FROM product WHERE name = ?";
     private static final String SQL_FIND_BY_ID = "SELECT id, name, price, stock FROM product WHERE id = ?";
-    private static final String SQL_FIND_ALL = "SELECT id, name, price, stock FROM product";
+    private static final String SQL_FIND_ALL = "SELECT id, name, price, stock FROM product ORDER BY name asc";
     private static final String SQL_UPDATE = "UPDATE product SET name=?, price=?, stock=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM product WHERE id = ?";
     

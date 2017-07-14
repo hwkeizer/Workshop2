@@ -35,15 +35,11 @@ public class ProductController {
     public void createProduct() {                
         productView.showNewProductScreen();
         
-        String name = productView.requestNameInput(); 
-        if (name == null) return; // User interupted createProduct proces
-        BigDecimal price = productView.requestPriceInput();
-        if (price == null) return; // User interupted createProduct proces
-        Integer stock = productView.requestStockInput();
-        if (stock == null) return;  // User interupted createProduct proces
-
         // Prepare the product with the validated values and add it to the database
-        product = new Product(name, price, stock);
+        product = productView.constructNewProduct();
+        if(product == null){
+            return;
+        }
         productView.showProductToBeCreated(product);
         Integer confirmed = productView.requestConfirmationToCreate();
         if (confirmed == null || confirmed == 2){
@@ -90,24 +86,9 @@ public class ProductController {
         Product productBeforeUpdate = productList.get(index);
         
         productView.showProductToBeUpdated(productBeforeUpdate);
-        
-        int iD = productBeforeUpdate.getId();
-        String newName = productView.requestNewNameInput(); 
-        if (newName == null) {
-            newName = productBeforeUpdate.getName();
-        } 
-        BigDecimal newPrice = productView.requestNewPriceInput();
-        if (newPrice == null){
-            newPrice = productBeforeUpdate.getPrice();
-        } 
-        Integer newStock = productView.requestNewStockInput();
-        if (newStock == null){
-            newStock = productBeforeUpdate.getStock();
-        }
 
-        Product productAfterUpdate = new Product(iD, newName, newPrice, newStock);
-        
-        
+        Product productAfterUpdate = productView.constructUpdateProduct(productBeforeUpdate);
+                
         //Promp for confirmation of the selected update
         productView.showProductUpdateChanges(productBeforeUpdate, productAfterUpdate);
         Integer confirmed = productView.requestConfirmationToUpdate();

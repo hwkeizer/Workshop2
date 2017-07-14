@@ -32,12 +32,23 @@ public class ProductView {
     /**
      * Methods related to createProduct
      */
-    
     public void showNewProductScreen() {
         System.out.println("\n\nU gaat een nieuw product aan de database toevoegen.\n\n"
                 + "Vul de gevraagde gegevens in. Als u een uitroepteken invult\n"
                 + "wordt het toevoegen van een nieuw product afgebroken en gaat u terug\n"
                 + "naar het menu. Al ingevulde gegevens worden dan niet bewaard!\n\n ");
+    }
+    
+    public Product constructNewProduct() {
+        
+        String name = requestNameInput(); 
+        if (name == null) return null; // User interupted createProduct proces
+        BigDecimal price = requestPriceInput();
+        if (price == null) return null; // User interupted createProduct proces
+        Integer stock = requestStockInput();
+        if (stock == null) return null;  // User interupted createProduct proces
+        
+        return new Product(name, price, stock);
     }
     
     public void showDuplicateProductError() {
@@ -49,7 +60,7 @@ public class ProductView {
     
     //Returns a valid product name or null if the user aborts
     //@return 
-    public String requestNameInput() {        
+    String requestNameInput() {        
         printRequestForNameInput();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -64,7 +75,7 @@ public class ProductView {
     
     //Returns a valid product price or null if the user aborts
     //@return 
-    public BigDecimal requestPriceInput() {
+    BigDecimal requestPriceInput() {
         printRequestForPriceInput();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -79,7 +90,7 @@ public class ProductView {
 
     //Returns a valid product stock or null if the user aborts
     //@return 
-    public Integer requestStockInput() {
+    Integer requestStockInput() {
         printRequestForStockInput();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -104,8 +115,7 @@ public class ProductView {
         printRequestForCreateConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
-        while (!Validator.isValidInt(respons) &&
-                (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
+        while (!Validator.isValidConfirmation(respons)) {
             showInvalidRespons();
             printRequestForCreateConfirmation();
             respons = input.nextLine();
@@ -153,8 +163,7 @@ public class ProductView {
         printRequestForDeleteConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
-        while (!Validator.isValidInt(respons) &&
-                (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
+        while (!Validator.isValidConfirmation(respons)) {
             showInvalidRespons();
             printRequestForDeleteConfirmation();
             respons = input.nextLine();
@@ -192,6 +201,24 @@ public class ProductView {
         System.out.println("\n\nHierna kunt u de naam, prijs of voorraad wijzigen.\n"
                 + "Indien u voor een bepaald gegeven geen wijziging wenst door te voeren,\n"
                 + "vul dan een sterretje (*) in en druk op <enter>.\n");
+    }
+    
+    public Product constructUpdateProduct(Product productBeforeUpdate) {
+        int id = productBeforeUpdate.getId();
+        String newName = requestNewNameInput(); 
+        if (newName == null) {
+            newName = productBeforeUpdate.getName();
+        } 
+        BigDecimal newPrice = requestNewPriceInput();
+        if (newPrice == null){
+            newPrice = productBeforeUpdate.getPrice();
+        } 
+        Integer newStock = requestNewStockInput();
+        if (newStock == null){
+            newStock = productBeforeUpdate.getStock();
+        }
+        
+        return new Product(id, newName, newPrice, newStock);
     }
     
     public void showProductUpdateChanges(Product productBeforeUpdate, Product productAfterUpdate){
@@ -239,7 +266,7 @@ public class ProductView {
         return Integer.parseInt(respons);
     }
     
-    public String requestNewNameInput() {        
+    String requestNewNameInput() {        
         printRequestForNameInput();
         String respons =  input.nextLine();
         if (respons.equals("*")) return null; // User initiated abort
@@ -252,7 +279,7 @@ public class ProductView {
         return respons;
     }
     
-    public BigDecimal requestNewPriceInput() {
+    BigDecimal requestNewPriceInput() {
         printRequestForPriceInput();
         String respons = input.nextLine();
         if (respons.equals("*")) return null; // User initiated abort
@@ -265,7 +292,7 @@ public class ProductView {
         return new BigDecimal(respons);
     }
 
-    public Integer requestNewStockInput() {
+    Integer requestNewStockInput() {
         printRequestForStockInput();
         String respons = input.nextLine();
         if (respons.equals("*")) return null; // User initiated abort
