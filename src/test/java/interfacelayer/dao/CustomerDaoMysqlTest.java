@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoma
  */
-//@Ignore("Temporary ignore to speed up testing of other DAO's")
+@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class CustomerDaoMysqlTest {
     
     private static final Logger log = LoggerFactory.getLogger(CustomerDaoMysqlTest.class);

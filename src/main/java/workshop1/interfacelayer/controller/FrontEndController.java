@@ -107,6 +107,15 @@ public class FrontEndController {
                 }
                 case CREATE_ADDRESS : {
                     addressController.createAddress(customerController);
+                    break;
+                }
+                case DELETE_ADDRESS : {
+                    addressController.deleteAddress(customerController);
+                    break;
+                }
+                case UPDATE_ADDRESS : {
+                    addressController.updateAddress(customerController);
+                    break;
                 }
             }
             currentAction = menuController.getMenuAction() ;

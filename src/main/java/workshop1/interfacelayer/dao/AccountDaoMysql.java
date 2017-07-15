@@ -32,7 +32,7 @@ public class AccountDaoMysql implements AccountDao {
     private static final String SQL_UPDATE = "UPDATE account SET username=?, password=?, account_type_id=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM account WHERE id = ?";
     private static final String SQL_LIST_ALL_ACCOUNTTYPES = "SELECT `type` FROM `account_type`";
-    private static final String SQL_LIST_ALL_ACCOUNTS = "SELECT `id`,`username`,`password`,`account_type_id` FROM `account`";
+    private static final String SQL_LIST_ALL_ACCOUNTS = "SELECT `id`,`username`,`password`,`account_type_id` FROM `account` ORDER BY username ASC";
 
     @Override
     public void insertAccount(Account account) throws DuplicateAccountException {

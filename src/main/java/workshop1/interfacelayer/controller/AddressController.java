@@ -6,6 +6,7 @@
 package workshop1.interfacelayer.controller;
 
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop1.domain.Address;
@@ -28,41 +29,48 @@ public class AddressController {
         addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
     }
     
-    public void createAddress(CustomerController customerController) {
-        
-        addressView.showNewAddressStartScreen();
-        Integer customerId = customerController.selectCustomerId();
-        addressView.showNewAddressContinueScreen();
-        
-        String streetName = addressView.requestStreetNameInput(); 
-        if (streetName == null) return; // User interupted createAddress proces
-        Integer number = addressView.requestNumberInput();
-        if (number == null) return; // User interupted createAddress proces
-        String addition = addressView.requestAdditionInput();
-        if (addition == null) return;  // User interupted createAddress proces
-        String postalCode = addressView.requestPostalCodeInput();
-        if (postalCode == null) return;  // User interupted createAddress proces
-        String city = addressView.requestCityInput();
-        if (city == null) return;  // User interupted createAddress proces
-        Integer addressType = addressView.requestAddressType(getAvailableAddressTypes());
-        if (addressType == null) return;  // User interupted createAccount proces
-        
-        // Prepare the address with the validated values and add to the database
-        // The customerID is set to null initially, this must be added later
-        address = new Address(streetName, number, addition, postalCode, city, customerId, addressType);
-        addressView.showAddressToBeCreated(address);
-        Integer confirmed = addressView.requestConfirmationToCreate();
-        if (confirmed == null || confirmed == 2){
+    public void createAddress(CustomerController customerController) {        
+        // We first need a valid customer to link to the new address
+        addressView.showConstructAddressStartScreen();
+        Integer customerId = customerController.selectCustomerIdByUser();
+        if (customerId == null) {
+            // No customer selected so we skip creating the address
             return;
         }
-        addressDao.insertAddress(address);
+        Optional<Address> optionalAddress = addressView.constructAddress(customerId, getAvailableAddressTypes());   
+        if (optionalAddress.isPresent()) {
+            addressDao.insertAddress(optionalAddress.get());
+        }       
     }
     
-    public void deleteAddress() {
-        
+    public void deleteAddress(CustomerController customerController) {
+        // We first need a valid customer to find the address to be deleted
+        addressView.showDeleteAddressStartScreen();
+        Integer customerId = customerController.selectCustomerIdByUser();
+        if (customerId == null) {
+            // No customer selected so we skip deleting the address
+            return;
+        }
+        List<Address> listAddresses = listAllAddressesFromCustomer(customerId);
+        Optional<Address> optionalAddress = addressView.selectAddressToDelete(listAddresses);
+        if (optionalAddress.isPresent()) {
+            addressDao.deleteAddress(optionalAddress.get());
+        }            
     }
     
-    public void updateAddress() {
+    public void updateAddress(CustomerController customerController) {
+        // We first need a valid customer to find the address to be deleted
+        addressView.showUpdateAddressStartScreen();
+        Integer customerId = customerController.selectCustomerIdByUser();
+        if (customerId == null) {
+            // No customer selected so we skip deleting the address
+            return;
+        }
+        List<Address> listAddresses = listAllAddressesFromCustomer(customerId);
+        Optional<Address> optionalAddress = addressView.selectAddressToUpdate(listAddresses);
+        if (optionalAddress.isPresent()) {
+            addressDao.updateAddress(optionalAddress.get());
+        }            
         
     }
     
@@ -70,9 +78,8 @@ public class AddressController {
         
     }
     
-    List<Address> listAllAddresses() {
-        
-        return null; // dummy
+    List<Address> listAllAddressesFromCustomer(int customerId) {
+        return addressDao.findAddressesByCustomerId(customerId);
     }
     
     List<String> getAvailableAddressTypes() {

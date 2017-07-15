@@ -6,6 +6,7 @@
 package workshop1.interfacelayer.controller;
 
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop1.domain.Customer;
@@ -28,105 +29,41 @@ public class CustomerController {
         customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
     }
     
-    public void createCustomer(){
-        customerView.showNewCustomerScreen();
-        
-        String firstName = customerView.requestFirstNameInput(); 
-        if (firstName == null) return; // User interupted createCustomer proces
-        String lastName = customerView.requestLastNameInput();
-        if (lastName == null) return; // User interupted createCustomer proces
-        String prefix = customerView.requestPrefixInput();
-        if (prefix == null) return;  // User interupted createCustomer proces
-        
-        // Prepare the customer with the validated values and add to database
-        // The accountID is set to null initially, this must be added later
-        customer = new Customer(firstName, lastName, prefix, null);
-        customerView.showCustomerToBeCreated(customer);
-        Integer confirmed = customerView.requestConfirmationToCreate();
-        if (confirmed == null || confirmed == 2){
-            return;
+    public void createCustomer(){        
+        Optional<Customer> optionalCustomer = customerView.constructCustomer();
+        if (optionalCustomer.isPresent()) {
+            customerDao.insertCustomer(optionalCustomer.get());
         }
-        customerDao.insertCustomer(customer);
     }
     
     public void deleteCustomer() {
-        List<Customer> customerList = listAllCustomers();
-        int customerListSize = customerList.size();
-        Integer index = customerView.requestCustomerIdToDeleteInput(customerListSize);
-        if (index == null) return;
-        
-        customer = customerList.get(index);
-        //Promp for confirmation if this is indeed the customer to delete
-        customerView.showCustomerToBeDeleted(customer);
-        Integer confirmed = customerView.requestConfirmationToDelete();
-        if (confirmed == null || confirmed == 2){
-            return;
-        }
-        else {
-            customerDao.deleteCustomer(customer);
-        }
+        Optional<Customer> optionalCustomer = customerView.selectCustomerToDelete(listAllCustomers());
+        if (optionalCustomer.isPresent()) {
+            customerDao.deleteCustomer(optionalCustomer.get());
+        }        
     }
     
     public void updateCustomer() {
-        //Prompt for which customer to update
-        List<Customer> customerList = listAllCustomers();
-        int customerListSize = customerList.size();
-        
-        Integer index = customerView.requestCustomerIdToUpdateInput(customerListSize);
-        if (index == null) return;
-        
-        Customer customerBeforeUpdate = customerList.get(index);
-        
-        customerView.showCustomerToBeUpdated(customerBeforeUpdate);
-        
-        int Id = customerBeforeUpdate.getId();
-        String newFirstName = customerView.requestNewFirstNameInput(); 
-        if (newFirstName == null) {
-            newFirstName = customerBeforeUpdate.getFirstName();
-        } 
-        String newLastName = customerView.requestNewLastNameInput();
-        if (newLastName == null){
-            newLastName = customerBeforeUpdate.getLastName();
-        } 
-        String newPrefix = customerView.requestNewPrefixInput();
-        if (newPrefix == null){
-            newPrefix = customerBeforeUpdate.getLastNamePrefix();
-        }
-        // The relation between customer and account will not change with this update procedure
-        
-        Customer customerAfterUpdate = new Customer(Id, newFirstName, newLastName, newPrefix, 
-                customerBeforeUpdate.getAccountId());
-        
-        //Promp for confirmation of the selected update
-        customerView.showCustomerUpdateChanges(customerBeforeUpdate, customerAfterUpdate);
-        Integer confirmed = customerView.requestConfirmationToUpdate();
-        if (confirmed == null || confirmed == 2){
-            return;
-        }
-        else {
-            customerDao.updateCustomer(customerAfterUpdate);
-        }
+        Optional<Customer> optionalCustomer = customerView.selectCustomerToUpdate(listAllCustomers());
+        if (optionalCustomer.isPresent()) {
+            customerDao.updateCustomer(optionalCustomer.get());
+        }        
     }
     
-    public void searchCustomer() {
-        
+    public void searchCustomer() {        
     }
     
     List<Customer> listAllCustomers() {
         List<Customer> customerList;
-        customerList = customerDao.getAllCustomersAsList();        
-        customerView.showListOfAllCustomers(customerList);        
+        customerList = customerDao.getAllCustomersAsList();               
         return customerList;
     }
     
-    Integer selectCustomerId() {
-         //Prompt for which customer to update
-        List<Customer> customerList = listAllCustomers();
-        int customerListSize = customerList.size();
-        
-        Integer index = customerView.requestCustomerId(customerListSize);
-        if (index == null) return null;
-        Customer selectedCustomer = customerList.get(index);
-        return selectedCustomer.getId();
+    Integer selectCustomerIdByUser() {
+        Optional<Customer> optionalCustomer = customerView.selectCustomer(listAllCustomers());
+        if (optionalCustomer.isPresent()) {
+            return optionalCustomer.get().getId();
+        }
+        return null;
     }
 }

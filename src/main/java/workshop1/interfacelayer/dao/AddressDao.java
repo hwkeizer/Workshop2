@@ -23,7 +23,7 @@ public interface AddressDao {
     
     Optional<Address> findAddressById(int AddressId);
     
-    Optional<Address> findAddressByCustomerId(int customerId);
+    List<Address> findAddressesByCustomerId(int customerId);
     
     List<String> getAllAddressTypesAsList();
     

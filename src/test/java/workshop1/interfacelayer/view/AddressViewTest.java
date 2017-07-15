@@ -155,14 +155,14 @@ public class AddressViewTest {
 //    }
 //
 //    /**
-//     * Test of showAddressToBeCreated method, of class AddressView.
+//     * Test of showAddressToBeConstructed method, of class AddressView.
 //     */
 //    @Test
 //    public void testShowAddressToBeCreated() {
-//        System.out.println("showAddressToBeCreated");
+//        System.out.println("showAddressToBeConstructed");
 //        Address address = null;
 //        AddressView instance = new AddressView();
-//        instance.showAddressToBeCreated(address);
+//        instance.showAddressToBeConstructed(address);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
 //    }

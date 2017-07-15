@@ -28,7 +28,7 @@ public class CustomerDaoMysql implements CustomerDao {
     private static final String SQL_INSERT = "INSERT INTO customer (first_name, last_name, ln_prefix, account_id) VALUES (?, ?, ?, ?)";
     private static final String SQL_FIND_BY_NAME = "SELECT id, first_name, last_name, ln_prefix, account_id FROM customer WHERE last_name = ?";
     private static final String SQL_FIND_BY_ID = "SELECT id, first_name, last_name, ln_prefix, account_id FROM customer WHERE id = ?";
-    private static final String SQL_FIND_ALL = "SELECT id, first_name, last_name, ln_prefix, account_id FROM `customer`";
+    private static final String SQL_FIND_ALL = "SELECT id, first_name, last_name, ln_prefix, account_id FROM `customer`  ORDER BY last_name ASC";
     private static final String SQL_UPDATE = "UPDATE customer SET first_name=?, last_name=?, ln_prefix=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM customer WHERE id = ?";
 
