@@ -80,11 +80,18 @@ public class Customer {
     
     @Override
     public String toString(){
-        return String.format("%-5d%-20s%-15s%-20s", getId(), getFirstName(), getLastNamePrefix(), getLastName());
+        if(getLastNamePrefix() != null) 
+            return String.format("%-5d%-20s%-15s%-20s", getId(), getFirstName(), getLastNamePrefix(), getLastName());
+        
+        else
+            return String.format("%-5d%-20s%-15s%-20s", getId(), getFirstName(), "", getLastName());
     }
     
     public String toStringNoId(){
-        return String.format("%-20s%-15s%-20s", getFirstName(), getLastNamePrefix(), getLastName());
+        if(getLastNamePrefix() != null) 
+            return String.format("%-20s%-15s%-20s", getFirstName(), getLastNamePrefix(), getLastName());
+        else
+            return String.format("%-20s%-15s%-20s", getFirstName(), "", getLastName());
     }
     
     @Override

@@ -10,6 +10,7 @@ import workshop1.interfacelayer.view.AccountView;
 import workshop1.interfacelayer.view.AddressView;
 import workshop1.interfacelayer.view.CustomerView;
 import workshop1.interfacelayer.view.MenuView;
+import workshop1.interfacelayer.view.OrderItemView;
 import workshop1.interfacelayer.view.OrderView;
 import workshop1.interfacelayer.view.ProductView;
 
@@ -31,7 +32,7 @@ public class FrontEndController {
         accountController = new AccountController(new AccountView());
         productController = new ProductController(new ProductView());
         customerController = new CustomerController(new CustomerView());
-        orderController = new OrderController(new OrderView());
+        orderController = new OrderController(new OrderView(), new OrderItemView());
         addressController = new AddressController(new AddressView());
     }
     
@@ -45,18 +46,8 @@ public class FrontEndController {
         MenuActions currentAction = menuController.getMenuAction() ;
         while (currentAction != MenuActions.LOGOUT) {
             switch (currentAction) {                  
-                case CREATE_PRODUCT : {
-                    productController.createProduct();
-                    break;
-                }
-                case UPDATE_PRODUCT : {
-                    productController.updateProduct();
-                    break;
-                }
-                case DELETE_PRODUCT : {
-                    productController.deleteProduct();
-                    break;
-                }
+                
+                //Account
                 case CREATE_ACCOUNT : {
                     accountController.createAccount();
                     break;
@@ -73,38 +64,8 @@ public class FrontEndController {
                     accountController.changeOwnPassword(menuController.getLoggedInUserName());
                     break;
                 }
-                case CREATE_CUSTOMER : {
-                    customerController.createCustomer();
-                    break;
-                }
-                case DELETE_CUSTOMER : {
-                    customerController.deleteCustomer();
-                    break;
-                }
-                case UPDATE_CUSTOMER : {
-                    customerController.updateCustomer();
-                    break;
-                }
-                case CREATE_ORDER_EMPLOYEE : {
-                    orderController.createOrderEmployee();
-                    break;
-                }
-                case CREATE_ORDER_CUSTOMER : {
-                    orderController.createOrderCustomer(menuController.getLoggedInUserName());
-                    break;
-                }
-                case DELETE_ORDER_EMPLOYEE : {
-                    orderController.deleteOrder();
-                    break;
-                }
-                case UPDATE_ORDER_CUSTOMER : {
-                    orderController.updateOrder();
-                    break;
-                }
-                case SET_ORDER_STATUS : {
-                    orderController.setOrderStatus();
-                    break;
-                }
+                
+                //Address
                 case CREATE_ADDRESS : {
                     addressController.createAddress(customerController);
                     break;
@@ -117,6 +78,69 @@ public class FrontEndController {
                     addressController.updateAddress(customerController);
                     break;
                 }
+                
+                //Customer                
+                case CREATE_CUSTOMER : {
+                    customerController.createCustomer();
+                    break;
+                }
+                case DELETE_CUSTOMER : {
+                    customerController.deleteCustomer();
+                    break;
+                }
+                case UPDATE_CUSTOMER : {
+                    customerController.updateCustomer();
+                    break;
+                }
+                
+                //Order
+                case CREATE_ORDER_EMPLOYEE : {
+                    orderController.createOrderEmployee(customerController);
+                    break;
+                }
+                case CREATE_ORDER_CUSTOMER : {
+                    orderController.createOrderCustomer();
+                    break;
+                }
+                case DELETE_ORDER_EMPLOYEE : {
+                    orderController.deleteOrderEmployee(customerController);
+                    break;
+                }
+                case DELETE_ORDER_CUSTOMER : {
+                    orderController.deleteOrderCustomer();
+                    break;
+                }
+                case UPDATE_ORDER_EMPLOYEE : {
+                    orderController.updateOrderEmployee(customerController);
+                    break;
+                }
+                case UPDATE_ORDER_CUSTOMER : {
+                    orderController.updateOrderCustomer();
+                    break;
+                }
+                case SET_ORDER_STATUS : {
+                    orderController.setOrderStatus();
+                    break;
+                }
+                
+                //OrderItem
+                //No specific action, handled from OrderController
+                
+                
+                //Product                
+                case CREATE_PRODUCT : {
+                    productController.createProduct();
+                    break;
+                }
+                case UPDATE_PRODUCT : {
+                    productController.updateProduct();
+                    break;
+                }
+                case DELETE_PRODUCT : {
+                    productController.deleteProduct();
+                    break;
+                }
+ 
             }
             currentAction = menuController.getMenuAction() ;
         }

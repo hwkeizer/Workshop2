@@ -72,10 +72,38 @@ public class Order {
     public int getOrderStatusId() {
         return orderStatusId;
     }
+    
+    public String getOrderStatusIdWord() {
+        String orderStatusWord = "";
+        switch(orderStatusId){
+            case 1: {
+                orderStatusWord = "nieuw";
+                break;
+            }
+            case 2: {
+                orderStatusWord = "in behandeling";
+                break;
+            } 
+            case 3: {
+                orderStatusWord = "afgehandeld";
+                break;
+            }
+        }
+        return orderStatusWord;
+    }
 
     public void setOrderStatusId(int orderStatusId) {
         this.orderStatusId = orderStatusId;
-    }  
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%-5d%-10.2f%-15s%-20s", this.getId(), this.getTotalPrice(), this.getDate().toLocalDate().toString(), this.getOrderStatusIdWord());
+    }
+
+    public String toStringNoId() {
+        return String.format("%-10.2f%-15s%-20s", this.getTotalPrice(), this.getDate().toLocalDate().toString(), this.getOrderStatusIdWord());
+    }
 
     @Override
     public int hashCode() {

@@ -378,7 +378,7 @@ public class CustomerView {
     }
     
     void printRequestForSelectConfirmation() {
-        System.out.println("Wilt u deze klant selecteren?");
+        System.out.println("\nWilt u deze klant selecteren?");
         System.out.println("1) Klant selecteren");
         System.out.println("2) Klant NIET selecteren");
         System.out.print("> ");

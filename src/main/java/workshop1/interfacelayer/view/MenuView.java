@@ -113,6 +113,10 @@ public class MenuView {
         adminProduct.addSubMenu(new MenuItem(adminProduct, 119, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
         adminProduct.addSubMenu(new MenuItem(adminProduct, 110, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         
+        adminOrder.addSubMenu(new MenuItem(adminOrder, 121, "Bestelling voor klant plaatsen", MenuActions.CREATE_ORDER_EMPLOYEE, true));
+        adminOrder.addSubMenu(new MenuItem(adminOrder, 122, "Bestelling voor klant aanpassen", MenuActions.UPDATE_ORDER_EMPLOYEE, true));
+        adminOrder.addSubMenu(new MenuItem(adminOrder, 123, "Bestelling voor klant verwijderen", MenuActions.DELETE_ORDER_EMPLOYEE, true));
+        adminOrder.addSubMenu(new MenuItem(adminOrder, 124, "Bestelstatus van een bestelling aanpassen", MenuActions.SET_ORDER_STATUS, true));
         adminOrder.addSubMenu(new MenuItem(adminOrder, 129, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
         adminOrder.addSubMenu(new MenuItem(adminOrder, 120, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         
@@ -158,6 +162,10 @@ public class MenuView {
         employeeProduct.addSubMenu(new MenuItem(employeeProduct, 219, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
         employeeProduct.addSubMenu(new MenuItem(employeeProduct, 210, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         
+        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 221, "Bestelling voor klant plaatsen", MenuActions.CREATE_ORDER_EMPLOYEE, true));
+        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 222, "Bestelling voor klant aanpassen", MenuActions.UPDATE_ORDER_EMPLOYEE, true));
+        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 223, "Bestelling voor klant verwijderen", MenuActions.DELETE_ORDER_EMPLOYEE, true));
+        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 224, "Bestelstatus van een bestelling aanpassen", MenuActions.SET_ORDER_STATUS, true));
         employeeOrder.addSubMenu(new MenuItem(employeeOrder, 229, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
         employeeOrder.addSubMenu(new MenuItem(employeeOrder, 220, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         

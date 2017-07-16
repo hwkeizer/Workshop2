@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -36,10 +37,11 @@ public class OrderDaoMysql implements OrderDao {
     }
 
     @Override
-    public void insertOrder(Order order) {
+    public Integer insertOrder(Order order) {
+        Integer generatedKey = null;
         try (
             Connection connection = DatabaseConnection.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_INSERT);) {         
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);) {         
                         
             statement.setString(1, order.getTotalPrice().toString());
             statement.setString(2, ((Integer)order.getCustomerId()).toString());
@@ -51,10 +53,19 @@ public class OrderDaoMysql implements OrderDao {
             if (affectedRows == 0) {
                 log.error("Onbekende fout, het toevoegen van de order is mislukt!");
             }
+            
+            try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if(generatedKeys.next()){
+                    generatedKey = generatedKeys.getInt(1);
+                }
+                else
+                    generatedKey = null;
+            }
         } catch (SQLException ex) {
             log.error("SQL error: ", ex);
             
         }
+        return generatedKey;
     }
 
     @Override

@@ -26,10 +26,11 @@ public class ProductController {
     
     private final ProductView productView;
     private Product product;
-    private ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+    private ProductDao productDao;
     
     public ProductController(ProductView productView) {
         this.productView = productView;
+        productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
     }
     
     public void createProduct() {                
@@ -105,7 +106,7 @@ public class ProductController {
     }
     
     //returntype the list of products, required for verification of which product to delete
-    public List<Product> listAllProducts() {
+    public  List<Product> listAllProducts() {
         List<Product> productList;
         ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
         productList = productDao.getAllProductsAsList();

@@ -91,12 +91,25 @@ public class Validator {
             return false;
         }
         
-        if(responsInt <= 2 && responsInt >= 1){
+        if(responsInt <= 2 && responsInt >= 1)
             return true;
+        else
+            return false;
+    }
+    
+    public static boolean isValidStock(int stock, String respons) {
+        int responsInt;
+        try{
+            responsInt = Integer.parseInt(respons);
         }
-        else {
+        catch (NumberFormatException e) {
             return false;
         }
+        
+        if(responsInt >= 0 && responsInt <= stock)
+            return true;
+        else
+            return false;
     }
     
     /**

@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 public interface OrderDao {
 
-    void insertOrder(Order order);
+    Integer insertOrder(Order order);
     
     void updateOrder(Order order);
     

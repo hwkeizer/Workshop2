@@ -32,7 +32,7 @@ public class AddressView {
      */
     
     public void showConstructAddressStartScreen() {
-        System.out.println("\n\nU gaat een nieuwe adres aan de database toevoegen.");
+        System.out.println("\n\nU gaat een nieuw adres aan de database toevoegen.");
         System.out.println("Een adres is altijd gekoppeld aan een klant.");
         System.out.println("Druk op <enter> en selecteer in het volgende scherm eerst de klant waar u een adres voor wilt maken.");
         input.nextLine();

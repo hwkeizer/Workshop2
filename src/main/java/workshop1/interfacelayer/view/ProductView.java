@@ -36,7 +36,7 @@ public class ProductView {
         System.out.println("\n\nU gaat een nieuw product aan de database toevoegen.\n\n"
                 + "Vul de gevraagde gegevens in. Als u een uitroepteken invult\n"
                 + "wordt het toevoegen van een nieuw product afgebroken en gaat u terug\n"
-                + "naar het menu. Al ingevulde gegevens worden dan niet bewaard!\n\n ");
+                + "naar het menu. Reeds ingevulde gegevens worden dan niet bewaard!\n\n ");
     }
     
     public Product constructNewProduct() {
