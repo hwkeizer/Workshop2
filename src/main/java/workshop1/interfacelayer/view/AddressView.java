@@ -107,7 +107,7 @@ public class AddressView {
         printRequestForPostalCodeInput();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
-        while (!Validator.isValidNameString(respons)) {
+        while (!Validator.isValidPostalCode(respons)) {
             showInvalidRespons();
             printRequestForPostalCodeInput();            
             respons = input.nextLine();
@@ -354,6 +354,12 @@ public class AddressView {
         printRequestForPostalCodeInput();
         String respons =  input.nextLine();
         if (respons.isEmpty()) return null; // User initiated abort
+         while (!Validator.isValidPostalCode(respons)) {
+            showInvalidRespons();
+            printRequestForPostalCodeInput();            
+            respons = input.nextLine();
+            if (respons.equals("!")) return null; // User initiated abort
+        }
         return respons;
     }
     

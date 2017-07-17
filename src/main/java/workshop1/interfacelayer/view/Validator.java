@@ -121,4 +121,13 @@ public class Validator {
         //TODO: moet nog geimplementeerd worden
         return true;
     }
+    
+    /**
+     * Validates if the given string is a valid Dutch postal code
+     * @param postalCode
+     * @return 
+     */
+    public static boolean isValidPostalCode(String postalCode) {
+        return postalCode.matches("^[0-9]{4}\\ ?[a-zA-Z]{2}$");
+    }
 }
