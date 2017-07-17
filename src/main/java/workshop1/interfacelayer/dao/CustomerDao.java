@@ -24,6 +24,8 @@ public interface CustomerDao {
     
     Optional<Customer> findCustomerById(int customerId);
     
+    Optional<Customer> findCustomerByAccountId(int accountId);
+    
     Optional<Customer> findCustomerByLastName(String userName);
     
     List<Customer> getAllCustomersAsList();

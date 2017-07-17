@@ -99,7 +99,7 @@ public class FrontEndController {
                     break;
                 }
                 case CREATE_ORDER_CUSTOMER : {
-                    orderController.createOrderCustomer();
+                    orderController.createOrderCustomer(menuController.getLoggedInUserName());
                     break;
                 }
                 case DELETE_ORDER_EMPLOYEE : {

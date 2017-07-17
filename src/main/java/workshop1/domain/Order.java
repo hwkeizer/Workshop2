@@ -154,5 +154,37 @@ public class Order {
         return true;
     }
     
+    public boolean equalsNoId(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Order other = (Order) obj;
+        if (this.customerId != other.customerId) {
+            return false;
+        }
+        if (this.orderStatusId != other.orderStatusId) {
+            return false;
+        }
+        if (!Objects.equals(this.totalPrice, other.totalPrice)) {
+            return false;
+        }
+        if (!Objects.equals(this.dateTime.getYear(), other.dateTime.getYear())) {
+            return false;
+        }
+        if (!Objects.equals(this.dateTime.getMonthValue(), other.dateTime.getMonthValue())) {
+            return false;
+        }
+        if (!Objects.equals(this.dateTime.getDayOfMonth(), other.dateTime.getDayOfMonth())) {
+            return false;
+        }
+        return true;
+    }
+    
     
 }

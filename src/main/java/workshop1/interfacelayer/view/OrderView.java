@@ -41,15 +41,8 @@ public class OrderView {
         input.nextLine();
     }
     
-
-    public Optional<Order> constructOrder(Integer customerId) {
-        
-        //placeholde
-        return null;
-    }
-    
     public void showOrderToBeCreated(List<OrderItem> orderItemList, Order order) {
-        System.out.println("Hier onder volgt een overzicht van de bestelling:\n\n");
+        System.out.println("\nHier onder volgt een overzicht van de bestelling:\n");
         
         System.out.printf("%-10s%-15s%-20s\n", "Prijs", "Datum", "Bestelstatus");
         System.out.println("---------------------------------------------");
@@ -82,6 +75,11 @@ public class OrderView {
     /**
      * Methods related to createOrderCustomer
      */
+    public void showConstructOrderCustomerStartScreen() {
+        System.out.println("\n\nU gaat een nieuwe bestelling plaatsen.");
+        System.out.println("Druk op <enter> om verder te gaan.");
+        input.nextLine();
+    }
     
     
     

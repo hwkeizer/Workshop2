@@ -193,6 +193,9 @@ public class MenuView {
         customerMenu.addSubMenu(customerInformation);
         customerMenu.addSubMenu(customerLogout);
         
+        customerOrder.addSubMenu(new MenuItem(customerOrder, 311, "Bestelling plaatsen", MenuActions.CREATE_ORDER_CUSTOMER, true));
+        customerOrder.addSubMenu(new MenuItem(customerOrder, 312, "Bestelling aanpassen", MenuActions.UPDATE_ORDER_CUSTOMER, true));
+        customerOrder.addSubMenu(new MenuItem(customerOrder, 313, "Bestelling verwijderen", MenuActions.DELETE_ORDER_CUSTOMER, true));
         customerOrder.addSubMenu(new MenuItem(customerOrder, 319, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
         customerOrder.addSubMenu(new MenuItem(customerOrder, 310, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
         

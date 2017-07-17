@@ -28,6 +28,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -35,7 +37,7 @@ import org.junit.Test;
  */
 @Ignore("Temporary ignore to speed up testing of other DAO's")
 public class OrderDaoMysqlTest {
-
+    private static final Logger log = LoggerFactory.getLogger(OrderDaoMysqlTest.class);
     private final int initialNumberOfOrders = 9; // Initial number of products
     
     @Before
@@ -95,6 +97,40 @@ public class OrderDaoMysqlTest {
         } catch (SQLException ex) {
             System.out.println("SQL Exception: " + ex.getMessage());
         }     
+    }
+    
+    @Test
+    public void testInsertOrderReturnsNewlyGeneratedId() {
+        System.out.println("testInsertOrderReturnsNewlyGeneratedId");
+        
+        // Prepare an order to add to the database
+        BigDecimal testTotalPrice = new BigDecimal("13.55");
+        Integer testCustomerId = 3;
+        Integer year = 2016;
+        Integer month = 8;
+        Integer day = 22;
+        LocalDateTime testDate = LocalDate.of(year,month,day).atTime(LocalTime.now());
+        Integer testOrderStatusId = 2;
+        Order testOrder = new Order(testTotalPrice, testCustomerId, testDate, testOrderStatusId);
+        
+        // Add the prepared order to the database and return the key
+        OrderDao orderDAO = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
+        int returnedKey = orderDAO.insertOrder(testOrder);
+        
+        //retrieve the object using the returned key
+        Order retrievedOrder = orderDAO.findOrderById(returnedKey).get();
+        
+        //test if the objects are the same
+        log.debug("tesOrder is:\n" + testOrder.toString());
+        log.debug("retrievedOrder is:\n" + retrievedOrder.toString());
+        
+        assertTrue("Existing found order should be as expected", testOrder.equalsNoId(retrievedOrder));
+        
+//        assertEquals("Existing found order should be as expected", testOrder.getTotalPrice(), retrievedOrder.getTotalPrice());
+//        assertEquals("Existing found order should be as expected", testOrder.getCustomerId(), retrievedOrder.getCustomerId());
+//        assertEquals("Existing found order should be as expected", testOrder.getDate().toLocalDate(), retrievedOrder.getDate().toLocalDate());
+//        assertEquals("Existing found order should be as expected", testOrder.getOrderStatusId(), retrievedOrder.getOrderStatusId());
+        
     }
     
     @Test

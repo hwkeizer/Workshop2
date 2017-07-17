@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,8 +174,8 @@ public class ProductDaoMysql implements ProductDao {
     }
     
     @Override
-    public ArrayList<Product> getAllProductsAsList(){
-        ArrayList<Product> productList = new ArrayList<>();
+    public List<Product> getAllProductsAsList(){
+        List<Product> productList = new ArrayList<>();
         
         try (
             Connection connection = DatabaseConnection.getInstance().getConnection();

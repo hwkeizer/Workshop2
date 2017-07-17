@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,7 @@ public class OrderItemDaoMysql implements OrderItemDao {
     private static final String SQL_UPDATE = "UPDATE `order_item` SET order_id=?, product_id=?, amount=?, subtotal=? WHERE id=?";
     private static final String SQL_FIND_BY_ID = "SELECT id, order_id, product_id, amount, subtotal FROM `order_item` WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM `order_item` WHERE id = ?";
+    private static final String SQL_FIND_ALL = "SELECT * FROM `order_item` WHERE order_id = ? ORDER BY name asc";
 
     public OrderItemDaoMysql() {
     }
@@ -117,6 +120,27 @@ public class OrderItemDaoMysql implements OrderItemDao {
         }
         // Nothing found
         return Optional.empty(); 
+    }
+    
+    @Override
+    public List<OrderItem> findAllOrderItemsAsListByOrderId(Integer orderId){
+        List<OrderItem> orderItemList = new ArrayList<>();
+        
+        try (
+            Connection connection = DatabaseConnection.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL);){
+            
+            statement.setString(1, orderId.toString());
+            
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                orderItemList.add(map(resultSet));
+            }           
+        } catch (SQLException ex) {
+            log.error("SQL error: ", ex);
+        }
+        
+        return orderItemList;
     }
     
     // Helper methode to map the current row of the given ResultSet to a Product instance

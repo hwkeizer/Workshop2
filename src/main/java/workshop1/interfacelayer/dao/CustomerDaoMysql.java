@@ -133,6 +133,24 @@ public class CustomerDaoMysql implements CustomerDao {
         // nothing found
         return Optional.empty();
     }
+    
+    @Override
+    public Optional<Customer> findCustomerByAccountId(int accountId) {
+        try (
+            Connection connection = DatabaseConnection.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
+            
+            statement.setInt(1, accountId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                return Optional.ofNullable(map(resultSet));
+            }            
+        } catch (SQLException ex) {
+            log.error("SQL error: ", ex);
+        }
+        // nothing found
+        return Optional.empty();
+    }
 
     @Override
     public Optional<Customer> findCustomerByLastName(String lastName) {

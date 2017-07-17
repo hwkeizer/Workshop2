@@ -5,6 +5,7 @@
  */
 package workshop1.interfacelayer.dao;
 
+import java.util.List;
 import workshop1.domain.OrderItem;
 import java.util.Optional;
 
@@ -21,5 +22,7 @@ public interface OrderItemDao {
     void deleteOrderItem(OrderItem orderItem);
     
     Optional<OrderItem> findOrderItemById(int orderItemId);
+    
+    List<OrderItem> findAllOrderItemsAsListByOrderId(Integer orderId);
     
 }
