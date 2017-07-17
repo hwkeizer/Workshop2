@@ -1,6 +1,1 @@
-2017-07-14 16:05:19.951 [main] DEBUG workshop1.interfacelayer.DatabaseConnection - Connectiestring: jdbc:mysql://localhost:3306/applikaasie?useSSL=false
-2017-07-14 16:05:36.923 [main] DEBUG workshop1.interfacelayer.dao.CustomerDaoMysql - first name is Fred and last name is Boomsma
-2017-07-14 16:05:36.924 [main] DEBUG workshop1.interfacelayer.dao.CustomerDaoMysql - first name is Jan and last name is Jansen
-2017-07-14 16:05:36.924 [main] DEBUG workshop1.interfacelayer.dao.CustomerDaoMysql - first name is Klaas and last name is Klaassen
-2017-07-14 16:05:36.924 [main] DEBUG workshop1.interfacelayer.dao.CustomerDaoMysql - first name is Piet and last name is Pietersen
-2017-07-14 16:05:36.924 [main] DEBUG workshop1.interfacelayer.dao.CustomerDaoMysql - first name is Joost and last name is Snel
+2017-07-17 16:36:10.241 [main] DEBUG workshop1.interfacelayer.DatabaseConnection - Connectiestring: jdbc:mysql://localhost:3306/applikaasie?useSSL=false

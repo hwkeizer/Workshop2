@@ -206,6 +206,29 @@ public class ValidatorTest {
         assertFalse("Index outside listSize should return false", result);
     }
     
+    /**
+     * Test of isValidPostalCode method, of class Validator.
+     */
+    @Test
+    public void testIsValidPostalCode() {
+        System.out.println("isValidPostalCode");
+        String postalCode;
+        
+        postalCode = "3417DZ";
+        assertTrue("Correct postal code should return true", Validator.isValidPostalCode(postalCode));
+        postalCode = "9999XX";
+        assertTrue("Correct postal code should return true", Validator.isValidPostalCode(postalCode));
+        postalCode = "0000AA";
+        assertTrue("Correct postal code should return true", Validator.isValidPostalCode(postalCode));
+        postalCode = "678DF";
+        assertFalse("Invalid postal code should return false", Validator.isValidPostalCode(postalCode));
+        postalCode = "67857DF";
+        assertFalse("Invalid postal code should return false", Validator.isValidPostalCode(postalCode));
+        postalCode = "67GHDF";
+        assertFalse("Invalid postal code should return false", Validator.isValidPostalCode(postalCode));
+        
+    }
+    
     
     
 }

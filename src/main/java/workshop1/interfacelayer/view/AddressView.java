@@ -34,12 +34,14 @@ public class AddressView {
     public void showConstructAddressStartScreen() {
         System.out.println("\n\nU gaat een nieuw adres aan de database toevoegen.");
         System.out.println("Een adres is altijd gekoppeld aan een klant.");
-        System.out.println("Druk op <enter> en selecteer in het volgende scherm eerst de klant waar u een adres voor wilt maken.");
+        System.out.println("Druk op <enter> en selecteer in het volgende scherm eerst de\n"
+                + " klant waar u een adres voor wilt maken.");
         input.nextLine();
     }
     
     public Optional<Address> constructAddress(int customerId, List<String> addressTypes) {
-        System.out.println("Vul nu de gevraagde adresgegevens in. Als u een uitroepteken invult\n"
+        System.out.println("Vul nu de gevraagde adresgegevens in. Let op dat u slechts één adres\n"
+                + "van elk type per klant kunt hebben. Als u een uitroepteken invult\n"
                 + "wordt het toevoegen van een nieuwe adres afgebroken en gaat u terug\n"
                 + "naar het menu. Al ingevulde gegevens worden dan niet bewaard!\n\n ");
         
@@ -105,7 +107,7 @@ public class AddressView {
         printRequestForPostalCodeInput();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
-        while (!Validator.isValidNameString(respons)) {
+        while (!Validator.isValidPostalCode(respons)) {
             showInvalidRespons();
             printRequestForPostalCodeInput();            
             respons = input.nextLine();
@@ -159,8 +161,8 @@ public class AddressView {
     void showAddressToBeConstructed(Address address){
         System.out.println("\nU heeft aangegeven het volgende adres te willen toevoegen:\n");
         
-        System.out.printf("%-30s%-8s%-12s%-10s%-20s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats");
-        System.out.println("----------------------------------------------------------------------");
+        System.out.printf("%-30s%-8s%-12s%-10s%-20s%-5s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats", "Type");
+        System.out.println("----------------------------------------------------------------------------------------");
         System.out.println(address.toStringNoId());
     }
     
@@ -234,8 +236,8 @@ public class AddressView {
     
     void showAddressToBeDeleted(Address address) {
         System.out.println("\nU heeft aangegeven het volgende adres te willen verwijderen:\n\n");        
-        System.out.printf("%-30s%-8s%-12s%-10s%-20s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats");
-        System.out.println("-------------------------------------------------------------------------------");
+        System.out.printf("%-30s%-8s%-12s%-10s%-20s%-5s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats", "Type");
+        System.out.println("----------------------------------------------------------------------------------------");
         System.out.println(address.toStringNoId());
     }
      
@@ -352,6 +354,12 @@ public class AddressView {
         printRequestForPostalCodeInput();
         String respons =  input.nextLine();
         if (respons.isEmpty()) return null; // User initiated abort
+         while (!Validator.isValidPostalCode(respons)) {
+            showInvalidRespons();
+            printRequestForPostalCodeInput();            
+            respons = input.nextLine();
+            if (respons.equals("!")) return null; // User initiated abort
+        }
         return respons;
     }
     
@@ -384,8 +392,8 @@ public class AddressView {
     
     void showAddressToBeUpdated(Address address) {
         System.out.println("\nU heeft aangegeven het volgende adres te willen aanpassen:\n\n");        
-        System.out.printf("%-30s%-8s%-12s%-10s%-20s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats");
-        System.out.println("-------------------------------------------------------------------------------");
+        System.out.printf("%-30s%-8s%-12s%-10s%-20s%-5s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats", "Type");
+        System.out.println("----------------------------------------------------------------------------------------");
         System.out.println(address.toStringNoId());
     }
     
@@ -393,14 +401,14 @@ public class AddressView {
         System.out.println("\nU heeft aangegeven het volgende adres te willen wijzigen:\n");
         System.out.println("Geselecteerd adres voor wijzigingen:\n");
         
-        System.out.printf("%-30s%-8s%-12s%-10s%-20s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats");
-        System.out.println("-------------------------------------------------------------------------------");
+        System.out.printf("%-30s%-8s%-12s%-10s%-20s%-5s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats", "Type");
+        System.out.println("----------------------------------------------------------------------------------------");
         System.out.println(before.toStringNoId());
         
         System.out.println("\nGeselecteerd adres na wijzigingen:\n");
         
-        System.out.printf("%-30s%-8s%-12s%-10s%-20s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats");
-        System.out.println("-------------------------------------------------------------------------------");
+        System.out.printf("%-30s%-8s%-12s%-10s%-20s%-5s\n", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats", "Type");
+        System.out.println("----------------------------------------------------------------------------------------");
         System.out.println(after.toStringNoId());
     }
      
@@ -430,10 +438,10 @@ public class AddressView {
      * General addressView methods not related to a specific action
      */
     
-    void showListOfAddresses(List<Address> addressList) {
-        System.out.println("\nDe volgende adressen zijn bij deze klant gevonden:\n");
-        System.out.printf("%-5s%-30s%-8s%-12s%-10s%-20s\n", "ID", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats");
-        System.out.println("----------------------------------------------------------------------------------------");
+    public void showListOfAddresses(List<Address> addressList) {
+        System.out.println("\nDe volgende adressen horen bij deze klant:\n");
+        System.out.printf("%-5s%-30s%-8s%-12s%-10s%-20s%-5s\n", "ID", "Straatnaam", "Nummer", "Toevoeging", "Postcode", "Plaats", "Type");
+        System.out.println("--------------------------------------------------------------------------------------------------");
         
         int i = 1;
         for(Address address: addressList){
@@ -442,6 +450,22 @@ public class AddressView {
             i++;
         }
         System.out.println("");
+    }
+    
+    public void showNoAddressCanBeAdded() {
+        System.out.println("Deze klant heeft al een postadres, factuuradres en bezorgadres. Er kan geen\n"
+                + "adres meer worden toegevoegd. U kunt alleen één van de bestaande\n"
+                + "adressen wijzigen. Kies hiervoor `Adres aanpassen` in het menu.\n"
+                + "Druk op <enter> om door te gaan\n");
+        input.nextLine();
+    }
+    
+    public void showAddressTypeExists() {
+        System.out.println("Dit adres type bestaat al voor deze klant. Kies `Adres aanpassen` indien\n"
+                + "u het bestaande adres wilt wijzigen of kies het juiste adres type\n"
+                + "om dit adres aan de klant toe te voegen\n"
+                + "Druk op <enter> om verder te gaan");
+        input.nextLine();
     }
     
     void showInvalidRespons() {
