@@ -110,13 +110,13 @@ public class Address {
     
     @Override
     public String toString(){
-        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s", getId(), getStreetName(), 
-                getNumber(), getAddition(), getPostalCode(), getCity());
+        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-8d", getId(), getStreetName(), 
+                getNumber(), getAddition(), getPostalCode(), getCity(), getAddressTypeId());
     }
     
     public String toStringNoId(){
-        return String.format("%-30s%-8d%-12s%-10s%-20s", getStreetName(), getNumber(), 
-                getAddition(), getPostalCode(), getCity());
+        return String.format("%-30s%-8d%-12s%-10s%-20s%-8d", getStreetName(), getNumber(), 
+                getAddition(), getPostalCode(), getCity(), getAddressTypeId());
     }
     
     @Override

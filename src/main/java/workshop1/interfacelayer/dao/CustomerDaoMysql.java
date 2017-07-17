@@ -38,7 +38,6 @@ public class CustomerDaoMysql implements CustomerDao {
 
     @Override
     public void insertCustomer(Customer customer) {
-        log.debug("customer at start of insert customer method " + " " + customer.getFirstName() + " " + customer.getLastName() + " " + customer.getLastNamePrefix() + " " + customer.getAccountId());
         try(
             Connection connection = DatabaseConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_INSERT);) {
@@ -152,14 +151,13 @@ public class CustomerDaoMysql implements CustomerDao {
         return Optional.empty();
     }
     
-    // Helper methode to map the current row of the given ResultSet to a Product instance
+    // Helper methode to map the current row of the given ResultSet to a Customer instance
     private Customer map(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
         String lastNamePrefix = resultSet.getString("ln_prefix");
         int accountId = resultSet.getInt("account_id");
-        log.debug("first name is " + firstName + " and last name is " + lastName);
         return new Customer(id, firstName, lastName, lastNamePrefix, accountId);
     }
 

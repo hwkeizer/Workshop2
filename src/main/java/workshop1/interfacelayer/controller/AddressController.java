@@ -37,8 +37,21 @@ public class AddressController {
             // No customer selected so we skip creating the address
             return;
         }
+        List<Address> listAddresses = listAllAddressesFromCustomer(customerId);
+        addressView.showListOfAddresses(listAddresses);
+        if (listAddresses.size() == 3) {
+            addressView.showNoAddressCanBeAdded();
+            return;
+        }        
         Optional<Address> optionalAddress = addressView.constructAddress(customerId, getAvailableAddressTypes());   
         if (optionalAddress.isPresent()) {
+            // If the address type already exists we have to abort
+            for (Address address : listAddresses) {
+                if (optionalAddress.get().getAddressTypeId() == address.getAddressTypeId()) {
+                    addressView.showAddressTypeExists();
+                    return;
+                }
+            }
             addressDao.insertAddress(optionalAddress.get());
         }       
     }
