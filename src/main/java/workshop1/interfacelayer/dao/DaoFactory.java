@@ -5,6 +5,8 @@
  */
 package workshop1.interfacelayer.dao;
 
+import workshop1.interfacelayer.dao.mongo.DaoFactoryMongo;
+
 /**
  *
  * @author hwkei
@@ -13,6 +15,7 @@ public abstract class DaoFactory {
     
     // List of DAO types supported by this factory
     public static final int MYSQL = 1;
+    public static final int MONGO = 2;
     
     // DAO's that can be produced. The concrete factories will implement
     // these methods.
@@ -28,6 +31,9 @@ public abstract class DaoFactory {
         switch (factoryType) {
             case MYSQL :
                 return new DaoFactoryMysql();
+            case MONGO : {
+                return new DaoFactoryMongo();
+            }
             default :
                 return null;
         }

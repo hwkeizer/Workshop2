@@ -5,6 +5,9 @@
  */
 package workshop1.interfacelayer;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoDatabase;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,6 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DatabaseConnection {
     private static final Logger log = LoggerFactory.getLogger(DatabaseConnection.class);
+    private final String dbSettingsFileName = "Database_Settings.xml";
     private String databaseType;
     private String serverName;
     private String databaseName;
@@ -27,10 +31,9 @@ public class DatabaseConnection {
     private String portNumber;
     private String user;   
     private String password;
-    private String environment;
+    private MongoClient mongoClient;
     
-    private DatabaseConnection() {  
-        readXML();
+    private DatabaseConnection() {
     }
     
     private static class SingletonHolder {
@@ -41,32 +44,32 @@ public class DatabaseConnection {
         return SingletonHolder.INSTANCE;
     }
     
-    public static void main(String[] args) {
-        Connection connection = DatabaseConnection.getInstance().getConnection();
-        if (connection != null) {
-            log.debug("Database connectie gemaakt");
-        }
-    }
-    
     /**
      * Returns the complete connection string
      * Connection string is composed from the XML configuration values
      * @return 
      */
-    private String getConnectionString() {
+    private String getMySqlConnectionString() {
         return databaseType + "://" + serverName + ":" + portNumber + "/" 
                 + databaseName + urlSuffix;
     }
     
+    private String getMongoDbConnectionString() {
+        return databaseType + "://" + serverName + ":" + portNumber;
+        
+    }
+        
+    
     /**
-     * Returns a connection to the database
+     * Returns a MySql connection to the database
      * @return connection
      */
-    public Connection getConnection(){
+    public Connection getMySqlConnection(){
+        readMySqlXML();
         try {
             Class.forName("com.mysql.jdbc.Driver");
             try {
-                return DriverManager.getConnection(getConnectionString(), user, password);
+                return DriverManager.getConnection(getMySqlConnectionString(), user, password);
             } catch (SQLException ex) {
                 // log an exception. fro example:
                 log.error("Failed to create the database connection.", ex);
@@ -78,36 +81,88 @@ public class DatabaseConnection {
         return null;
     }
     
-    private void readXML(){
+    public MongoDatabase getMongoDatabase() {
+        // TODO: Check existance of database and create it when not available?
+        return getMongoDbClient().getDatabase(databaseName);
+    }
+    
+    private MongoClient getMongoDbClient() {
+        if (mongoClient != null) return mongoClient;
+        readMongoDbXML();
+        MongoClientURI uri = new MongoClientURI(getMongoDbConnectionString());
+        mongoClient = new MongoClient(uri);
+        return mongoClient;
+    }
+        
+    
+    private void readMySqlXML(){
         SAXReader reader = new SAXReader();
         // TODO: hard-coded file naam ergens als configuratie of constante zetten
-        File file = new File("Database_Settings.xml");
+        File file = new File(dbSettingsFileName);
         try{
             Document document = reader.read(file);
             
             Node node;
-            node = document.selectSingleNode("/database_settings/databaseType");
+            node = document.selectSingleNode("/database_settings/mysql/databaseType");
             databaseType = node.getText();
             
-            node = document.selectSingleNode("/database_settings/serverName");
+            node = document.selectSingleNode("/database_settings/mysql/serverName");
             serverName = node.getText();
             
-            node = document.selectSingleNode("/database_settings/databaseName");
+            node = document.selectSingleNode("/database_settings/mysql/databaseName");
             databaseName = node.getText();
             
-            node = document.selectSingleNode("/database_settings/urlSuffix");
+            node = document.selectSingleNode("/database_settings/mysql/urlSuffix");
             urlSuffix = node.getText();
             
-            node = document.selectSingleNode("/database_settings/portNumber");
+            node = document.selectSingleNode("/database_settings/mysql/portNumber");
             portNumber = node.getText();
             
-            node = document.selectSingleNode("/database_settings/user");
+            node = document.selectSingleNode("/database_settings/mysql/user");
             user = node.getText();
             
-            node = document.selectSingleNode("/database_settings/password");
+            node = document.selectSingleNode("/database_settings/mysql/password");
             password = node.getText();
             
-            log.debug("Connectiestring: {}",getConnectionString());
+            log.debug("Connectiestring: {}",getMySqlConnectionString());
+
+        }
+        catch(DocumentException e){
+            log.debug("Probleem met het lezen van het configuratie document", e);
+        }
+        
+    }
+    
+    private void readMongoDbXML() {
+        SAXReader reader = new SAXReader();
+        // TODO: hard-coded file naam ergens als configuratie of constante zetten
+        File file = new File(dbSettingsFileName);
+        try{
+            Document document = reader.read(file);
+            
+            Node node;
+            node = document.selectSingleNode("/database_settings/mongodb/databaseType");
+            databaseType = node.getText();
+            
+            node = document.selectSingleNode("/database_settings/mongodb/serverName");
+            serverName = node.getText();
+            
+            node = document.selectSingleNode("/database_settings/mysql/databaseName");
+            databaseName = node.getText();
+//            
+//            node = document.selectSingleNode("/database_settings/mysql/urlSuffix");
+//            urlSuffix = node.getText();
+//            
+            node = document.selectSingleNode("/database_settings/mongodb/portNumber");
+            portNumber = node.getText();
+//            
+//            node = document.selectSingleNode("/database_settings/mysql/user");
+//            user = node.getText();
+//            
+//            node = document.selectSingleNode("/database_settings/mysql/password");
+//            password = node.getText();
+            
+            log.debug("Connectiestring: {}",getMongoDbConnectionString());
 
         }
         catch(DocumentException e){

@@ -39,7 +39,7 @@ public class CustomerDaoMysql implements CustomerDao {
     @Override
     public void insertCustomer(Customer customer) {
         try(
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_INSERT);) {
             
             statement.setString(1, customer.getFirstName());
@@ -78,7 +78,7 @@ public class CustomerDaoMysql implements CustomerDao {
         }
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE);) {
             
             statement.setString(1, customer.getFirstName());
@@ -98,7 +98,7 @@ public class CustomerDaoMysql implements CustomerDao {
     @Override
     public void deleteCustomer(Customer customer) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_DELETE);) {
             
             statement.setInt(1, customer.getId());
@@ -118,7 +118,7 @@ public class CustomerDaoMysql implements CustomerDao {
     @Override
     public Optional<Customer> findCustomerById(int customerId) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
             
             statement.setInt(1, customerId);
@@ -136,7 +136,7 @@ public class CustomerDaoMysql implements CustomerDao {
     @Override
     public Optional<Customer> findCustomerByAccountId(int accountId) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
             
             statement.setInt(1, accountId);
@@ -154,7 +154,7 @@ public class CustomerDaoMysql implements CustomerDao {
     @Override
     public Optional<Customer> findCustomerByLastName(String lastName) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_NAME);){
             
             statement.setString(1, lastName);
@@ -183,7 +183,7 @@ public class CustomerDaoMysql implements CustomerDao {
     public List<Customer> getAllCustomersAsList() {
         List<Customer> customerList = new ArrayList<>();
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL);){
             
             ResultSet resultSet = statement.executeQuery();

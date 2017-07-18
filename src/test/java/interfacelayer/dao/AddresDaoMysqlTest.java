@@ -79,7 +79,7 @@ public class AddresDaoMysqlTest {
 
         // Try to fetch the address from the database. If it exists and ID is not the same as allready present in database, we have succesfully created a new address
         final String query = "SELECT * FROM `address` WHERE `id` NOT BETWEEN 1 and " + initialNumberOfAddresses + " AND `street_name`=? AND `number`=? AND `addition`=? AND `postal_code`=? AND `city`=? AND `customer_id`=? AND `address_type_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setString(1,testStreetName);
             stat.setInt(2,testNumber);
@@ -189,7 +189,7 @@ public class AddresDaoMysqlTest {
         else {
             query = "SELECT * FROM `address` WHERE `id`=? AND `street_name`=? AND `number`=? AND `postal_code`=? AND `city`=? AND `customer_id`=? AND `address_type_id`=? AND `addition`=?";
         }
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(query);
             
             stat.setInt(1,testId);
@@ -235,7 +235,7 @@ public class AddresDaoMysqlTest {
             queryForDeleted = "SELECT * FROM `address` WHERE `id`=? AND `street_name`=? AND `number`=? AND `postal_code`=? AND `city`=? AND `customer_id`=? AND `address_type_id`=? AND `addition`=?";
         }
         
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(queryForDeleted);
             stat.setInt(1,testId);
             stat.setString(2,testStreetName);
@@ -304,7 +304,7 @@ public class AddresDaoMysqlTest {
         else {
             beforeAddressUpdateQuery = "SELECT * FROM `address` WHERE `id`=? AND `street_name`=? AND `number`=? AND `postal_code`=? AND `city`=? AND `customer_id`=? AND `address_type_id`=? AND `addition`=?";
         }
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             // Try to find the address with the old values in the database. This should fail
             PreparedStatement stat = connection.prepareStatement(beforeAddressUpdateQuery);
             stat.setInt(1,testId);
@@ -380,7 +380,7 @@ public class AddresDaoMysqlTest {
     int getTableCount(String table) {
 
         final String countQuery = "SELECT COUNT(*) FROM `" + table + "`";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             Statement stat = connection.createStatement();
             try (ResultSet resultSet = stat.executeQuery(countQuery)) {
                 while (resultSet.next()) {

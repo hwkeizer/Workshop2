@@ -80,7 +80,7 @@ public class CustomerDaoMysqlTest {
 
         // Try to fetch the customer from the database. If it exists and ID is not the same as allready present in database, we have succesfully created a new customer
         final String query = "SELECT * FROM `customer` WHERE `id` NOT BETWEEN 1 and " + initialNumberOfCustomers + " AND `first_name`=? AND `last_name`=? AND `ln_prefix`=? AND `account_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setString(1,testFirstName);
             stat.setString(2,testLastName);
@@ -227,7 +227,7 @@ public class CustomerDaoMysqlTest {
         else {
             query = "SELECT * FROM `customer` WHERE `id`=? AND `first_name`=? AND `last_name`=? AND `account_id`=? and `ln_prefix`=?";
         }
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setInt(1, testId);
             stat.setString(2, testFirstName);
@@ -268,7 +268,7 @@ public class CustomerDaoMysqlTest {
         else {
             queryForDeleted = "SELECT * FROM `customer` WHERE `id`=? AND `first_name`=? AND `last_name`=? AND `account_id`=? and `ln_prefix`=?";
         }
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(queryForDeleted);
             stat.setInt(1, testId);
             stat.setString(2, testFirstName);
@@ -294,7 +294,7 @@ public class CustomerDaoMysqlTest {
     int getTableCount(String table) {
 
         final String countQuery = "SELECT COUNT(*) FROM `" + table + "`";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             Statement stat = connection.createStatement();
             try (ResultSet resultSet = stat.executeQuery(countQuery)) {
                 while (resultSet.next()) {
@@ -345,7 +345,7 @@ public class CustomerDaoMysqlTest {
         else {
             beforeCustomerUpdateQuery = "SELECT * FROM `customer` WHERE `id`=? AND `first_name`=? AND `last_name`=? AND `account_id`=? AND `ln_prefix`=?";
         }
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             // Try to find the customer with the old values in the database. This should fail
             PreparedStatement stat = connection.prepareStatement(beforeCustomerUpdateQuery);
             stat.setInt(1,testId);

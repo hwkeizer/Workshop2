@@ -38,7 +38,7 @@ public class AccountDaoMysql implements AccountDao {
     public void insertAccount(Account account) throws DuplicateAccountException {
     
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_INSERT);) {         
             
             statement.setString(1, account.getUsername());
@@ -75,7 +75,7 @@ public class AccountDaoMysql implements AccountDao {
         }
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE);) {
             
             statement.setString(1, account.getUsername());
@@ -95,7 +95,7 @@ public class AccountDaoMysql implements AccountDao {
     @Override
     public void deleteAccount(Account account) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_DELETE);) {
             
             statement.setInt(1, account.getId());
@@ -115,7 +115,7 @@ public class AccountDaoMysql implements AccountDao {
     @Override
     public Optional<Account> findAccountById(int accountId) {
     try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
             
             statement.setString(1, ((Integer)accountId).toString());
@@ -139,7 +139,7 @@ public class AccountDaoMysql implements AccountDao {
     @Override
     public Optional<Account> findAccountByUserName(String username) {
             try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_NAME);){
             
             statement.setString(1, username);
@@ -167,7 +167,7 @@ public class AccountDaoMysql implements AccountDao {
     public List<String> getAllAccountTypesAsList() {
         List<String> allAccountTypes = new ArrayList<>();
         try {
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             Statement statement = connection.createStatement();            
             ResultSet resultSet = statement.executeQuery(SQL_LIST_ALL_ACCOUNTTYPES);            
             while (resultSet.next()) {
@@ -183,7 +183,7 @@ public class AccountDaoMysql implements AccountDao {
     public List<Account> getAllAccountsAsList() {
         List<Account> allAccounts = new ArrayList<>();
         try {
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             Statement statement = connection.createStatement();            
             ResultSet resultSet = statement.executeQuery(SQL_LIST_ALL_ACCOUNTS);            
             while (resultSet.next()) {

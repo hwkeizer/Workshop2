@@ -40,7 +40,7 @@ public class OrderItemDaoMysql implements OrderItemDao {
     @Override
     public void insertOrderItem(OrderItem orderItem) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_INSERT);) {         
             
             statement.setInt(1, orderItem.getOrderId());
@@ -69,7 +69,7 @@ public class OrderItemDaoMysql implements OrderItemDao {
         }
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE);) {
             
             statement.setInt(1, orderItem.getOrderId());
@@ -90,7 +90,7 @@ public class OrderItemDaoMysql implements OrderItemDao {
     @Override
     public void deleteOrderItem(OrderItem orderItem) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_DELETE);) {
             
             statement.setInt(1, orderItem.getId());
@@ -107,7 +107,7 @@ public class OrderItemDaoMysql implements OrderItemDao {
     @Override
     public Optional<OrderItem> findOrderItemById(int orderItemId) {
        try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
             
             statement.setString(1, ((Integer)orderItemId).toString());
@@ -127,7 +127,7 @@ public class OrderItemDaoMysql implements OrderItemDao {
         List<OrderItem> orderItemList = new ArrayList<>();
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL);){
             
             statement.setString(1, orderId.toString());

@@ -73,7 +73,7 @@ public class AccountDaoMysqlTest {
 
         // Try to fetch the account from the database. If it exists and ID is not the same as allready present in database, we have succesfully created a new account
         final String query = "SELECT * FROM `account` WHERE `id` NOT BETWEEN 1 and " + initialNumberOfAccounts + " AND `username`=? AND `password`=? AND `account_type_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setString(1,testUsername);
             stat.setString(2,testPassword);
@@ -211,7 +211,7 @@ public class AccountDaoMysqlTest {
         
         // Try to fetch the account from the database. It must exist or testing will make no sence
         final String query = "SELECT * FROM `account` WHERE `id`=? AND `username`=? AND `password`=? AND `account_type_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setInt(1, testId);
             stat.setString(2, testUsername);
@@ -242,7 +242,7 @@ public class AccountDaoMysqlTest {
         
         // Try to fetch the account from the database. If it does not exist we have succesfully deleted the account
         final String queryForDeleted = "SELECT * FROM `account` WHERE `id`=? AND `username`=? AND `password`=? AND `account_type_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(queryForDeleted);
             stat.setString(1, testId.toString());
             stat.setString(2, testUsername);
@@ -265,7 +265,7 @@ public class AccountDaoMysqlTest {
     int getTableCount(String table) {
 
         final String countQuery = "SELECT COUNT(*) FROM `" + table + "`";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             Statement stat = connection.createStatement();
             try (ResultSet resultSet = stat.executeQuery(countQuery)) {
                 while (resultSet.next()) {
@@ -309,7 +309,7 @@ public class AccountDaoMysqlTest {
         
         // Validate the update        
         final String query = "SELECT * FROM `account` WHERE `id`=? AND `username`=? AND `password`=? AND `account_type_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             // Try to find the account with the old values in the database. This should fail
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setString(1,testId.toString());

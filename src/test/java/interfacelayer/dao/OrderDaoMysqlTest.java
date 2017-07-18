@@ -76,7 +76,7 @@ public class OrderDaoMysqlTest {
         
         // Try to fetch the order from the database. If it exists and ID is not the same as allready present in database, we have succesfully created a new order
         final String query = "SELECT * FROM `order` WHERE `id` NOT BETWEEN 1 and " + initialNumberOfOrders + " AND `total_price`=? AND `customer_id`=? AND year(date)=? AND month(date)=? AND day(date)=? AND `order_status_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setString(1,testTotalPrice.toString());
             stat.setString(2,testCustomerId.toString());
@@ -169,7 +169,7 @@ public class OrderDaoMysqlTest {
                 
         // Validate the update        
         final String query = "SELECT * FROM `order` WHERE `id`=? AND `total_price`=? AND `customer_id`=? AND year(date)=? AND month(date)=? AND day(date)=? AND `order_status_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             // Try to find the order with the old values in the database. This should fail
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setString(1,testId.toString());
@@ -229,7 +229,7 @@ public class OrderDaoMysqlTest {
         
         // Try to fetch the product from the database. It must exist or testing will make no sence
         final String query = "SELECT * FROM `order` WHERE `id`=? AND `total_price`=? AND `customer_id`=? AND year(date)=? AND month(date)=? AND day(date)=? AND `order_status_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setString(1,testId.toString());
             stat.setString(2,testTotalPrice.toString());
@@ -263,7 +263,7 @@ public class OrderDaoMysqlTest {
         
         // Try to fetch the product from the database. If it does not exist we have succesfully deleted the product
         final String queryForDeleted = "SELECT * FROM `order` WHERE `id`=? AND `total_price`=? AND `customer_id`=? AND year(date)=? AND month(date)=? AND day(date)=? AND `order_status_id`=?";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(queryForDeleted);
             stat.setString(1,testId.toString());
             stat.setString(2,testTotalPrice.toString());
@@ -333,7 +333,7 @@ public class OrderDaoMysqlTest {
     int getTableCount(String table) {
 
         final String countQuery = "SELECT COUNT(*) FROM `" + table + "`";
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             Statement stat = connection.createStatement();
             try (ResultSet resultSet = stat.executeQuery(countQuery)) {
                 while (resultSet.next()) {

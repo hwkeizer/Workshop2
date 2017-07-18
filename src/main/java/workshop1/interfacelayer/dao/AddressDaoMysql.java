@@ -39,7 +39,7 @@ public class AddressDaoMysql implements AddressDao {
     public void insertAddress(Address address) {
         log.debug("insertMethod was called");
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_INSERT);) {         
             
             statement.setString(1, address.getStreetName());
@@ -77,7 +77,7 @@ public class AddressDaoMysql implements AddressDao {
         }
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE);) {
             
             statement.setString(1, address.getStreetName());
@@ -103,7 +103,7 @@ public class AddressDaoMysql implements AddressDao {
     public void deleteAddress(Address address) {
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_DELETE);) {
             
             statement.setInt(1, address.getId());
@@ -125,7 +125,7 @@ public class AddressDaoMysql implements AddressDao {
     @Override
     public Optional<Address> findAddressById(int addressId) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
             
             statement.setInt(1, addressId);
@@ -144,7 +144,7 @@ public class AddressDaoMysql implements AddressDao {
     public List<Address> findAddressesByCustomerId(int customerId) {
         List<Address> addressList = new ArrayList<>();
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_CUSTOMER_ID);){
             statement.setInt(1, customerId);
             ResultSet resultSet = statement.executeQuery();
@@ -161,7 +161,7 @@ public class AddressDaoMysql implements AddressDao {
     public List<String> getAllAddressTypesAsList() {
         List<String> allAddressTypes = new ArrayList<>();
         try {
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             Statement statement = connection.createStatement();            
             ResultSet resultSet = statement.executeQuery(SQL_LIST_ALL_ADDRESSTYPES);            
             while (resultSet.next()) {

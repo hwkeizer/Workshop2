@@ -43,7 +43,7 @@ public class ProductDaoMysql implements ProductDao {
     public void insertProduct(Product product) throws DuplicateProductException {
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_INSERT);) {         
             
             statement.setString(1, product.getName());
@@ -85,7 +85,7 @@ public class ProductDaoMysql implements ProductDao {
         }
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE);) {
             
             statement.setString(1, product.getName());
@@ -110,7 +110,7 @@ public class ProductDaoMysql implements ProductDao {
     @Override
     public void deleteProduct(Product product) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_DELETE);) {
             
             statement.setString(1, ((Integer)product.getId()).toString());
@@ -135,7 +135,7 @@ public class ProductDaoMysql implements ProductDao {
     @Override
     public Optional<Product> findProductById(int productId) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
             
             statement.setString(1, ((Integer)productId).toString());
@@ -158,7 +158,7 @@ public class ProductDaoMysql implements ProductDao {
     @Override
     public Optional<Product> findProductByName(String name) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_NAME);){
             
             statement.setString(1, name);
@@ -178,7 +178,7 @@ public class ProductDaoMysql implements ProductDao {
         List<Product> productList = new ArrayList<>();
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL);){
             
             ResultSet resultSet = statement.executeQuery();

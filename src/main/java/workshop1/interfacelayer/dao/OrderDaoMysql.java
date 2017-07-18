@@ -40,7 +40,7 @@ public class OrderDaoMysql implements OrderDao {
     public Integer insertOrder(Order order) {
         Integer generatedKey = null;
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);) {         
                         
             statement.setString(1, order.getTotalPrice().toString());
@@ -78,7 +78,7 @@ public class OrderDaoMysql implements OrderDao {
         }
         
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE);) {
             
             statement.setString(1, order.getTotalPrice().toString());
@@ -98,7 +98,7 @@ public class OrderDaoMysql implements OrderDao {
     @Override
     public void deleteOrder(Order order) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_DELETE);) {
             statement.setString(1, ((Integer)order.getId()).toString());
             int affectedRows = statement.executeUpdate();
@@ -113,7 +113,7 @@ public class OrderDaoMysql implements OrderDao {
     @Override
     public Optional<Order> findOrderById(int orderId) {
         try (
-            Connection connection = DatabaseConnection.getInstance().getConnection();
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID);){
             
             statement.setString(1, ((Integer)orderId).toString());
