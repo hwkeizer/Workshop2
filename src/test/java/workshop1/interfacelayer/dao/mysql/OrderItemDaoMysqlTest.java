@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfacelayer.dao;
+package workshop1.interfacelayer.dao.mysql;
 
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.OrderItemDao;
@@ -34,6 +34,7 @@ public class OrderItemDaoMysqlTest {
     
         @Before
     public void initializeDatabase() {        
+        DaoFactory.setDatabaseType(1);
         DatabaseTest.initializeDatabase();
         DatabaseTest.populateDatabase();
     }
@@ -56,7 +57,7 @@ public class OrderItemDaoMysqlTest {
         int countBefore = getTableCount("order_item");
         
         // Add the prepared product to the database
-        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory().createOrderItemDao();
         orderItemDao.insertOrderItem(testOrderItem);        
         
         // Count the records after the insert and compare with before
@@ -111,7 +112,7 @@ public class OrderItemDaoMysqlTest {
         testOrderItem.setSubTotal(newSubTotal);
         
         // Perform the update in the databse
-        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory().createOrderItemDao();
         orderItemDao.updateOrderItem(testOrderItem);
                 
         // Validate the update        
@@ -192,7 +193,7 @@ public class OrderItemDaoMysqlTest {
         int countBefore = getTableCount("order_item");
         
         // Perform the deletion of the product
-        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();        
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory().createOrderItemDao();        
         orderItemDao.deleteOrderItem(testOrderItem);
         
         // Count the records after the deletion and compare with before
@@ -234,7 +235,7 @@ public class OrderItemDaoMysqlTest {
         OrderItem expectedOrderItem = new OrderItem(testId, testOrderId, testProductId, testAmount, testSubTotal);
         int searchId = expectedOrderItem.getId();
         
-        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory().createOrderItemDao();
         Optional<OrderItem> optionalOrderItem = orderItemDao.findOrderItemById(searchId);
         
         // Assert we found the product and it is the product we expected
@@ -258,7 +259,7 @@ public class OrderItemDaoMysqlTest {
         OrderItem expectedOrderItem = new OrderItem(testId, testOrderId, testProductId, testAmount, testSubTotal);
         int searchId = expectedOrderItem.getId();
         
-        OrderItemDao orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory().createOrderItemDao();
         Optional<OrderItem> optionalOrderItem = orderItemDao.findOrderItemById(searchId);
         
         // Assert we did not find the OrderItem

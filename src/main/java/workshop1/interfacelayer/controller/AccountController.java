@@ -29,7 +29,7 @@ public class AccountController {
     // Public constructor only requires accountView parameter
     public AccountController(AccountView accountView) {
         this.accountView = accountView;
-        accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        accountDao = DaoFactory.getDaoFactory().createAccountDao();
     }
     
     // Package private constructor can be injected with accountView AND AccountDao for 

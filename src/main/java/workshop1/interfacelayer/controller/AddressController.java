@@ -26,7 +26,7 @@ public class AddressController {
     
     public AddressController(AddressView addressView) {
         this.addressView = addressView;
-        addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
+        addressDao = DaoFactory.getDaoFactory().createAddressDao();
     }
     
     public void createAddress(CustomerController customerController) {        

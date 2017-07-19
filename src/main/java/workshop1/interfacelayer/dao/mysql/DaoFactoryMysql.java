@@ -3,7 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package workshop1.interfacelayer.dao;
+package workshop1.interfacelayer.dao.mysql;
+
+import workshop1.interfacelayer.dao.AccountDao;
+import workshop1.interfacelayer.dao.AddressDao;
+import workshop1.interfacelayer.dao.CustomerDao;
+import workshop1.interfacelayer.dao.DaoFactory;
+import workshop1.interfacelayer.dao.OrderDao;
+import workshop1.interfacelayer.dao.OrderItemDao;
+import workshop1.interfacelayer.dao.ProductDao;
 
 /**
  *

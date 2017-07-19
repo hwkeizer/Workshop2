@@ -26,7 +26,7 @@ public class CustomerController {
     
     public CustomerController(CustomerView customerView) {
         this.customerView = customerView;
-        customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        customerDao = DaoFactory.getDaoFactory().createCustomerDao();
     }
     
     public void createCustomer(){        

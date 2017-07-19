@@ -5,6 +5,7 @@
  */
 package workshop1.interfacelayer.controller;
 
+import workshop1.interfacelayer.DatabaseConnection;
 import workshop1.interfacelayer.MenuActions;
 import workshop1.interfacelayer.view.AccountView;
 import workshop1.interfacelayer.view.AddressView;

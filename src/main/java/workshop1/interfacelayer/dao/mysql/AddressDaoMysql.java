@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package workshop1.interfacelayer.dao;
+package workshop1.interfacelayer.dao.mysql;
 
 import workshop1.domain.Address;
 import workshop1.interfacelayer.DatabaseConnection;
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import workshop1.interfacelayer.dao.AddressDao;
 
 /**
  *

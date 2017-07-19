@@ -16,6 +16,7 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import workshop1.interfacelayer.dao.DaoFactory;
 
 /**
  *
@@ -32,6 +33,7 @@ public class DatabaseConnection {
     private String user;   
     private String password;
     private MongoClient mongoClient;
+    private static int databaseTypeForSettingFactory;
     
     private DatabaseConnection() {
     }
@@ -43,6 +45,7 @@ public class DatabaseConnection {
     public static DatabaseConnection getInstance() {
         return SingletonHolder.INSTANCE;
     }
+
     
     /**
      * Returns the complete connection string
@@ -58,7 +61,11 @@ public class DatabaseConnection {
         return databaseType + "://" + serverName + ":" + portNumber;
         
     }
-        
+    
+    public int getDatabaseTypeForSettingFactory() {
+        readAndSetXMLDatabaseType();
+        return databaseTypeForSettingFactory;
+    }
     
     /**
      * Returns a MySql connection to the database
@@ -94,6 +101,35 @@ public class DatabaseConnection {
         return mongoClient;
     }
         
+    private void readAndSetXMLDatabaseType(){
+        SAXReader reader = new SAXReader();
+        // TODO: hard-coded file naam ergens als configuratie of constante zetten
+        File file = new File(dbSettingsFileName);
+        int databaseTypeInt = 0;
+        try{
+            Document document = reader.read(file);
+            
+            Node node;
+            node = document.selectSingleNode("/database_settings/type/databaseTypeForSetting");
+            String databaseTypeLocal = node.getText();
+                        
+            switch (databaseTypeLocal) {
+                case "MYSQL" : {
+                    databaseTypeForSettingFactory = 1;
+                    break;
+                }
+                case "MONGO" : {
+                    databaseTypeForSettingFactory = 2;
+                    break;
+                }
+            }
+            
+        }
+        catch(DocumentException e){
+            log.debug("Probleem met het lezen van het configuratie document", e);
+        }
+        
+    }
     
     private void readMySqlXML(){
         SAXReader reader = new SAXReader();

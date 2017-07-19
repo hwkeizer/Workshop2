@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfacelayer.dao;
+package workshop1.interfacelayer.dao.mysql;
 
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.AccountDao;
@@ -39,6 +39,7 @@ public class AccountDaoMysqlTest {
     
     @Before
     public void initializeDatabase() {        
+        DaoFactory.setDatabaseType(1);
         DatabaseTest.initializeDatabase();
         DatabaseTest.populateDatabase();
     }
@@ -65,7 +66,7 @@ public class AccountDaoMysqlTest {
 
         // Add a test account to the database
         //DaoFactory daoFactory = DaoFactory.getDAOFactory(DaoFactory.MYSQL);
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();        
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();        
         accountDao.insertAccount(testAccount);
         
         // Count the records after the insert and compare with before
@@ -110,7 +111,7 @@ public class AccountDaoMysqlTest {
         
         // Add the prepared account to the database
         try {
-            AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+            AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
             accountDao.insertAccount(testAccount);
             fail("Adding an existing account should have thrown a DuplicateAccountException");
         } catch (DuplicateAccountException ex) {
@@ -131,7 +132,7 @@ public class AccountDaoMysqlTest {
         Account expectedAccount = new Account(2, "klaas", "welkom", 2);
         String searchString = expectedAccount.getUsername();
         
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
         Optional<Account> optionalAccount = accountDao.findAccountByUserName(searchString);
         
         // Assert we found the account and it is the account we expected
@@ -150,7 +151,7 @@ public class AccountDaoMysqlTest {
         Account expectedAccount = new Account(2, "onbekend", "welkom", 2);
         String searchString = expectedAccount.getUsername();
         
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
         Optional<Account> optionalAccount = accountDao.findAccountByUserName(searchString);
         
         // Assert we did not find the account
@@ -168,7 +169,7 @@ public class AccountDaoMysqlTest {
         Account expectedAccount = new Account(2, "klaas", "welkom", 2);
         int searchId = expectedAccount.getId();
         
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
         Optional<Account> optionalAccount = accountDao.findAccountById(searchId);
         
         // Assert we found the account and it is the account we expected
@@ -187,7 +188,7 @@ public class AccountDaoMysqlTest {
         Account expectedAccount = new Account(20, "klaas", "welkom", 2);
         int searchId = expectedAccount.getId();
         
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
         Optional<Account> optionalAccount = accountDao.findAccountById(searchId);
         
         // Assert we did not find the account
@@ -234,7 +235,7 @@ public class AccountDaoMysqlTest {
         int countBefore = getTableCount("account");
         
         // Perform the deletion of the account
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();        
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();        
         accountDao.deleteAccount(testAccount);
         
         // Count the records after the deletion and compare with before
@@ -304,7 +305,7 @@ public class AccountDaoMysqlTest {
         testAccount.setAccountType(newAccountType);
         
         // Perform the update in the databse
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
         accountDao.updateAccount(testAccount);
         
         // Validate the update        
@@ -349,7 +350,7 @@ public class AccountDaoMysqlTest {
     @Test
     public void testGetAllAccountTypesAsList() {
         System.out.println("getAllAccountTypesAsList");
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
         List<String> expectedAccountTypes = new ArrayList<>();
         expectedAccountTypes.add("admin");
         expectedAccountTypes.add("medewerker");
@@ -365,7 +366,7 @@ public class AccountDaoMysqlTest {
     @Test
     public void testGetAllAccountsAsList() {
         System.out.println("getAllAccountsAsList");
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
         List<Account> expectedAccounts = new ArrayList<>();
         expectedAccounts.add(new Account(1,"piet","welkom",1));
         expectedAccounts.add(new Account(2,"klaas","welkom",2));

@@ -25,22 +25,22 @@ public class DaoFactoryMongo extends DaoFactory{
 
     @Override
     public CustomerDao createCustomerDao() {
-        return null; //new CustomerDaoMongo();
+        return new CustomerDaoMongo();
     }
 
     @Override
     public AddressDao createAddressDao() {
-        return null; // new AddressDaoMongo();
+        return new AddressDaoMongo();
     }
 
     @Override
     public OrderDao createOrderDao() {
-        return null; // new OrderDaoMongo();
+        return new OrderDaoMongo();
     }
 
     @Override
     public OrderItemDao createOrderItemDao() {
-        return null; //new OrderItemDaoMongo();
+        return new OrderItemDaoMongo();
     }
     
     @Override

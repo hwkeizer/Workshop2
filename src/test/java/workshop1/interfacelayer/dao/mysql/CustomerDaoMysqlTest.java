@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfacelayer.dao;
+package workshop1.interfacelayer.dao.mysql;
 
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.CustomerDao;
@@ -41,6 +41,7 @@ public class CustomerDaoMysqlTest {
     
     @Before
     public void initializeDatabase() {        
+        DaoFactory.setDatabaseType(1);
         DatabaseTest.initializeDatabase();
         DatabaseTest.populateDatabase();
     }
@@ -70,7 +71,7 @@ public class CustomerDaoMysqlTest {
 
         // Add a test customer to the database
         //DaoFactory daoFactory = DaoFactory.getDAOFactory(DaoFactory.MYSQL);
-        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();        
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();        
         customerDao.insertCustomer(testCustomer);
         
         log.debug("count after inserting is " + getTableCount("customer"));
@@ -118,7 +119,7 @@ public class CustomerDaoMysqlTest {
 //
 //        // Add the prepared customer to the database
 //        try {
-//            CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+//            CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
 //            customerDao.insertCustomer(testCustomer);
 //            fail("Adding an existing customer should have thrown a DuplicateCustomerException");
 //        } catch (DuplicateCustomerException ex) {
@@ -139,7 +140,7 @@ public class CustomerDaoMysqlTest {
         Customer expectedCustomer = new Customer(3, "Jan", "Jansen", null, 3);
         String searchString = expectedCustomer.getLastName();
         
-        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
         Optional<Customer> optionalCustomer = customerDao.findCustomerByLastName(searchString);
         
         // Assert we found the customer and it is the customer we expected
@@ -158,7 +159,7 @@ public class CustomerDaoMysqlTest {
         Customer expectedCustomer = new Customer(3, "Jan", "Onbekend", null, 3);
         String searchString = expectedCustomer.getLastName();
         
-        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
         Optional<Customer> optionalCustomer = customerDao.findCustomerByLastName(searchString);
         
         // Assert we found the customer and it is the customer we expected
@@ -176,7 +177,7 @@ public class CustomerDaoMysqlTest {
         Customer expectedCustomer = new Customer(3, "Jan", "Jansen", null, 3);
         int searchId = expectedCustomer.getId();
         
-        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
         Optional<Customer> optionalCustomer = customerDao.findCustomerById(searchId);
         
         // Assert we found the customer and it is the customer we expected
@@ -195,7 +196,7 @@ public class CustomerDaoMysqlTest {
         Customer expectedCustomer = new Customer(30, "Jan", "Jansen", null, 3);
         int searchId = expectedCustomer.getId();
         
-        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
         Optional<Customer> optionalCustomer = customerDao.findCustomerById(searchId);
         
         // Assert we found the customer and it is the customer we expected
@@ -253,7 +254,7 @@ public class CustomerDaoMysqlTest {
         int countBefore = getTableCount("customer");
         
         // Perform the deletion of the customer
-        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();        
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();        
         customerDao.deleteCustomer(testCustomer);
         
         // Count the records after the deletion and compare with before
@@ -334,7 +335,7 @@ public class CustomerDaoMysqlTest {
         testCustomer.setLastNamePrefix(newLastNamePrefix);
         
         // Perform the update in the databse
-        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
         customerDao.updateCustomer(testCustomer);
         
         // Validate the update
@@ -399,7 +400,7 @@ public class CustomerDaoMysqlTest {
     @Test
     public void testGetAllCustomersAsList() {
         System.out.println("getAllCustomersAsList");
-        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
         List<Customer> expectedCustomers = new ArrayList<>();
         expectedCustomers.add(new Customer(1,"Piet","Pietersen",null,1));
         expectedCustomers.add(new Customer(2,"Klaas","Klaassen",null,2));

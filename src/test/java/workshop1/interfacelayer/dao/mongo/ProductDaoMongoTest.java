@@ -32,6 +32,7 @@ public class ProductDaoMongoTest {
     
      @Before
     public void initializeDatabase() {        
+        DaoFactory.setDatabaseType(2);
         DatabaseTest.initializeMongoDatabase();
         DatabaseTest.populateMongoDatabase();
     }
@@ -61,7 +62,7 @@ public class ProductDaoMongoTest {
         assertFalse("Product should not be in database before insertion", productCollection.find(query).iterator().hasNext());
         
         // Add the prepared product to the database with the DAO
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         productDao.insertProduct(testProduct);        
         
         // Verify the records after the insertion and verify the product is inserted
@@ -85,7 +86,7 @@ public class ProductDaoMongoTest {
         
         // Add the prepared product to the database
         try {
-            ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+            ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
             productDao.insertProduct(testProduct);
             fail("Adding an existing product should have thrown a DuplicateProductException");
         } catch (DuplicateProductException ex) {
@@ -129,7 +130,7 @@ public class ProductDaoMongoTest {
         assertFalse("New Product should not be in database before update", productCollection.find(queryNew).iterator().hasNext());
         
         // Perform the update in the databse
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         productDao.updateProduct(testProduct);
                 
         // Validate the old product is not and the new product is in the database and
@@ -160,7 +161,7 @@ public class ProductDaoMongoTest {
         assertTrue("Product should be in database before insertion", productCollection.find(query).iterator().hasNext());
         
         // Delete the prepared product from the database with the DAO
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         productDao.deleteProduct(testProduct);        
         
         // Verify the records after the insertion and verify the product is deleted
@@ -178,7 +179,7 @@ public class ProductDaoMongoTest {
         Product expectedProduct = new Product(2, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
         int searchId = expectedProduct.getId();
         
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         Optional<Product> optionalProduct = productDao.findProductById(searchId);
         
         // Assert we found the product and it is the product we expected
@@ -196,7 +197,7 @@ public class ProductDaoMongoTest {
         Product expectedProduct = new Product(20, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
         int searchId = expectedProduct.getId();
         
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         Optional<Product> optionalProduct = productDao.findProductById(searchId);
         
         // Assert we did not find the product
@@ -213,7 +214,7 @@ public class ProductDaoMongoTest {
         Product expectedProduct = new Product(2, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
         String searchString = expectedProduct.getName();
         
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         Optional<Product> optionalProduct = productDao.findProductByName(searchString);
         
         // Assert we found the product and it is the product we expected
@@ -231,7 +232,7 @@ public class ProductDaoMongoTest {
         Product expectedProduct = new Product(2, "verkeerde naam", new BigDecimal("14.70"), 239);
         String searchString = expectedProduct.getName();
         
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         Optional<Product> optionalProduct = productDao.findProductByName(searchString);
         
          // Assert we did not find the product
@@ -252,7 +253,7 @@ public class ProductDaoMongoTest {
         
         //declare and get the productlist to be tested
         List<Product> productList;
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         productList = productDao.getAllProductsAsList();
         
         // Assert we found the productList and it is the productList we expected

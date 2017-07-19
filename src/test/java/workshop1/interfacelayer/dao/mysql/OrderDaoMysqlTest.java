@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfacelayer.dao;
+package workshop1.interfacelayer.dao.mysql;
 
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.OrderDao;
@@ -42,6 +42,7 @@ public class OrderDaoMysqlTest {
     
     @Before
     public void initializeDatabase() {        
+        DaoFactory.setDatabaseType(1);
         DatabaseTest.initializeDatabase();
         DatabaseTest.populateDatabase();
     }
@@ -68,7 +69,7 @@ public class OrderDaoMysqlTest {
         int countBefore = getTableCount("order");
         
         // Add the prepared order to the database
-        OrderDao orderDAO = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
+        OrderDao orderDAO = DaoFactory.getDaoFactory().createOrderDao();
         orderDAO.insertOrder(testOrder);        
         
         // Count the records after the insert and compare with before
@@ -114,7 +115,7 @@ public class OrderDaoMysqlTest {
         Order testOrder = new Order(testTotalPrice, testCustomerId, testDate, testOrderStatusId);
         
         // Add the prepared order to the database and return the key
-        OrderDao orderDAO = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
+        OrderDao orderDAO = DaoFactory.getDaoFactory().createOrderDao();
         int returnedKey = orderDAO.insertOrder(testOrder);
         
         //retrieve the object using the returned key
@@ -164,7 +165,7 @@ public class OrderDaoMysqlTest {
         testOrder.setOrderStatusId(newOrderStatusId);
         
         // Perform the update in the databse
-        OrderDao orderDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
+        OrderDao orderDao = DaoFactory.getDaoFactory().createOrderDao();
         orderDao.updateOrder(testOrder);
                 
         // Validate the update        
@@ -255,7 +256,7 @@ public class OrderDaoMysqlTest {
         int countBefore = getTableCount("order");
         
         // Delete the prepared order from the database
-        OrderDao orderDAO = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
+        OrderDao orderDAO = DaoFactory.getDaoFactory().createOrderDao();
         orderDAO.deleteOrder(testOrder);        
         
         // Count the records after the deletion and compare with before
@@ -298,7 +299,7 @@ public class OrderDaoMysqlTest {
         Order expectedOrder = new Order(4, new BigDecimal("78.23"), 2, testDate, 3);
         int searchId = expectedOrder.getId();
         
-        OrderDao orderDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
+        OrderDao orderDao = DaoFactory.getDaoFactory().createOrderDao();
         Optional<Order> optionalOrder = orderDao.findOrderById(searchId);
         
         // Assert we found the product and it is the product we expected
@@ -321,7 +322,7 @@ public class OrderDaoMysqlTest {
         Order expectedOrder = new Order(40, new BigDecimal("78.23"), 2, testDate, 3);
         int searchId = expectedOrder.getId();
         
-        OrderDao orderDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
+        OrderDao orderDao = DaoFactory.getDaoFactory().createOrderDao();
         Optional<Order> optionalOrder = orderDao.findOrderById(searchId);
         
         // Assert we did not find the order

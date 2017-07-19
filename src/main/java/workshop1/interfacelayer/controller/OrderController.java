@@ -43,8 +43,8 @@ public class OrderController {
     OrderController(OrderView orderView, OrderItemView orderItemView) {
         this.orderView = orderView;
         this.orderItemView = orderItemView;
-        orderDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderDao();
-        orderItemDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createOrderItemDao();
+        orderDao = DaoFactory.getDaoFactory().createOrderDao();
+        orderItemDao = DaoFactory.getDaoFactory().createOrderItemDao();
     }
 
     public void createOrderEmployee(CustomerController customerController) {
@@ -55,7 +55,7 @@ public class OrderController {
             return;
         }
         
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         List<Product> productList = productDao.getAllProductsAsList();
         orderItemList = orderItemView.createOrderItemListForNewOrder(productList);
         
@@ -88,13 +88,13 @@ public class OrderController {
     public void createOrderCustomer(String username) {
         orderView.showConstructOrderCustomerStartScreen();
         
-        AccountDao accountDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAccountDao();        
+        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();        
         Account customerAccount = accountDao.findAccountByUserName(username).get();
         
-        CustomerDao customerDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createCustomerDao();
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
         int customerId = customerDao.findCustomerByAccountId(customerAccount.getId()).get().getId();
                         
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         List<Product> productList = productDao.getAllProductsAsList();
         orderItemList = orderItemView.createOrderItemListForNewOrder(productList);
         
@@ -125,7 +125,7 @@ public class OrderController {
     }
         
     void updateProductStockAfterCreatingOrder(List<OrderItem> orderItemList) {
-        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createProductDao();
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         
         for(OrderItem orderItem: orderItemList) {
                 Optional<Product> optionalProduct = productDao.findProductById(orderItem.getProductId());

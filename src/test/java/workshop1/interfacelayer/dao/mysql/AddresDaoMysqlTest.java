@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfacelayer.dao;
+package workshop1.interfacelayer.dao.mysql;
 
 import workshop1.interfacelayer.dao.AddressDao;
 import workshop1.interfacelayer.dao.DaoFactory;
@@ -40,6 +40,7 @@ public class AddresDaoMysqlTest {
     
     @Before
     public void initializeDatabase() {        
+        DaoFactory.setDatabaseType(1);
         DatabaseTest.initializeDatabase();
         DatabaseTest.populateDatabase();
     }
@@ -71,7 +72,7 @@ public class AddresDaoMysqlTest {
 
         // Add a test address to the database
         //DaoFactory daoFactory = DaoFactory.getDAOFactory(DaoFactory.MYSQL);
-        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();        
+        AddressDao addressDao = DaoFactory.getDaoFactory().createAddressDao();        
         addressDao.insertAddress(testAddress);
         
         // Count the records after the insert and compare with before
@@ -114,7 +115,7 @@ public class AddresDaoMysqlTest {
         Address expectedAddress = new Address(3, "Torenstraat", 82, null, "7620CX", "Best", 2, 2);
         int searchId = expectedAddress.getId();
         
-        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
+        AddressDao addressDao = DaoFactory.getDaoFactory().createAddressDao();
         Optional<Address> optionalAddress = addressDao.findAddressById(searchId);
         
         // Assert we found the address and it is the address we expected
@@ -133,7 +134,7 @@ public class AddresDaoMysqlTest {
         Address expectedAddress = new Address(30, "Torenstraat", 82, null, "7620CX", "Best", 2, 2);
         int searchId = expectedAddress.getId();
         
-        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
+        AddressDao addressDao = DaoFactory.getDaoFactory().createAddressDao();
         Optional<Address> optionalAddress = addressDao.findAddressById(searchId);
         
         // Assert we did not find the address
@@ -153,7 +154,7 @@ public class AddresDaoMysqlTest {
         Address expectedAddress2 = new Address(3,"Torenstraat",82,null,"7620CX","Best",2,2);
         Address expectedAddress3 = new Address(4,"Valkstraat",9,"e","2424DF","Goorle",2,3);
         
-        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
+        AddressDao addressDao = DaoFactory.getDaoFactory().createAddressDao();
         List<Address> listAddress = addressDao.findAddressesByCustomerId(customerId);
         // Assert we found the addresses and it is the address we expected
         assertEquals("Customer should have three addresses", 3, listAddress.size());
@@ -220,7 +221,7 @@ public class AddresDaoMysqlTest {
         log.debug("count before is " + countBefore);
         
         // Perform the deletion of the address
-        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();        
+        AddressDao addressDao = DaoFactory.getDaoFactory().createAddressDao();        
         addressDao.deleteAddress(testAddress);
         
         // Count the records after the deletion and compare with before
@@ -293,7 +294,7 @@ public class AddresDaoMysqlTest {
         testAddress.setAddressTypeId(newAddressTypeId);
         
         // Perform the update in the databse
-        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
+        AddressDao addressDao = DaoFactory.getDaoFactory().createAddressDao();
         addressDao.updateAddress(testAddress);
         
         //Validate the update        
@@ -364,7 +365,7 @@ public class AddresDaoMysqlTest {
     @Test
     public void testGetAllAddressTypesAsList() {
         System.out.println("getAllAddressTypesAsList");
-        AddressDao addressDao = DaoFactory.getDaoFactory(DaoFactory.MYSQL).createAddressDao();
+        AddressDao addressDao = DaoFactory.getDaoFactory().createAddressDao();
         List<String> expectedAddressTypes = new ArrayList<>();
         expectedAddressTypes.add("postadres");
         expectedAddressTypes.add("factuuradres");
