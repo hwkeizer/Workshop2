@@ -20,7 +20,7 @@ import workshop1.interfacelayer.dao.ProductDao;
 public class DaoFactoryMongo extends DaoFactory{
     @Override
     public AccountDao createAccountDao() {
-        return null; //new AccountDaoMongo();
+        return new AccountDaoMongo();
     }
 
     @Override
