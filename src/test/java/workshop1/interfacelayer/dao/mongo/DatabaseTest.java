@@ -5,7 +5,6 @@
  */
 package workshop1.interfacelayer.dao.mongo;
 
-import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.InsertOneModel;
@@ -227,7 +226,8 @@ public class DatabaseTest {
         // Product
         collection = database.getCollection("product");
         collection.bulkWrite(Arrays.asList(
-            new InsertOneModel<>(new Document("name", "Goudse belegen kaas")
+            new InsertOneModel<>(new Document("_id", 1)
+                    .append("name", "Goudse belegen kaas")
                     .append("price", "12.90")
                     .append("stock", 134)),
             new InsertOneModel<>(new Document("_id", 2)
@@ -248,7 +248,7 @@ public class DatabaseTest {
                     .append("stock", 122)),
             new InsertOneModel<>(new Document("_id", 6)
                     .append("name", "Boeren jonge kaas")
-                    .append("price", 12.57)
+                    .append("price", "12.57")
                     .append("stock", 85))));
 
         // Order item

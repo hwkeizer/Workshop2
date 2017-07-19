@@ -6,17 +6,15 @@
 package workshop1.interfacelayer.dao.mongo;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.eq;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.set;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -35,20 +33,21 @@ public class ProductDaoMongo implements ProductDao {
 
     @Override
     public void insertProduct(Product product) throws DuplicateProductException {
-            
-        // Prepare the document to insert
-        Document document = new Document("name", product.getName())
-               .append("price", product.getPrice().toString())
-               .append("stock", product.getStock());
 
         // Get the product collection
         MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
-        MongoCollection collection = database.getCollection("product");
+        MongoCollection collection = database.getCollection("product");        
+        
+        // Prepare the document to insert
+        Document document = new Document("_id", getNextAvailableIndex())
+                .append("name", product.getName())
+                .append("price", product.getPrice().toString())
+                .append("stock", product.getStock());
         
         // Verify the productname does not exist
         BasicDBObject query = new BasicDBObject("name", product.getName());
         if (collection.find(query).iterator().hasNext()) throw new DuplicateProductException(
-                "Product with name = " + product.getName() + " is already in the database");;
+                "Product with name = " + product.getName() + " is already in the database");
 
         collection.insertOne(document);
         log.debug("Product toegevoegd: {}", document.toString());
@@ -58,49 +57,96 @@ public class ProductDaoMongo implements ProductDao {
     @Override
     public void updateProduct(Product product) {
         // Do nothing if the product cannot be found in the database
-        if ((findProductByName(product.getName())) == null) {
-            log.error("Productnaam '{}' bestaat niet in de database en kan dus "
-                    + "ook niet worden bijgewerkt!", product.getName());
+        if ((findProductById(product.getId())) == null) {
+            log.error("ProductId '{}' bestaat niet in de database en kan dus "
+                    + "ook niet worden bijgewerkt!", product.getId());
             return;
         }
         
-//        try (
-//            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
-//            PreparedStatement statement = connection.prepareStatement("");) {
-//            
-//            statement.setString(1, product.getName());
-//            statement.setString(2, product.getPrice().toString());
-//            statement.setString(3, ((Integer)product.getStock()).toString());
-//            statement.setString(4, ((Integer)product.getId()).toString());
-//            int affectedRows = statement.executeUpdate();
-//            if (affectedRows == 0) {
-//                log.error("Het aanpassen van product {} is helaas mislukt!", 
-//                        product.getName());
-//            }        
-//        } catch (SQLException ex) {
-//            log.error("SQL error: ", ex);
-//        }
+        // Get the product collection
+        MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
+        MongoCollection collection = database.getCollection("product");
+        
+        collection.updateOne(eq("_id", product.getId()), 
+                combine(set("name", product.getName()),
+                        set("price", product.getPrice().toString()),
+                        set("stock", product.getStock())));
+        
     }
     
 
     @Override
     public void deleteProduct(Product product) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Get the product collection
+        MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
+        MongoCollection collection = database.getCollection("product");
+        
+        collection.deleteOne(eq("_id", product.getId()));
+        
     }
 
     @Override
     public Optional<Product> findProductById(int productId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Get the product collection
+        MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
+        MongoCollection collection = database.getCollection("product");
+        BasicDBObject query = new BasicDBObject("_id", productId);
+        MongoCursor cursor = collection.find(query).iterator();
+        while(cursor.hasNext()) {
+            Document document = (Document) cursor.next();  
+            return Optional.ofNullable(map(document));
+        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<Product> findProductByName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Get the product collection
+        MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
+        MongoCollection collection = database.getCollection("product");
+        BasicDBObject query = new BasicDBObject("name", name);
+        MongoCursor cursor = collection.find(query).iterator();
+        while(cursor.hasNext()) {
+            Document document = (Document) cursor.next();  
+            return Optional.ofNullable(map(document));
+        }
+        return Optional.empty();
     }
 
     @Override
-    public ArrayList<Product> getAllProductsAsList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Product> getAllProductsAsList() {
+        List<Product> productList = new ArrayList<>();
+        // Get the product collection
+        MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
+        MongoCollection collection = database.getCollection("product");
+        MongoCursor cursor = collection.find().iterator();
+        while (cursor.hasNext()) {
+            Document document = (Document) cursor.next();  
+            productList.add(map(document));
+        }
+        return productList;
     }
     
+    // Helper methode to map the current row of the given ResultSet to a Product instance
+    private Product map(Document document) {
+        int id = document.getInteger("_id");
+        String name = document.getString("name");
+        BigDecimal price = new BigDecimal(document.getString("price"));
+        int stock = document.getInteger("stock");
+        return new Product(id, name, price, stock);
+    }
+    
+    private int getNextAvailableIndex() {    
+        MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
+        MongoCollection collection = database.getCollection("product");
+        int highest = 0;
+        MongoCursor cursor = collection.find().iterator();
+        while(cursor.hasNext()) {
+            Document obj = (Document) cursor.next();  
+            int current = obj.getInteger("_id");
+            if (highest < current) highest = current;
+        }
+        return highest + 1;
+    }
+        
 }

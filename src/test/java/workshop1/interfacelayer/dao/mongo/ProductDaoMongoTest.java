@@ -7,13 +7,9 @@ package workshop1.interfacelayer.dao.mongo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.After;
 import org.junit.Test;
@@ -148,42 +144,98 @@ public class ProductDaoMongoTest {
      */
     @Test
     public void testDeleteProduct() {
-        System.out.println("deleteProduct");
-        Product product = null;
-        ProductDaoMongo instance = new ProductDaoMongo();
-        instance.deleteProduct(product);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Prepare the product to be deleted
+        Integer testId = 3;
+        String  testName = "Leidse oude kaas";
+        BigDecimal testPrice = new BigDecimal("14.65");
+        Integer testStock = 89;
+        Product testProduct = new Product(testId, testName, testPrice, testStock);
+        
+        // Get the production Collection for easy test verification
+        MongoCollection productCollection = DatabaseConnection.getInstance().getMongoDatabase().getCollection("product"); 
+        
+        // Count the records before the deletion and verify the product is in the database       
+        long countBefore = productCollection.count();
+        BasicDBObject query = new BasicDBObject("name", testName);
+        assertTrue("Product should be in database before insertion", productCollection.find(query).iterator().hasNext());
+        
+        // Delete the prepared product from the database with the DAO
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        productDao.deleteProduct(testProduct);        
+        
+        // Verify the records after the insertion and verify the product is deleted
+        assertEquals("Number of products should be increased by one.", countBefore - 1, productCollection.count());
+        assertFalse("Product should not be in database after deletion", productCollection.find(query).iterator().hasNext());
     }
 
     /**
      * Test of findProductById method, of class ProductDaoMongo.
      */
     @Test
-    public void testFindProductById() {
-        System.out.println("findProductById");
-        int productId = 0;
-        ProductDaoMongo instance = new ProductDaoMongo();
-        Optional<Product> expResult = null;
-        Optional<Product> result = instance.findProductById(productId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testFindExistingProductById() {
+        System.out.println("findExistingProductById");
+        // Define the product to be searched
+        Product expectedProduct = new Product(2, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
+        int searchId = expectedProduct.getId();
+        
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        Optional<Product> optionalProduct = productDao.findProductById(searchId);
+        
+        // Assert we found the product and it is the product we expected
+        assertTrue("Existing product should be present", optionalProduct.isPresent());
+        assertEquals("Existing product should be the expected product", expectedProduct, optionalProduct.get());
+    }
+    
+    /**
+     * Test of findProductById method, of class ProductDaoMongo.
+     */
+    @Test
+    public void testFindNonExistingProductById() {
+        System.out.println("findNonExistingProductById");
+        // Define the product to be searched
+        Product expectedProduct = new Product(20, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
+        int searchId = expectedProduct.getId();
+        
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        Optional<Product> optionalProduct = productDao.findProductById(searchId);
+        
+        // Assert we did not find the product
+        assertFalse("Non Existing product should not be present", optionalProduct.isPresent());
     }
 
     /**
      * Test of findProductByName method, of class ProductDaoMongo.
      */
     @Test
-    public void testFindProductByName() {
-        System.out.println("findProductByName");
-        String name = "";
-        ProductDaoMongo instance = new ProductDaoMongo();
-        Optional<Product> expResult = null;
-        Optional<Product> result = instance.findProductByName(name);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testFindExistingProductByName() {
+        System.out.println("findExistingProductByName");
+        // Define the product to be searched
+        Product expectedProduct = new Product(2, "Goudse extra belegen kaas", new BigDecimal("14.70"), 239);
+        String searchString = expectedProduct.getName();
+        
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        Optional<Product> optionalProduct = productDao.findProductByName(searchString);
+        
+        // Assert we found the product and it is the product we expected
+        assertTrue("Existing product should be present", optionalProduct.isPresent());
+        assertEquals("Existing product should be the expected product", expectedProduct, optionalProduct.get());
+    }
+    
+    /**
+     * Test of findProductByName method, of class ProductDaoMongo.
+     */
+    @Test
+    public void testFindNonExistingProductByName() {
+        System.out.println("findNonExistingProductByName");
+        // Define the product to be searched
+        Product expectedProduct = new Product(2, "verkeerde naam", new BigDecimal("14.70"), 239);
+        String searchString = expectedProduct.getName();
+        
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        Optional<Product> optionalProduct = productDao.findProductByName(searchString);
+        
+         // Assert we did not find the product
+        assertFalse("Non existing product should not be present", optionalProduct.isPresent());
     }
 
     /**
@@ -192,12 +244,22 @@ public class ProductDaoMongoTest {
     @Test
     public void testGetAllProductsAsList() {
         System.out.println("getAllProductsAsList");
-        ProductDaoMongo instance = new ProductDaoMongo();
-        ArrayList<Product> expResult = null;
-        ArrayList<Product> result = instance.getAllProductsAsList();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("getAllProductsAsList");
+        
+        // Get the production Collection for easy test verification
+        MongoCollection productCollection = DatabaseConnection.getInstance().getMongoDatabase().getCollection("product");
+        long count = productCollection.count();
+        
+        //declare and get the productlist to be tested
+        List<Product> productList;
+        ProductDao productDao = DaoFactory.getDaoFactory(DaoFactory.MONGO).createProductDao();
+        productList = productDao.getAllProductsAsList();
+        
+        // Assert we found the productList and it is the productList we expected
+        assertEquals("Number of items in the list should equal initial number of products in database", count, productList.size());
+        assertEquals("First product in the list equals first entry in the database", "Goudse belegen kaas" , productList.get(0).getName());
+        assertEquals("First product in the list equals first entry in the database", "14.65" , productList.get(2).getPrice().toString());
+        assertEquals("First product in the list equals first entry in the database", 256 , productList.get(3).getStock());
     }
     
 }
