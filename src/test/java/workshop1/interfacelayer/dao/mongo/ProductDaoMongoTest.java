@@ -157,7 +157,7 @@ public class ProductDaoMongoTest {
         // Count the records before the deletion and verify the product is in the database       
         long countBefore = productCollection.count();
         BasicDBObject query = new BasicDBObject("name", testName);
-        assertTrue("Product should be in database before insertion", productCollection.find(query).iterator().hasNext());
+        assertTrue("Product should be in database before deletion", productCollection.find(query).iterator().hasNext());
         
         // Delete the prepared product from the database with the DAO
         ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
@@ -243,7 +243,6 @@ public class ProductDaoMongoTest {
      */
     @Test
     public void testGetAllProductsAsList() {
-        System.out.println("getAllProductsAsList");
         System.out.println("getAllProductsAsList");
         
         // Get the production Collection for easy test verification

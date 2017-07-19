@@ -105,6 +105,7 @@ public class DatabaseConnection {
     }
         
     private void readDatabaseType(){
+        
         SAXReader reader = new SAXReader();
         File file = new File(dbSettingsFileName);
         try{

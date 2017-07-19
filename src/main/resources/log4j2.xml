@@ -9,6 +9,9 @@
         </File>
     </Appenders>
     <Loggers>
+      <Logger name = "org.mongodb.driver" level="error">
+        <AppenderRef ref="Console"/>
+      </Logger>
         <Root level="debug">
             <AppenderRef ref="Console" />
             <AppenderRef ref="FileOutput"/>

@@ -376,6 +376,5 @@ public class AccountDaoMysqlTest {
         expectedAccounts.add(new Account(6,"jaap","welkom",3));
         List<Account> allAccounts = accountDao.getAllAccountsAsList();
         assertEquals("All Accounts should be as expected", expectedAccounts, allAccounts);
-        System.out.println(allAccounts);
     }        
 }
