@@ -16,7 +16,6 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import workshop1.interfacelayer.dao.DaoFactory;
 
 /**
  *
@@ -25,7 +24,7 @@ import workshop1.interfacelayer.dao.DaoFactory;
 public class DatabaseConnection {
     private static final Logger log = LoggerFactory.getLogger(DatabaseConnection.class);
     private final String dbSettingsFileName = "Database_Settings.xml";
-    private String databaseType;
+    private String databasePrefix;
     private String serverName;
     private String databaseName;
     private String urlSuffix;    
@@ -33,9 +32,10 @@ public class DatabaseConnection {
     private String user;   
     private String password;
     private MongoClient mongoClient;
-    private static int databaseTypeForSettingFactory;
+    private String databaseType;
     
     private DatabaseConnection() {
+        readDatabaseType();
     }
     
     private static class SingletonHolder {
@@ -53,18 +53,21 @@ public class DatabaseConnection {
      * @return 
      */
     private String getMySqlConnectionString() {
-        return databaseType + "://" + serverName + ":" + portNumber + "/" 
+        return databasePrefix + "://" + serverName + ":" + portNumber + "/" 
                 + databaseName + urlSuffix;
     }
     
     private String getMongoDbConnectionString() {
-        return databaseType + "://" + serverName + ":" + portNumber;
+        return databasePrefix + "://" + serverName + ":" + portNumber;
         
     }
     
-    public int getDatabaseTypeForSettingFactory() {
-        readAndSetXMLDatabaseType();
-        return databaseTypeForSettingFactory;
+    public String getDatabaseType() {
+        return databaseType;
+    }
+    
+    public void setDatabaseType( String databaseType) {
+        this.databaseType = databaseType;
     }
     
     /**
@@ -101,28 +104,15 @@ public class DatabaseConnection {
         return mongoClient;
     }
         
-    private void readAndSetXMLDatabaseType(){
+    private void readDatabaseType(){
         SAXReader reader = new SAXReader();
-        // TODO: hard-coded file naam ergens als configuratie of constante zetten
         File file = new File(dbSettingsFileName);
-        int databaseTypeInt = 0;
         try{
             Document document = reader.read(file);
             
             Node node;
-            node = document.selectSingleNode("/database_settings/type/databaseTypeForSetting");
-            String databaseTypeLocal = node.getText();
-                        
-            switch (databaseTypeLocal) {
-                case "MYSQL" : {
-                    databaseTypeForSettingFactory = 1;
-                    break;
-                }
-                case "MONGO" : {
-                    databaseTypeForSettingFactory = 2;
-                    break;
-                }
-            }
+            node = document.selectSingleNode("/database_settings/databaseType");
+            databaseType = node.getText();
             
         }
         catch(DocumentException e){
@@ -133,14 +123,13 @@ public class DatabaseConnection {
     
     private void readMySqlXML(){
         SAXReader reader = new SAXReader();
-        // TODO: hard-coded file naam ergens als configuratie of constante zetten
         File file = new File(dbSettingsFileName);
         try{
             Document document = reader.read(file);
             
             Node node;
-            node = document.selectSingleNode("/database_settings/mysql/databaseType");
-            databaseType = node.getText();
+            node = document.selectSingleNode("/database_settings/mysql/databasePrefix");
+            databasePrefix = node.getText();
             
             node = document.selectSingleNode("/database_settings/mysql/serverName");
             serverName = node.getText();
@@ -171,14 +160,13 @@ public class DatabaseConnection {
     
     private void readMongoDbXML() {
         SAXReader reader = new SAXReader();
-        // TODO: hard-coded file naam ergens als configuratie of constante zetten
         File file = new File(dbSettingsFileName);
         try{
             Document document = reader.read(file);
             
             Node node;
-            node = document.selectSingleNode("/database_settings/mongodb/databaseType");
-            databaseType = node.getText();
+            node = document.selectSingleNode("/database_settings/mongodb/databasePrefix");
+            databasePrefix = node.getText();
             
             node = document.selectSingleNode("/database_settings/mongodb/serverName");
             serverName = node.getText();

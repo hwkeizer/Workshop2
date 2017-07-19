@@ -8,8 +8,9 @@ and open the template in the editor.
 
 
 <database_settings>
+    <databaseType>MYSQL</databaseType>
   <mysql>
-	  <databaseType>jdbc:mysql</databaseType>
+	  <databasePrefix>jdbc:mysql</databasePrefix>
 	  <serverName>localhost</serverName>
 	  <databaseName>applikaasie</databaseName>
 	  <urlSuffix>?useSSL=false</urlSuffix>
@@ -19,7 +20,7 @@ and open the template in the editor.
 	  <environment>development</environment>
 	</mysql>
 	<mongodb>
-	  <databaseType>mongodb</databaseType>
+	  <databasePrefix>mongodb</databasePrefix>
 	  <serverName>localhost</serverName>
 	  <databaseName>applikaasie</databaseName>
 	  <portNumber>27017</portNumber>

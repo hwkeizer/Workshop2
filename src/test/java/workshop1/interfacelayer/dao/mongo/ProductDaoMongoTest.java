@@ -8,7 +8,6 @@ package workshop1.interfacelayer.dao.mongo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.After;
@@ -32,7 +31,7 @@ public class ProductDaoMongoTest {
     
      @Before
     public void initializeDatabase() {        
-        DaoFactory.setDatabaseType(2);
+        DatabaseConnection.getInstance().setDatabaseType("MONGO");
         DatabaseTest.initializeMongoDatabase();
         DatabaseTest.populateMongoDatabase();
     }

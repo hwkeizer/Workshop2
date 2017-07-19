@@ -42,7 +42,7 @@ public class OrderDaoMysqlTest {
     
     @Before
     public void initializeDatabase() {        
-        DaoFactory.setDatabaseType(1);
+        DatabaseConnection.getInstance().setDatabaseType("MYSQL");
         DatabaseTest.initializeDatabase();
         DatabaseTest.populateDatabase();
     }

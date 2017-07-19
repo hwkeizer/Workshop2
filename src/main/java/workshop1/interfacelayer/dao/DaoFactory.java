@@ -17,18 +17,17 @@ import workshop1.interfacelayer.dao.mongo.DaoFactoryMongo;
  */
 public abstract class DaoFactory {
     private static final Logger log = LoggerFactory.getLogger(DaoFactory.class);
-    // List of DAO types supported by this factory
-    private static int databaseType;
+    private static final String DATABASETYPE = DatabaseConnection.getInstance().getDatabaseType();;
 
-    public static void setDatabaseType(int dummyType) {
-        if(dummyType == 0) {
-            log.debug("databaseType before trying setter method is: " + databaseType);
-            databaseType = DatabaseConnection.getInstance().getDatabaseTypeForSettingFactory();
-            log.debug("databaseType after trying setter method is: " + databaseType);
-        }
-        else
-            databaseType = dummyType;
-    }
+//    public static void setDatabaseType(int dummyType) {
+//        if(dummyType == 0) {
+//            log.debug("databaseType before trying setter method is: " + databaseType);
+//            databaseType = 
+//            log.debug("databaseType after trying setter method is: " + databaseType);
+//        }
+//        else
+//            databaseType = dummyType;
+//    }
     
     
     
@@ -43,10 +42,11 @@ public abstract class DaoFactory {
     
     // Deliver the correct factory based on the given factoryType
     public static DaoFactory getDaoFactory() {
-        switch (databaseType) {
-            case 1 :
+        log.debug("DatabaseType: {}", DATABASETYPE);
+        switch (DATABASETYPE) {
+            case "MYSQL" :                
                 return new DaoFactoryMysql();
-            case 2 : {
+            case "MONGO" : {
                 return new DaoFactoryMongo();
             }
             default :
