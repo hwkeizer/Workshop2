@@ -51,6 +51,9 @@ public class OrderDaoMysqlTest {
     public void tearDown() {
     }
     
+    /**
+     * Test of insertOrder method, of class OrderDaoMysql.
+     */
     @Test
     public void testInsertOrder() {
         System.out.println("insertOrder");

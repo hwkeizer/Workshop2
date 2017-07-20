@@ -183,50 +183,50 @@ public class DatabaseTest {
         collection = database.getCollection("order");
         collection.bulkWrite(Arrays.asList(
             new InsertOneModel<>(new Document("_id", 1)
-                    .append("total_price", 230.78)
+                    .append("total_price", "230.78")
                     .append("customer_id", 1)
-                    .append("date", "2016-01-01")
-                    .append("order_status", 3)),
+                    .append("date", "2016-01-01T01:01:01")
+                    .append("order_status_id", 3)),
             new InsertOneModel<>(new Document("_id", 2)
-                    .append("total_price", 62.97)
+                    .append("total_price", "62.97")
                     .append("customer_id", 1)
-                    .append("date", "2016-05-02")
-                    .append("order_status", 3)),
+                    .append("date", "2016-05-02T01:01:01")
+                    .append("order_status_id", 3)),
             new InsertOneModel<>(new Document("_id", 3)
-                    .append("total_price", 144.12)
+                    .append("total_price", "144.12")
                     .append("customer_id", 1)
-                    .append("date", "2017-06-02")
-                    .append("order_status", 2)),
+                    .append("date", "2017-06-02T01:01:01")
+                    .append("order_status_id", 2)),
             new InsertOneModel<>(new Document("_id", 4)
-                    .append("total_price", 78.23)
+                    .append("total_price", "78.23")
                     .append("customer_id", 2)
-                    .append("date", "2017-04-08")
-                    .append("order_status", 3)),
+                    .append("date", "2017-04-08T01:01:01")
+                    .append("order_status_id", 3)),
             new InsertOneModel<>(new Document("_id", 5)
-                    .append("total_price", 6.45)
+                    .append("total_price", "6.45")
                     .append("customer_id", 3)
-                    .append("date", "2017-06-28")
-                    .append("order_status", 1)),
+                    .append("date", "2017-06-28T01:01:01")
+                    .append("order_status_id", 1)),
             new InsertOneModel<>(new Document("_id", 6)
-                    .append("total_price", 324.65)
+                    .append("total_price", "324.65")
                     .append("customer_id", 3)
-                    .append("date", "2017-06-07")
-                    .append("order_status", 3)),
+                    .append("date", "2017-06-07T01:01:01")
+                    .append("order_status_id", 3)),
             new InsertOneModel<>(new Document("_id", 7)
-                    .append("total_price", 46.08)
+                    .append("total_price", "46.08")
                     .append("customer_id", 3)
-                    .append("date", "2017-06-07")
-                    .append("order_status", 2)),
+                    .append("date", "2017-06-07T01:01:01")
+                    .append("order_status_id", 2)),
             new InsertOneModel<>(new Document("_id", 8)
-                    .append("total_price", 99.56)
+                    .append("total_price", "99.56")
                     .append("customer_id", 4)
-                    .append("date", "2017-06-17")
-                    .append("order_status", 1)),
+                    .append("date", "2017-06-17T01:01:01")
+                    .append("order_status_id", 1)),
             new InsertOneModel<>(new Document("_id", 9)
-                    .append("total_price", 23.23)
+                    .append("total_price", "23.23")
                     .append("customer_id", 5)
-                    .append("date", "2017-05-13")
-                    .append("order_status", 3))));
+                    .append("date", "2017-05-13T01:01:01")
+                    .append("order_status_id", 3))));
 
         // Product
         collection = database.getCollection("product");

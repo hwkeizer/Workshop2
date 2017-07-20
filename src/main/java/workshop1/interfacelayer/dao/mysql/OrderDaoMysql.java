@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,6 +130,11 @@ public class OrderDaoMysql implements OrderDao {
         return Optional.empty(); 
     }
     
+    @Override
+    public List<Order> getAllOrdersAsList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     // Helper methode to map the current row of the given ResultSet to a Product instance
     private Order map(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
@@ -138,5 +144,7 @@ public class OrderDaoMysql implements OrderDao {
         int orderStatusId = resultSet.getInt("order_status_id");
         return new Order(id, totalPrice, customerId, date, orderStatusId);
     }
+
+    
     
 }
