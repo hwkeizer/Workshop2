@@ -59,7 +59,7 @@ public class OrderItemDaoMongo implements OrderItemDao {
     @Override
     public void updateOrderItem(OrderItem orderItem) {
         // Do nothing if the product cannot be found in the database
-        if ((findOrderItemById(orderItem.getId())) == null) {
+        if (!findOrderItemById(orderItem.getId()).isPresent()) {
             log.error("OrderItemId '{}' bestaat niet in de database en kan dus "
                     + "ook niet worden bijgewerkt!", orderItem.getId());
             return;
@@ -108,7 +108,7 @@ public class OrderItemDaoMongo implements OrderItemDao {
         MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
         MongoCollection collection = database.getCollection("order_item");
         
-        BasicDBObject query = new BasicDBObject("_id", orderId);
+        BasicDBObject query = new BasicDBObject("order_id", orderId);
         MongoCursor cursor = collection.find(query).iterator();
         while(cursor.hasNext()) {
             Document document = (Document)cursor.next();  

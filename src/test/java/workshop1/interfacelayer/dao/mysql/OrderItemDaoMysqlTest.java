@@ -226,7 +226,7 @@ public class OrderItemDaoMysqlTest {
     public void testFindExistingOrderItemById() {
         System.out.println("findExistingOrderItemById");
         
-        // Prepare an order item to be deleted from the database
+        // Define the orderItem to be searched
         Integer testId = 13;
         Integer testOrderId = 8;
         Integer testProductId = 4;

@@ -263,77 +263,77 @@ public class DatabaseTest {
                     .append("order_id", 1)
                     .append("product_id", 6)
                     .append("amount", 23)
-                    .append("subtotal", 254.12)),
+                    .append("subtotal", "254.12")),
             new InsertOneModel<>(new Document("_id", 2)
                     .append("order_id", 1)
                     .append("product_id", 1)
                     .append("amount", 26)
-                    .append("subtotal", 345.20)),
+                    .append("subtotal", "345.20")),
             new InsertOneModel<>(new Document("_id", 3)
                     .append("order_id", 1)
                     .append("product_id", 2)
                     .append("amount", 2)
-                    .append("subtotal", 24.14)),
+                    .append("subtotal", "24.14")),
             new InsertOneModel<>(new Document("_id", 4)
                     .append("order_id", 2)
                     .append("product_id", 1)
                     .append("amount", 25)
-                    .append("subtotal", 289.89)),
+                    .append("subtotal", "289.89")),
             new InsertOneModel<>(new Document("_id", 5)
                     .append("order_id", 3)
                     .append("product_id", 4)
                     .append("amount", 2)
-                    .append("subtotal", 34.89)),
+                    .append("subtotal", "34.89")),
             new InsertOneModel<>(new Document("_id", 6)
                     .append("order_id", 4)
                     .append("product_id", 2)
                     .append("amount", 13)
-                    .append("subtotal", 156.76)),
+                    .append("subtotal", "156.76")),
             new InsertOneModel<>(new Document("_id", 7)
                     .append("order_id", 4)
                     .append("product_id", 5)
                     .append("amount", 2)
-                    .append("subtotal", 23.78)),
+                    .append("subtotal", "23.78")),
             new InsertOneModel<>(new Document("_id", 8)
                     .append("order_id", 5)
                     .append("product_id", 2)
                     .append("amount", 2)
-                    .append("subtotal", 21.34)),
+                    .append("subtotal", "21.34")),
             new InsertOneModel<>(new Document("_id", 9)
                     .append("order_id", 6)
                     .append("product_id", 1)
                     .append("amount", 3)
-                    .append("subtotal", 35.31)),
+                    .append("subtotal", "35.31")),
             new InsertOneModel<>(new Document("_id", 10)
                     .append("order_id", 6)
                     .append("product_id", 3)
                     .append("amount", 1)
-                    .append("subtotal", 11.23)),
+                    .append("subtotal", "11.23")),
             new InsertOneModel<>(new Document("_id", 11)
                     .append("order_id", 7)
                     .append("product_id", 6)
                     .append("amount", 1)
-                    .append("subtotal", 14.23)),
+                    .append("subtotal", "14.23")),
             new InsertOneModel<>(new Document("_id", 12)
                     .append("order_id", 7)
                     .append("product_id", 2)
                     .append("amount", 3)
-                    .append("subtotal", 31.87)),
+                    .append("subtotal", "31.87")),
             new InsertOneModel<>(new Document("_id", 13)
                     .append("order_id", 8)
                     .append("product_id", 4)
                     .append("amount", 23)
-                    .append("subtotal", 167.32)),
+                    .append("subtotal", "167.32")),
             new InsertOneModel<>(new Document("_id", 14)
                     .append("order_id", 9)
                     .append("product_id", 1)
                     .append("amount", 1)
-                    .append("subtotal", 11.34)),
+                    .append("subtotal", "11.34")),
             new InsertOneModel<>(new Document("_id", 15)
                     .append("order_id", 9)
                     .append("product_id", 2)
                     .append("amount", 2)
-                    .append("subtotal", 22.41))));
+                    .append("subtotal", "22.41"))));
         
     }        
     
