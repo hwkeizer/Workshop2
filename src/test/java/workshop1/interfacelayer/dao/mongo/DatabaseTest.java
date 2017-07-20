@@ -101,22 +101,27 @@ public class DatabaseTest {
             new InsertOneModel<>(new Document("_id", 1)
                     .append("first_name", "Piet")
                     .append("last_name", "Pietersen")
+                    .append("ln_prefix", "van")
                     .append("account_id", 1)),
             new InsertOneModel<>(new Document("_id", 2)
                     .append("first_name", "Klaas")
                     .append("last_name", "Klaassen")
+                    .append("ln_prefix", null)
                     .append("account_id", 2)),
             new InsertOneModel<>(new Document("_id", 3)
                     .append("first_name", "Jan")
                     .append("last_name", "Jansen")
+                    .append("ln_prefix", null)
                     .append("account_id", 3)),
             new InsertOneModel<>(new Document("_id", 4)
                     .append("first_name", "Fred")
                     .append("last_name", "Boomsma")
+                    .append("ln_prefix", null)
                     .append("account_id", 4)),
             new InsertOneModel<>(new Document("_id", 5)
                     .append("first_name", "Joost")
                     .append("last_name", "Snel")
+                    .append("ln_prefix", null)
                     .append("account_id", 5))));
 
         // Address

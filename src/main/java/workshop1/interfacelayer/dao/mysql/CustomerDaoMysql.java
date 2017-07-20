@@ -68,8 +68,7 @@ public class CustomerDaoMysql implements CustomerDao {
     }
     
     @Override
-    public void updateCustomer(Customer customer) {
-        
+    public void updateCustomer(Customer customer) {        
                 
         // Do nothing if the customer cannot be found in the database
         if ((findCustomerById(customer.getId())) == null) {
