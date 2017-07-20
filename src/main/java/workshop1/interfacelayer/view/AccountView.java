@@ -6,6 +6,7 @@
 package workshop1.interfacelayer.view;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import workshop1.domain.Account;
 
@@ -24,7 +25,7 @@ public class AccountView {
     // Package private constructor can be injected with Scanner for testing
     AccountView(Scanner input) {
         this.input = input;
-    }
+    }        
     
     public void showNewAccountScreen() {
         System.out.println("\n\nU gaat een nieuw account aan de database toevoegen.\n\n"
@@ -282,6 +283,75 @@ public class AccountView {
         System.out.println("");
     }
     
+    /*
+     * Methods related to selectAccount
+     */
+    
+    public Optional<Account> selectAccount(List<Account> accountList) {
+        showListOfAllAccounts(accountList);
+        Integer index = requestAccountIdToSelectInput(accountList.size());
+        if (index == null) return Optional.empty();        
+        Account account = accountList.get(index);
+        //Promp for confirmation if this is indeed the customer to select
+        showAccountToBeSelected(account);
+        Integer confirmed = requestConfirmationToSelect();
+        if (confirmed == null || confirmed == 2){
+            return Optional.empty();
+        }
+        return Optional.ofNullable(account);
+    }
+    
+    Integer requestAccountIdToSelectInput(int customerListSize){
+        printRequestForIdToSelectInput();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidListIndex(customerListSize, respons)) {
+            showInvalidRespons();
+            printRequestForIdToSelectInput();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }        
+        //index of product in ArrayList<Product> productList
+        return Integer.parseInt(respons) - 1;
+    }
+    
+    void printRequestForIdToSelectInput() {
+        System.out.println("Selecteer het gewenste account ID gevolgd door <enter>:");
+        System.out.print("> ");
+    }
+    
+    void showAccountToBeSelected(Account account) {
+        System.out.println("\nU heeft het volgende account geselecteerd:\n\n");        
+        System.out.printf("%-20s%-20s%-5s\n", "gebruikersnaam", "wachtwoord", "Account type");
+        System.out.println("--------------------------------------------------");
+        System.out.println(account.toStringNoId());
+    }
+    
+     Integer requestConfirmationToSelect() {
+        printRequestForSelectConfirmation();
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidInt(respons) &&
+                (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
+            showInvalidRespons();
+            printRequestForSelectConfirmation();
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }        
+        return Integer.parseInt(respons);
+    }
+     
+    void printRequestForSelectConfirmation() {
+        System.out.println("\nWilt u dit account selecteren?");
+        System.out.println("1) Account selecteren");
+        System.out.println("2) Account NIET selecteren");
+        System.out.print("> ");
+    }    
+    
+    /**
+     * End Methods related to selectAccount
+     */
+    
     public void showAccountToBeDeleted(Account account){
         System.out.println("\nU heeft aangegeven het volgende account te willen verwijderen uit de database:\n\n");        
         System.out.printf("%-20s%-20s%-5s\n", "gebruikersnaam", "wachtwoord", "Account type");
@@ -380,5 +450,13 @@ public class AccountView {
         System.out.println("1) Opslaan");
         System.out.println("2) NIET opslaan, ga terug naar menu");
         System.out.print("> ");
+    }
+    
+    /**
+     * Generic methods
+     */
+    
+    void showInvalidRespons() {
+        System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
     }
 }

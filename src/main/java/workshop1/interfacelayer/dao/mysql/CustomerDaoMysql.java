@@ -17,6 +17,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop1.interfacelayer.dao.CustomerDao;
+import workshop1.interfacelayer.view.Validator;
 
 /**
  *
@@ -30,7 +31,7 @@ public class CustomerDaoMysql implements CustomerDao {
     private static final String SQL_FIND_BY_NAME = "SELECT id, first_name, last_name, ln_prefix, account_id FROM customer WHERE last_name = ?";
     private static final String SQL_FIND_BY_ID = "SELECT id, first_name, last_name, ln_prefix, account_id FROM customer WHERE id = ?";
     private static final String SQL_FIND_ALL = "SELECT id, first_name, last_name, ln_prefix, account_id FROM `customer`  ORDER BY last_name ASC";
-    private static final String SQL_UPDATE = "UPDATE customer SET first_name=?, last_name=?, ln_prefix=? WHERE id = ?";
+    private static final String SQL_UPDATE = "UPDATE customer SET first_name=?, last_name=?, ln_prefix=?, account_id=? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM customer WHERE id = ?";
 
 
@@ -84,7 +85,8 @@ public class CustomerDaoMysql implements CustomerDao {
             statement.setString(1, customer.getFirstName());
             statement.setString(2, customer.getLastName());
             statement.setString(3, customer.getLastNamePrefix());
-            statement.setInt(4, customer.getId());
+            statement.setInt(4, customer.getAccountId());
+            statement.setInt(5, customer.getId());
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 log.error("Het aanpassen van customer {} is helaas mislukt!", 
@@ -175,7 +177,7 @@ public class CustomerDaoMysql implements CustomerDao {
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
         String lastNamePrefix = resultSet.getString("ln_prefix");
-        int accountId = resultSet.getInt("account_id");
+        Integer accountId = resultSet.getInt("account_id");
         return new Customer(id, firstName, lastName, lastNamePrefix, accountId);
     }
 

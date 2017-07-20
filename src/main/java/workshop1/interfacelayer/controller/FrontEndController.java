@@ -93,6 +93,10 @@ public class FrontEndController {
                     customerController.updateCustomer();
                     break;
                 }
+                case LINK_ACCOUNT_TO_CUSTOMER : {
+                    customerController.linkAccountToCustomer(accountController);
+                    break;
+                }
                 
                 //Order
                 case CREATE_ORDER_EMPLOYEE : {

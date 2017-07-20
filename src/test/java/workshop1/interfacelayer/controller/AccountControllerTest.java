@@ -17,6 +17,7 @@ import workshop1.domain.Account;
 import workshop1.interfacelayer.dao.AccountDao;
 import workshop1.interfacelayer.dao.DuplicateAccountException;
 import workshop1.interfacelayer.view.AccountView;
+import workshop1.interfacelayer.view.CustomerView;
 
 /**
  *

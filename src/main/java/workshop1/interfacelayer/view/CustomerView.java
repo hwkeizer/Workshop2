@@ -121,6 +121,25 @@ public class CustomerView {
         System.out.print("> ");
     }
     
+     /**
+     * Methods related to linkAccountToCustomer
+     */
+    
+    public void showLinkAccountToCustomerScreen() {
+        System.out.println("\nU wilt een account aan een klant koppelen. Beiden moeten bestaan\n"
+                + "in het systeem en mogen geen andere koppeling hebben!\n"
+                + "Druk op <enter> om een klant te selecteren\n");
+        input.nextLine();
+    }
+    
+    public void showCustomerHasAlreadyAccount() {
+        System.out.println("\nDe geselecteerde klant haaft al een account. verwijder dit\n"
+                + "account eerst voordat u een nieuw account aan deze klant kan koppelen\n"
+                + "Druk op <enter> om door te gaan");
+        input.nextLine();
+    }
+    
+    
     /*
      * Methods related to deleteCustomer
      */
@@ -382,8 +401,7 @@ public class CustomerView {
         System.out.println("1) Klant selecteren");
         System.out.println("2) Klant NIET selecteren");
         System.out.print("> ");
-    }    
-    
+    }  
     
     /*
     * General customerView methods not related to a specific action
@@ -403,9 +421,9 @@ public class CustomerView {
         System.out.println("");
     }
     
-    void showInvalidRespons() {
-        System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
-    }
+        void showInvalidRespons() {
+            System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
+        }
 
     void printRequestForFirstNameInput() {
         System.out.println("Geef de voornaam van de klant gevolgd door <enter>:");

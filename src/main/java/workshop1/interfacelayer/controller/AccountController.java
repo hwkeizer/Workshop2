@@ -11,6 +11,7 @@ import workshop1.domain.Account;
 import workshop1.interfacelayer.view.AccountView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import workshop1.domain.Customer;
 import workshop1.interfacelayer.dao.AccountDao;
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.DuplicateAccountException;
@@ -47,7 +48,7 @@ public class AccountController {
         if (password == null) return; // User interupted createAccount proces
         Integer accountType = accountView.requestAccountType(getAvailableAccountTypes());
         if (accountType == null) return;  // User interupted createAccount proces
-        
+                
         // Prepare the account with the validated values and add it to the database
         account = new Account(name, password, accountType);
         try {
@@ -56,7 +57,7 @@ public class AccountController {
             accountView.showDuplicateAccountError();
         }
     }
-    
+       
     public void updateAccount() {
         // Prompt for which account to update
         List<Account> accountList = listAllAccounts();
@@ -157,5 +158,9 @@ public class AccountController {
         accountList = accountDao.getAllAccountsAsList();        
         accountView.showListOfAllAccounts(accountList);        
         return accountList;
+    }
+    
+    public Optional<Account> selectAccountByUser() {
+        return accountView.selectAccount(listAllAccounts());
     }
 }
