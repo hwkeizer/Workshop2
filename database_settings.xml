@@ -8,7 +8,7 @@ and open the template in the editor.
 
 
 <database_settings>
-    <databaseType>MONGO</databaseType>
+    <databaseType>MYSQL</databaseType>
   <mysql>
 	  <databasePrefix>jdbc:mysql</databasePrefix>
 	  <serverName>localhost</serverName>

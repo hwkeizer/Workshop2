@@ -18,6 +18,7 @@ import workshop1.domain.Account;
 import workshop1.interfacelayer.DatabaseConnection;
 import workshop1.interfacelayer.dao.AccountDao;
 import workshop1.interfacelayer.dao.DaoFactory;
+import workshop1.interfacelayer.dao.DuplicateAccountException;
 
 /**
  *
@@ -64,6 +65,43 @@ public class AccountDaoMongoTest {
         
         // Verify the records after the insertion and verify the account is inserted
         assertEquals("Number of account should be increased by one.", countBefore + 1, accountCollection.count());
+        assertTrue("Account should be in database after insertion", accountCollection.find(query).iterator().hasNext());
+    }
+    
+    /**
+     * Test of insertAccount method, of class AccountDaoMongo.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testInsertExistingAccount() throws Exception {
+        // Get the account Collection for easy test verification
+        MongoCollection accountCollection = DatabaseConnection.getInstance().getMongoDatabase().getCollection("account");        
+
+        //Prepare an account to add to the database
+        String testUsername = "klaas";
+        String testPassword = "Klaassen";
+        Integer testAccountTypeId = 2;
+        Account testAccount = new Account(testUsername, testPassword, testAccountTypeId);
+        
+        // Count the records before the insert and verify the account is not yet in the database       
+        long countBefore = accountCollection.count();
+        BasicDBObject query = new BasicDBObject("username", testUsername);
+        assertTrue("Account should be in the database before insertion", accountCollection.find(query).iterator().hasNext());
+        
+        // Add the prepared account to the database with the DAO
+        try {
+            AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
+            accountDao.insertAccount(testAccount);
+            fail("Adding an existing account should have thrown a DuplicateAccountException");
+        } catch (DuplicateAccountException ex) {
+            // Assert expected exception
+            assertTrue("Exception DuplicateAccountException should be thrown", ex instanceof DuplicateAccountException);
+            assertEquals("Exception message should be as expected.", "Account with name = " + testAccount.getUsername()+ " is already in the database", ex.getMessage());
+        }       
+                
+        
+        // Verify the records after the insertion and verify the account is inserted
+        assertEquals("Number of account should be increased by one.", countBefore, accountCollection.count());
         assertTrue("Account should be in database after insertion", accountCollection.find(query).iterator().hasNext());
     }
 
