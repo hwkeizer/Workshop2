@@ -33,7 +33,7 @@ public class OrderItemDaoMysql implements OrderItemDao {
     private static final String SQL_UPDATE = "UPDATE `order_item` SET order_id=?, product_id=?, amount=?, subtotal=? WHERE id=?";
     private static final String SQL_FIND_BY_ID = "SELECT id, order_id, product_id, amount, subtotal FROM `order_item` WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM `order_item` WHERE id = ?";
-    private static final String SQL_FIND_ALL = "SELECT * FROM `order_item` WHERE order_id = ? ORDER BY name asc";
+    private static final String SQL_FIND_ALL = "SELECT * FROM `order_item` WHERE order_id = ?";
 
     public OrderItemDaoMysql() {
     }

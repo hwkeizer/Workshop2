@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ public class OrderDaoMysql implements OrderDao {
     private static final String SQL_INSERT = "INSERT INTO `order` (total_price, customer_id, date, order_status_id) VALUES (?, ?, ?, ?)";
     private static final String SQL_UPDATE = "UPDATE `order` SET `total_price`=?, `customer_id`=?, `date`=?,`order_status_id`=? WHERE `id`=?";
     private static final String SQL_FIND_BY_ID = "SELECT id, total_price, customer_id, date, order_status_id FROM `order` WHERE id = ?";
+    private static final String SQL_FIND_ALL = "SELECT * FROM `order` ORDER BY date asc";
     private static final String SQL_DELETE = "DELETE FROM `order` WHERE id = ?";
 
     public OrderDaoMysql() {
@@ -132,7 +134,21 @@ public class OrderDaoMysql implements OrderDao {
     
     @Override
     public List<Order> getAllOrdersAsList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Order> orderList = new ArrayList<>();
+        
+        try (
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL);){
+            
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                orderList.add(map(resultSet));
+            }           
+        } catch (SQLException ex) {
+            log.error("SQL error: ", ex);
+        }
+        
+        return orderList;
     }
     
     // Helper methode to map the current row of the given ResultSet to a Product instance

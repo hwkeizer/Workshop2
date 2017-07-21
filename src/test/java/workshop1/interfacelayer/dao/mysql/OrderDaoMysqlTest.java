@@ -20,6 +20,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -225,7 +227,7 @@ public class OrderDaoMysqlTest {
         BigDecimal testTotalPrice = new BigDecimal("46.08");
         Integer testCustomerId = 3;
         Integer year = 2017;
-        Integer month = 6;
+        Integer month = 7;
         Integer day = 7;
         LocalDateTime testDate = LocalDate.of(year,month,day).atTime(LocalTime.now());
         Integer testOrderStatusId = 2;
@@ -331,6 +333,29 @@ public class OrderDaoMysqlTest {
         // Assert we did not find the order
         assertFalse("Non existing order should not be present", optionalOrder.isPresent());
     }
+    
+    /**
+     * Test of getAllOrdersAsList method, of class OrderDaoMysql.
+     */
+    @Test
+    public void testgetAllOrdersAsList() {
+        System.out.println("getAllProductsAsList");
+        
+        //declare and get the productlist to be tested
+        List<Order> orderList = new ArrayList<>();
+        OrderDao orderDao = DaoFactory.getDaoFactory().createOrderDao();
+        orderList = orderDao.getAllOrdersAsList();
+        
+
+        
+        // Assert we found the productList and it is the productList we expected
+        assertEquals("Number of items in the list should equal initial number of products in database", initialNumberOfOrders, orderList.size());
+        assertEquals("First product in the list equals first entry in the database", 3, orderList.get(0).getOrderStatusId());
+        assertEquals("Second product in the list equals second entry in the database", "62.97" , orderList.get(1).getTotalPrice().toString());
+        assertEquals("Third product in the list equals third entry in the database", 2 , orderList.get(2).getOrderStatusId());
+
+    }
+    
     /**
      * Helper function to get the number of records from a table
      */

@@ -138,7 +138,44 @@ public class OrderController {
     }
 
     public void deleteOrderEmployee(CustomerController customerController) {
+        OrderDao orderDao = DaoFactory.getDaoFactory().createOrderDao();
+        List<Order> orderList = orderDao.getAllOrdersAsList();
         
+        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
+        List<Customer> customerList = customerDao.getAllCustomersAsList();
+        
+        //obtain the id of order to delete
+        orderView.showDeleteOrderEmployeeStartScreen();
+        orderView.showListToSelectOrderToDelete(orderList, customerList);
+        int index = orderView.requestOrderIdToSelectFromList(orderList);
+        Order selectedOrder = orderList.get(index);
+        
+        OrderItemDao orderItemDao = DaoFactory.getDaoFactory().createOrderItemDao();
+        List<OrderItem> orderItemList = 
+                orderItemDao.findAllOrderItemsAsListByOrderId(selectedOrder.getId());
+        
+        for(OrderItem orderItem: orderItemList) {
+            System.out.println(orderItem.toString());
+        }
+        
+        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
+        List<Product> productList = productDao.getAllProductsAsList();
+        
+        orderView.showOrderToBeDeleted(orderItemList, selectedOrder, customerList, productList);
+        
+        
+        Integer confirmed = orderView.requestConfirmationToDelete();
+        if (confirmed == null || confirmed == 2){
+            return;
+        }
+        else {
+            orderDao.deleteOrder(selectedOrder);
+            for(OrderItem orderItem: orderItemList) {
+                Product product = productDao.findProductById(orderItem.getProductId()).get();
+                product.setStock(product.getStock() + orderItem.getAmount());                
+                orderItemDao.deleteOrderItem(orderItem);
+            }
+        }
     }
     
     public void deleteOrderCustomer() {
