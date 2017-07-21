@@ -99,12 +99,14 @@ public class MenuView {
         MenuItem adminCustomer = new MenuItem(adminMenu, 13, "Menu klanten", MenuActions.SHOW_SUBMENU, false); 
         MenuItem adminAccount = new MenuItem(adminMenu, 14, "Menu accounts", MenuActions.SHOW_SUBMENU, false);
         MenuItem adminInformation = new MenuItem(adminMenu, 15, "Menu eigen gegevens", MenuActions.SHOW_SUBMENU, false);
+        MenuItem adminDatabase = new MenuItem(adminMenu, 16, "Database instellingen", MenuActions.SHOW_SUBMENU, false);
         MenuItem adminLogout = new MenuItem(adminMenu, 10, "Uitloggen", MenuActions.LOGOUT, true);
         adminMenu.addSubMenu(adminProduct);
         adminMenu.addSubMenu(adminOrder);
         adminMenu.addSubMenu(adminCustomer);
         adminMenu.addSubMenu(adminAccount);
         adminMenu.addSubMenu(adminInformation);
+        adminMenu.addSubMenu(adminDatabase);
         adminMenu.addSubMenu(adminLogout);
         
         adminProduct.addSubMenu(new MenuItem(adminProduct, 111, "Toevoegen product", MenuActions.CREATE_PRODUCT, true));
@@ -140,6 +142,10 @@ public class MenuView {
         adminInformation.addSubMenu(new MenuItem(adminInformation, 159, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
         adminInformation.addSubMenu(new MenuItem(adminInformation, 150, "Naar Hoofdscherm", MenuActions.MAIN_SCREEN, false));
         
+        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 161, "Wijzigen database type", MenuActions.SET_DATABASE_TYPE, true));
+        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 162, "Aan/uit zetten connectie pool", MenuActions.SET_CONNECTION_POOL, true));
+        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 169, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
+        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 160, "Naar Hoofdscherm", MenuActions.MAIN_SCREEN, false));   
         
         return adminMenu;
     }

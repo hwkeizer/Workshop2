@@ -33,6 +33,8 @@ public enum MenuActions {
     //No menu actions, methods will be accessed via the OrderController
     
     //Product
-    CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT    
-      
+    CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT,
+    
+    //Database
+    SET_DATABASE_TYPE, SET_CONNECTION_POOL  
 }

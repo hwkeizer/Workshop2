@@ -145,6 +145,16 @@ public class FrontEndController {
                     productController.deleteProduct();
                     break;
                 }
+                
+                //Database settings
+                case SET_DATABASE_TYPE : {
+                    accountController.setDatabaseType();
+                    break;
+                }
+                case SET_CONNECTION_POOL : {
+                    accountController.setConnectionPool();
+                    break;
+                }
  
             }
             currentAction = menuController.getMenuAction() ;

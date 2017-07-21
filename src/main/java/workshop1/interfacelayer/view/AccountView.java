@@ -459,4 +459,34 @@ public class AccountView {
     void showInvalidRespons() {
         System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
     }
+    
+    // Database settings are added to the accountcontroller to prevent the need for new controller/view
+    public Integer requestDatabaseTypeInput(String currentType){
+        printRequestForDatabaseTypeInput(currentType);
+        String respons = input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!(respons.equals("1") || respons.equals("2"))) {
+            showInvalidRespons();
+            printRequestForDatabaseTypeInput(currentType);
+            respons = input.nextLine();
+            if (respons.equals("!")) return null;  // User initiated abort
+        }
+        System.out.println("Database wordt gewijzigd naar type " + respons + "\n"
+                + "Druk op <enter> om door te gaan");
+        input.nextLine();
+        return Integer.parseInt(respons);
+    }
+
+    
+    private void printRequestForDatabaseTypeInput(String currentType) {
+        System.out.println("Het huidige database type is " + currentType);
+        System.out.println("Kies het nieuwe type dat u wenst te gebruiken gevolgd door <enter>");
+        System.out.println("Let op! Een andere database bevat mogelijk andere gegevens!:\n"
+                + "Kies !<enter> om terug te gaan naar het menu\n");
+        System.out.println("1) MySQL");
+        System.out.println("2) MongoDB\n");
+        System.out.print("> ");
+    }
+
+
 }

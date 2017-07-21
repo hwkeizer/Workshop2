@@ -11,7 +11,7 @@ import workshop1.domain.Account;
 import workshop1.interfacelayer.view.AccountView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import workshop1.domain.Customer;
+import workshop1.interfacelayer.DatabaseConnection;
 import workshop1.interfacelayer.dao.AccountDao;
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.DuplicateAccountException;
@@ -162,5 +162,20 @@ public class AccountController {
     
     public Optional<Account> selectAccountByUser() {
         return accountView.selectAccount(listAllAccounts());
+    }
+    
+    // Database settings are added to the accountcontroller to prevent the need for new controller/view
+    public void setDatabaseType() {
+        Integer newType = accountView.requestDatabaseTypeInput(DatabaseConnection.getInstance().getDatabaseType());
+        if (newType == null) return;
+        if (newType == 1) {
+            DatabaseConnection.getInstance().setDatabaseType("MYSQL");
+        } else {
+            DatabaseConnection.getInstance().setDatabaseType("MONGO");
+        }
+    }
+    
+    public void setConnectionPool() {
+        
     }
 }

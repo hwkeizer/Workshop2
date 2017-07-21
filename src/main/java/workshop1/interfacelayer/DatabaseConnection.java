@@ -8,12 +8,11 @@ package workshop1.interfacelayer;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
-import java.io.File;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import org.dom4j.io.SAXReader;
-import org.dom4j.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,21 +22,19 @@ import org.slf4j.LoggerFactory;
  */
 public class DatabaseConnection {
     private static final Logger log = LoggerFactory.getLogger(DatabaseConnection.class);
-    private final String dbSettingsFileName = "Database_Settings.xml";
-    private String databasePrefix;
-    private String serverName;
-    private String databaseName;
-    private String urlSuffix;    
-    private String portNumber;
-    private String user;   
-    private String password;
-    private MongoClient mongoClient;
+    private final Configuration configuration;
     private String databaseType;
+    private boolean useConnectionPool;
+    private HikariConfig config;
+    private HikariDataSource ds;
+    private MongoClient mongoClient;
     
     private DatabaseConnection() {
-        readDatabaseType();
-    }
-    
+        // The default configuration is created
+        configuration = new Configuration();
+        databaseType = configuration.getDatabaseType();
+    }    
+
     private static class SingletonHolder {
         private static final DatabaseConnection INSTANCE = new DatabaseConnection();
     }
@@ -45,155 +42,94 @@ public class DatabaseConnection {
     public static DatabaseConnection getInstance() {
         return SingletonHolder.INSTANCE;
     }
-
     
     /**
-     * Returns the complete connection string
-     * Connection string is composed from the XML configuration values
+     * Set the database type to be used
+     * This will overrule the default setting from the XML configuration!
+     * @param databaseType 
+     */
+    public void setDatabaseType( String databaseType) {
+        if (this.databaseType.equals(databaseType)) return; // No change in database type
+        log.debug("Switching databasetype to {}", databaseType);
+        this.databaseType = databaseType;
+        // If we do not use MySQL then turn off the connectionpool
+        if (!databaseType.equals("MYSQL")) useConnectionPool(false); 
+    }
+    
+    /**
+     * Get the current active database type
      * @return 
      */
-    private String getMySqlConnectionString() {
-        return databasePrefix + "://" + serverName + ":" + portNumber + "/" 
-                + databaseName + urlSuffix;
-    }
-    
-    private String getMongoDbConnectionString() {
-        return databasePrefix + "://" + serverName + ":" + portNumber;
-        
-    }
-    
     public String getDatabaseType() {
-        return databaseType;
-    }
-    
-    public void setDatabaseType( String databaseType) {
-        this.databaseType = databaseType;
+        return this.databaseType;
     }
     
     /**
-     * Returns a MySql connection to the database
+     * Switch to turn on or off the MySQL connection pool
+     * @param useConnectionPool 
+     */
+    public void useConnectionPool(boolean useConnectionPool) {
+        this.useConnectionPool = useConnectionPool;
+        if (useConnectionPool) {
+            if (ds == null) {
+                config = new HikariConfig();
+                config.setJdbcUrl("jdbc:mysql://localhost:3306/applikaasie?useSSL=false");
+                config.setUsername("testuser");
+                config.setPassword("Testen01!");
+                config.addDataSourceProperty("cachePrepStmts" , "true");
+                config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
+                config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+                ds = new HikariDataSource(config);
+            }
+        } else {
+            if (ds != null) {
+                ds.close();
+            }
+        }
+    }
+    
+    /**
+     * Returns a single or pooled MySql connection depending on the useConnectionPool boolean
      * @return connection
      */
     public Connection getMySqlConnection(){
-        readMySqlXML();
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
+        if (useConnectionPool) {
+            // Use connectionpool
+            log.debug("Mysql connection pool active");
             try {
-                return DriverManager.getConnection(getMySqlConnectionString(), user, password);
+                return ds.getConnection();
             } catch (SQLException ex) {
-                // log an exception. fro example:
-                log.error("Failed to create the database connection.", ex);
+                // log an exception for example:
+                    log.error("Failed to get database connection from the connection pool", ex);
             }
-        } catch (ClassNotFoundException ex) {
-            // log an exception. for example:
-            log.error("SQL Driver not found.", ex); 
+            
+        } else {
+            // use single MySqlConnection
+            log.debug("Mysql single connection active");
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                try {
+                    return DriverManager.getConnection(configuration.getMySqlConnectionString(), 
+                            configuration.getUser(), 
+                            configuration.getPassword());
+                } catch (SQLException ex) {
+                    // log an exception for example:
+                    log.error("Failed to create a single MySQL database connection.", ex);
+                }
+            } catch (ClassNotFoundException ex) {
+                // log an exception. for example:
+                log.error("SQL Driver not found.", ex); 
+            }            
         }
         return null;
     }
     
     public MongoDatabase getMongoDatabase() {
         // TODO: Check existance of database and create it when not available?
-        return getMongoDbClient().getDatabase(databaseName);
+        if (mongoClient == null) {
+            MongoClientURI uri = new MongoClientURI(configuration.getMongoDbConnectionString());
+            mongoClient = new MongoClient(uri);
+        }
+        return mongoClient.getDatabase(configuration.getDatabaseName());
     }
-    
-    private MongoClient getMongoDbClient() {
-        if (mongoClient != null) return mongoClient;
-        readMongoDbXML();
-        MongoClientURI uri = new MongoClientURI(getMongoDbConnectionString());
-        mongoClient = new MongoClient(uri);
-        return mongoClient;
-    }
-        
-    private void readDatabaseType(){
-        
-        SAXReader reader = new SAXReader();
-        File file = new File(dbSettingsFileName);
-        try{
-            Document document = reader.read(file);
-            
-            Node node;
-            node = document.selectSingleNode("/database_settings/databaseType");
-            databaseType = node.getText();
-            
-        }
-        catch(DocumentException e){
-            log.debug("Probleem met het lezen van het configuratie document", e);
-        }
-        
-    }
-    
-    private void readMySqlXML(){
-        SAXReader reader = new SAXReader();
-        File file = new File(dbSettingsFileName);
-        try{
-            Document document = reader.read(file);
-            
-            Node node;
-            node = document.selectSingleNode("/database_settings/mysql/databasePrefix");
-            databasePrefix = node.getText();
-            
-            node = document.selectSingleNode("/database_settings/mysql/serverName");
-            serverName = node.getText();
-            
-            node = document.selectSingleNode("/database_settings/mysql/databaseName");
-            databaseName = node.getText();
-            
-            node = document.selectSingleNode("/database_settings/mysql/urlSuffix");
-            urlSuffix = node.getText();
-            
-            node = document.selectSingleNode("/database_settings/mysql/portNumber");
-            portNumber = node.getText();
-            
-            node = document.selectSingleNode("/database_settings/mysql/user");
-            user = node.getText();
-            
-            node = document.selectSingleNode("/database_settings/mysql/password");
-            password = node.getText();
-            
-            log.debug("Connectiestring: {}",getMySqlConnectionString());
-
-        }
-        catch(DocumentException e){
-            log.debug("Probleem met het lezen van het configuratie document", e);
-        }
-        
-    }
-    
-    private void readMongoDbXML() {
-        SAXReader reader = new SAXReader();
-        File file = new File(dbSettingsFileName);
-        try{
-            Document document = reader.read(file);
-            
-            Node node;
-            node = document.selectSingleNode("/database_settings/mongodb/databasePrefix");
-            databasePrefix = node.getText();
-            
-            node = document.selectSingleNode("/database_settings/mongodb/serverName");
-            serverName = node.getText();
-            
-            node = document.selectSingleNode("/database_settings/mysql/databaseName");
-            databaseName = node.getText();
-//            
-//            node = document.selectSingleNode("/database_settings/mysql/urlSuffix");
-//            urlSuffix = node.getText();
-//            
-            node = document.selectSingleNode("/database_settings/mongodb/portNumber");
-            portNumber = node.getText();
-//            
-//            node = document.selectSingleNode("/database_settings/mysql/user");
-//            user = node.getText();
-//            
-//            node = document.selectSingleNode("/database_settings/mysql/password");
-//            password = node.getText();
-            
-            log.debug("Connectiestring: {}",getMongoDbConnectionString());
-
-        }
-        catch(DocumentException e){
-            log.debug("Probleem met het lezen van het configuratie document", e);
-        }
-        
-    }
-    
 }
