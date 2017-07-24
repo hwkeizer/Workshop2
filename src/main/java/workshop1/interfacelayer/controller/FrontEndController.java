@@ -21,11 +21,11 @@ import workshop1.interfacelayer.view.ProductView;
  */
 public class FrontEndController {
     private final MenuController menuController;
-    private final AccountController accountController;
-    private final ProductController productController;
-    private final CustomerController customerController;
-    private final OrderController orderController;
-    private final AddressController addressController;
+    private AccountController accountController;
+    private ProductController productController;
+    private CustomerController customerController;
+    private OrderController orderController;
+    private AddressController addressController;
 
     
     public FrontEndController() {
@@ -148,14 +148,20 @@ public class FrontEndController {
                 
                 //Database settings
                 case SET_DATABASE_TYPE : {
-                    accountController.setDatabaseType();
+                    if (accountController.setDatabaseType()) {
+                        // refresh the controllers with the new choosen databasetype
+                        accountController = new AccountController(new AccountView());
+                        productController = new ProductController(new ProductView());
+                        customerController = new CustomerController(new CustomerView());
+                        orderController = new OrderController(new OrderView(), new OrderItemView());
+                        addressController = new AddressController(new AddressView());
+                    }
                     break;
                 }
                 case SET_CONNECTION_POOL : {
                     accountController.setConnectionPool();
                     break;
-                }
- 
+                } 
             }
             currentAction = menuController.getMenuAction() ;
         }

@@ -164,18 +164,34 @@ public class AccountController {
         return accountView.selectAccount(listAllAccounts());
     }
     
-    // Database settings are added to the accountcontroller to prevent the need for new controller/view
-    public void setDatabaseType() {
+    /**
+     * Sets a new datasetype to be used. This option is only used for demonstration
+     * purposes as this will also replace the database that is being used
+     * @return 
+     */
+    public boolean setDatabaseType() {
         Integer newType = accountView.requestDatabaseTypeInput(DatabaseConnection.getInstance().getDatabaseType());
-        if (newType == null) return;
+        if (newType == null) return false; // nothing changed
         if (newType == 1) {
             DatabaseConnection.getInstance().setDatabaseType("MYSQL");
         } else {
             DatabaseConnection.getInstance().setDatabaseType("MONGO");
         }
+        // Databasetype has been changed
+        return true;
     }
     
+    /**
+     * Sets the connection pool on or off. This option is only used for demonstration
+     * purposes
+     */
     public void setConnectionPool() {
+        boolean newPoolSetting = accountView.requestConnectionPoolInput(DatabaseConnection.getInstance().getUseConnectionPool());
+        System.out.println(newPoolSetting);
+        DatabaseConnection.getInstance().useConnectionPool(newPoolSetting);
+    }
+    
+    public void showCurrentDatabaseSettings() {
         
     }
 }

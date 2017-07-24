@@ -459,8 +459,12 @@ public class AccountView {
     void showInvalidRespons() {
         System.out.println("\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
     }
+   
     
-    // Database settings are added to the accountcontroller to prevent the need for new controller/view
+    /**
+     * Methods to change database settings during program flow
+     */
+   
     public Integer requestDatabaseTypeInput(String currentType){
         printRequestForDatabaseTypeInput(currentType);
         String respons = input.nextLine();
@@ -470,6 +474,11 @@ public class AccountView {
             printRequestForDatabaseTypeInput(currentType);
             respons = input.nextLine();
             if (respons.equals("!")) return null;  // User initiated abort
+        }
+        if (respons.equals(currentType)) {
+            System.out.println("Huidige database type is opnieuw gekozen. De database wordt niet gewijzigd\n"
+                + "Druk op <enter> om door te gaan");
+            return null;
         }
         System.out.println("Database wordt gewijzigd naar type " + respons + "\n"
                 + "Druk op <enter> om door te gaan");
@@ -487,6 +496,35 @@ public class AccountView {
         System.out.println("2) MongoDB\n");
         System.out.print("> ");
     }
-
+    
+    public boolean requestConnectionPoolInput(boolean currentSetting) {
+        printRequestForConnectionPoolInput(currentSetting);        
+        String respons = input.nextLine();
+        while (!(respons.equals("1") || respons.equals("2"))) {
+            showInvalidRespons();
+            printRequestForConnectionPoolInput(currentSetting);
+            respons = input.nextLine();
+        }
+        boolean newSetting = currentSetting;
+        if (respons.equals("1")) {
+            System.out.println("Connectie pool staat aan"); 
+            newSetting = true;
+        }
+        if (respons.equals("2")) {
+            System.out.println("Connectie pool staat uit");
+            newSetting = false;
+        }
+        System.out.println("Druk op <enter> om door te gaan");
+        input.nextLine();
+        return newSetting;
+    }
+    
+    private void printRequestForConnectionPoolInput(boolean currentType) {
+        System.out.println("De huidige connectiepool instelling is " + currentType);
+        System.out.println("Kies de nieuwe instelling gevolgd door <enter>\n");
+        System.out.println("1) Connectiepool aan");
+        System.out.println("2) Connectiepool uit\n");
+        System.out.print("> ");
+    }
 
 }

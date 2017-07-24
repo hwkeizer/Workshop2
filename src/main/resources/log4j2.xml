@@ -4,16 +4,20 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
         </Console>
-        <File name="FileOutput" fileName="application.log" immediateFlush="false" append="false">
+        <File name="FileOutput" fileName="application.log" append="false">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="FileDBOutput" fileName="database.log" append="false">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
     <Loggers>
       <Logger name = "org.mongodb.driver" level="error">
         <AppenderRef ref="Console"/>
+        <AppenderRef ref="FileDBOutput"/>
       </Logger>
-        <Logger name = "com.zaxxer.hikari" level="error">
-        <AppenderRef ref="Console"/>
+        <Logger name = "com.zaxxer.hikari" level="debug">
+        <AppenderRef ref="FileDBOutput"/>
       </Logger>
         <Root level="debug">
             <AppenderRef ref="Console" />

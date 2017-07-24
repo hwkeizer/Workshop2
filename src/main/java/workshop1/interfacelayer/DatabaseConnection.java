@@ -65,6 +65,13 @@ public class DatabaseConnection {
     }
     
     /**
+     * Get the current pool setting
+     */
+    public boolean getUseConnectionPool() {
+        return useConnectionPool;
+    }
+    
+    /**
      * Switch to turn on or off the MySQL connection pool
      * @param useConnectionPool 
      */
