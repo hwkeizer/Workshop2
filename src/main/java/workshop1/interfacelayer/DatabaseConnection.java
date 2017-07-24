@@ -80,9 +80,9 @@ public class DatabaseConnection {
         if (useConnectionPool) {
             if (ds == null) {
                 config = new HikariConfig();
-                config.setJdbcUrl("jdbc:mysql://localhost:3306/applikaasie?useSSL=false");
-                config.setUsername("testuser");
-                config.setPassword("Testen01!");
+                config.setJdbcUrl(configuration.getMySqlConnectionString());
+                config.setUsername(configuration.getUser());
+                config.setPassword(configuration.getPassword());
                 config.addDataSourceProperty("cachePrepStmts" , "true");
                 config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
                 config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );

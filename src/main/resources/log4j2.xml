@@ -16,7 +16,7 @@
         <AppenderRef ref="Console"/>
         <AppenderRef ref="FileDBOutput"/>
       </Logger>
-        <Logger name = "com.zaxxer.hikari" level="debug">
+        <Logger name = "com.zaxxer.hikari" level="debug" additivity="false">
         <AppenderRef ref="FileDBOutput"/>
       </Logger>
         <Root level="debug">

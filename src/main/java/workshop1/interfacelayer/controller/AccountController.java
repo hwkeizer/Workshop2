@@ -187,7 +187,6 @@ public class AccountController {
      */
     public void setConnectionPool() {
         boolean newPoolSetting = accountView.requestConnectionPoolInput(DatabaseConnection.getInstance().getUseConnectionPool());
-        System.out.println(newPoolSetting);
         DatabaseConnection.getInstance().useConnectionPool(newPoolSetting);
     }
     

@@ -507,11 +507,11 @@ public class AccountView {
         }
         boolean newSetting = currentSetting;
         if (respons.equals("1")) {
-            System.out.println("Connectie pool staat aan"); 
+            System.out.println("Connectie pool wordt aan gezet"); 
             newSetting = true;
         }
         if (respons.equals("2")) {
-            System.out.println("Connectie pool staat uit");
+            System.out.println("Connectie pool wordt uit gezet");
             newSetting = false;
         }
         System.out.println("Druk op <enter> om door te gaan");
@@ -520,7 +520,8 @@ public class AccountView {
     }
     
     private void printRequestForConnectionPoolInput(boolean currentType) {
-        System.out.println("De huidige connectiepool instelling is " + currentType);
+        String status = currentType ? "Aan" : "Uit";
+        System.out.println("De huidige connectiepool instelling is: " + status);
         System.out.println("Kies de nieuwe instelling gevolgd door <enter>\n");
         System.out.println("1) Connectiepool aan");
         System.out.println("2) Connectiepool uit\n");
