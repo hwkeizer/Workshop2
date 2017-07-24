@@ -35,16 +35,20 @@ public class OrderController {
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
     private OrderView orderView;
     private OrderItemView orderItemView;
-    private Order order;
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
-    private List<OrderItem> orderItemList;
+    private final CustomerDao customerDao;
+    private final ProductDao productDao;
+    private final AccountDao accountDao;
 
     OrderController(OrderView orderView, OrderItemView orderItemView) {
         this.orderView = orderView;
         this.orderItemView = orderItemView;
         orderDao = DaoFactory.getDaoFactory().createOrderDao();
         orderItemDao = DaoFactory.getDaoFactory().createOrderItemDao();
+        customerDao = DaoFactory.getDaoFactory().createCustomerDao();
+        productDao = DaoFactory.getDaoFactory().createProductDao();
+        accountDao = DaoFactory.getDaoFactory().createAccountDao();
     }
 
     public void createOrderEmployee(CustomerController customerController) {
@@ -55,15 +59,16 @@ public class OrderController {
             return;
         }
         
-        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         List<Product> productList = productDao.getAllProductsAsList();
-        orderItemList = orderItemView.createOrderItemListForNewOrder(productList);
+        List<OrderItem> orderItemList = orderItemView.createOrderItemListForNewOrder(productList);
         
-        BigDecimal price = calculateOrderPrice();
+        BigDecimal price = calculateOrderPrice(orderItemList);
         LocalDateTime dateTime = LocalDateTime.now();
-        order = new Order(price, customerId, dateTime, 1); 
+        Order order = new Order(price, customerId, dateTime, 1); 
         
-        orderView.showOrderToBeCreated(orderItemList, order); //For now only price, date and order status
+        //Get full productList, the one loaded above is emptied in the order creation process
+        productList = productDao.getAllProductsAsList();
+        orderView.showOrderToBeCreated(orderItemList, order, productList); //For now only price, date and order status
         Integer confirmed = orderView.requestConfirmationToCreate();
         if (confirmed == null || confirmed == 2){
             return;
@@ -88,21 +93,20 @@ public class OrderController {
     public void createOrderCustomer(String username) {
         orderView.showConstructOrderCustomerStartScreen();
         
-        AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();        
         Account customerAccount = accountDao.findAccountByUserName(username).get();
-        
-        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
+
         int customerId = customerDao.findCustomerByAccountId(customerAccount.getId()).get().getId();
-                        
-        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
+
         List<Product> productList = productDao.getAllProductsAsList();
-        orderItemList = orderItemView.createOrderItemListForNewOrder(productList);
+        List<OrderItem> orderItemList = orderItemView.createOrderItemListForNewOrder(productList);
         
-        BigDecimal price = calculateOrderPrice();
+        BigDecimal price = calculateOrderPrice(orderItemList);
         LocalDateTime dateTime = LocalDateTime.now();
-        order = new Order(price, customerId, dateTime, 1); 
+        Order order = new Order(price, customerId, dateTime, 1);
         
-        orderView.showOrderToBeCreated(orderItemList, order); //For now only price, date and order status
+        //Get full productList, the one loaded above is emptied in the order creation process
+        productList = productDao.getAllProductsAsList();
+        orderView.showOrderToBeCreated(orderItemList, order, productList); //For now only price, date and order status
         Integer confirmed = orderView.requestConfirmationToCreate();
         if (confirmed == null || confirmed == 2){
             return;
@@ -123,9 +127,38 @@ public class OrderController {
             
         }
     }
+    
+    public void showOrderToCustomer(String username) {
+        orderView.showOrderListCustomerStartScreen();
+        
+        Account customerAccount = accountDao.findAccountByUserName(username).get();
+        int customerId = customerDao.findCustomerByAccountId(customerAccount.getId()).get().getId();
+
+        List<Order> orderList = orderDao.getAllOrdersAsListByCustomerId(customerId);
+        List<Product> productList = productDao.getAllProductsAsList();
+        
+        if(orderList.size() == 0) {
+            orderView.showCustomerNoOrdersWereFound();
+        }
+        else if(orderList.size() == 1) {
+            Order order = orderList.get(0);
+            List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(order.getId());
+            orderView.showOneOrderWasFound();
+            orderView.showOrderToCustomer(order, orderItemList, productList);
+        }
+        else {
+            orderView.showCustomerListOfFoundOrders(orderList);
+            int index = orderView.requestOrderIdToSelectFromList(orderList);
+            Order order = orderList.get(index);
+            List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(order.getId());
+            orderView.showCustomerThatOrderWasSelected();
+            orderView.showOrderToCustomer(order, orderItemList, productList);
+        }
+        
+        
+    }
         
     void updateProductStockAfterCreatingOrder(List<OrderItem> orderItemList) {
-        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
         
         for(OrderItem orderItem: orderItemList) {
                 Optional<Product> optionalProduct = productDao.findProductById(orderItem.getProductId());
@@ -138,10 +171,8 @@ public class OrderController {
     }
 
     public void deleteOrderEmployee(CustomerController customerController) {
-        OrderDao orderDao = DaoFactory.getDaoFactory().createOrderDao();
         List<Order> orderList = orderDao.getAllOrdersAsList();
         
-        CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
         List<Customer> customerList = customerDao.getAllCustomersAsList();
         
         //obtain the id of order to delete
@@ -150,15 +181,8 @@ public class OrderController {
         int index = orderView.requestOrderIdToSelectFromList(orderList);
         Order selectedOrder = orderList.get(index);
         
-        OrderItemDao orderItemDao = DaoFactory.getDaoFactory().createOrderItemDao();
-        List<OrderItem> orderItemList = 
-                orderItemDao.findAllOrderItemsAsListByOrderId(selectedOrder.getId());
-        
-        for(OrderItem orderItem: orderItemList) {
-            System.out.println(orderItem.toString());
-        }
-        
-        ProductDao productDao = DaoFactory.getDaoFactory().createProductDao();
+        List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(selectedOrder.getId());
+
         List<Product> productList = productDao.getAllProductsAsList();
         
         orderView.showOrderToBeDeleted(orderItemList, selectedOrder, customerList, productList);
@@ -175,26 +199,68 @@ public class OrderController {
                 product.setStock(product.getStock() + orderItem.getAmount());                
                 orderItemDao.deleteOrderItem(orderItem);
             }
+            
+            //Update the stock after placing the order
+            updateProductStockAfterDeletingOrder(orderItemList);
         }
     }
     
-    public void deleteOrderCustomer() {
+    void updateProductStockAfterDeletingOrder(List<OrderItem> orderItemList) {
         
-    }
-
-    public void updateOrderEmployee(CustomerController customerController) {
-        
+        for(OrderItem orderItem: orderItemList) {
+                Optional<Product> optionalProduct = productDao.findProductById(orderItem.getProductId());
+                Product product = optionalProduct.get();
+                int amount = orderItem.getAmount();
+                int stock = product.getStock();
+                product.setStock(stock + amount);
+                productDao.updateProduct(product);
+        }
     }
     
-    public void updateOrderCustomer() {
-        
-    }
+//    public void deleteOrderCustomer() {
+//        
+//    }
+//
+//    public void updateOrderEmployee(CustomerController customerController) {
+//        
+//    }
+//    
+//    public void updateOrderCustomer() {
+//        
+//    }
     
     public void setOrderStatus() {
+        List<Order> orderList = orderDao.getAllOrdersAsList();
         
+        List<Customer> customerList = customerDao.getAllCustomersAsList();
+        
+        //obtain the id of order to delete
+        orderView.showSetOrderStatusStartScreen();
+        orderView.showListToSelectOrderToSetOrderStatus(orderList, customerList);
+        int index = orderView.requestOrderIdToSelectFromList(orderList);
+        Order selectedOrder = orderList.get(index);
+        
+        List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(selectedOrder.getId());
+        List<Product> productList = productDao.getAllProductsAsList();
+        
+        orderView.showOrderToSetOrderStatus(orderItemList, selectedOrder, customerList, productList);
+        int newOrderStatusId = orderView.requestInputForNewOrderStatus(selectedOrder);
+        
+        
+        orderView.showOrderToSetNewOrderStatusId(selectedOrder, newOrderStatusId, customerList, productList);
+        
+        selectedOrder.setOrderStatusId(newOrderStatusId);
+        
+        Integer confirmed = orderView.requestConfirmationToSetNewOrderStatusId();
+        if (confirmed == null || confirmed == 2){
+            return;
+        }
+        else {
+            orderDao.updateOrder(selectedOrder);
+        }
     }
     
-    private BigDecimal calculateOrderPrice() {
+    private BigDecimal calculateOrderPrice(List<OrderItem> orderItemList) {
         BigDecimal price = new BigDecimal("0.00");
         for(OrderItem orderItem: orderItemList){
             price = price.add(orderItem.getSubTotal());

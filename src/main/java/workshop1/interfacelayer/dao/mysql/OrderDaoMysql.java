@@ -35,6 +35,7 @@ public class OrderDaoMysql implements OrderDao {
     private static final String SQL_UPDATE = "UPDATE `order` SET `total_price`=?, `customer_id`=?, `date`=?,`order_status_id`=? WHERE `id`=?";
     private static final String SQL_FIND_BY_ID = "SELECT id, total_price, customer_id, date, order_status_id FROM `order` WHERE id = ?";
     private static final String SQL_FIND_ALL = "SELECT * FROM `order` ORDER BY date asc";
+    private static final String SQL_FIND_ALL_FROM_CUSTOMER = "SELECT * FROM `order` WHERE `customer_id`=? ORDER BY date asc";
     private static final String SQL_DELETE = "DELETE FROM `order` WHERE id = ?";
 
     public OrderDaoMysql() {
@@ -139,6 +140,27 @@ public class OrderDaoMysql implements OrderDao {
         try (
             Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL);){
+            
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                orderList.add(map(resultSet));
+            }           
+        } catch (SQLException ex) {
+            log.error("SQL error: ", ex);
+        }
+        
+        return orderList;
+    }
+    
+    @Override
+    public List<Order> getAllOrdersAsListByCustomerId(int customerId) {
+        List<Order> orderList = new ArrayList<>();
+        
+        try (
+            Connection connection = DatabaseConnection.getInstance().getMySqlConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL_FROM_CUSTOMER);){
+            
+            statement.setInt(1, customerId);
             
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

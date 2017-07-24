@@ -116,6 +116,23 @@ public class OrderDaoMongo implements OrderDao {
         return orderList;
     }
     
+    @Override
+    public List<Order> getAllOrdersAsListByCustomerId(int customerId) {
+        List<Order> orderList = new ArrayList<>();
+
+        // Get the orderItem collection
+        MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
+        MongoCollection collection = database.getCollection("order");
+        
+        BasicDBObject query = new BasicDBObject("customer_id", customerId);
+        MongoCursor cursor = collection.find(query).iterator();
+        while(cursor.hasNext()) {
+            Document document = (Document)cursor.next();  
+            orderList.add(Optional.ofNullable(map(document)).get());
+        }
+        return orderList;
+    }
+    
     // Helper methode to map the current row of the given ResultSet to a Product instance
     private Order map(Document document) {
         int id = document.getInteger("_id");

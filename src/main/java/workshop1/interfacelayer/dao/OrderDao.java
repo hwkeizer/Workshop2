@@ -25,4 +25,6 @@ public interface OrderDao {
     
     List<Order> getAllOrdersAsList();
     
+    List<Order> getAllOrdersAsListByCustomerId(int customerId);
+    
 }

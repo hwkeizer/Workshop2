@@ -27,7 +27,7 @@ public enum MenuActions {
     //Order
     CREATE_ORDER_EMPLOYEE, CREATE_ORDER_CUSTOMER, DELETE_ORDER_EMPLOYEE,
     DELETE_ORDER_CUSTOMER, UPDATE_ORDER_EMPLOYEE, UPDATE_ORDER_CUSTOMER,
-    SET_ORDER_STATUS,
+    SET_ORDER_STATUS, VIEW_ORDER_CUSTOMER,
     
     //OrderItem
     //No menu actions, methods will be accessed via the OrderController

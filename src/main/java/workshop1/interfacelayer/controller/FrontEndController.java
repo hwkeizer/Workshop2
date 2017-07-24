@@ -107,22 +107,26 @@ public class FrontEndController {
                     orderController.createOrderCustomer(menuController.getLoggedInUserName());
                     break;
                 }
+                case VIEW_ORDER_CUSTOMER : {
+                    orderController.showOrderToCustomer(menuController.getLoggedInUserName());
+                    break;
+                }
                 case DELETE_ORDER_EMPLOYEE : {
                     orderController.deleteOrderEmployee(customerController);
                     break;
                 }
-                case DELETE_ORDER_CUSTOMER : {
-                    orderController.deleteOrderCustomer();
-                    break;
-                }
-                case UPDATE_ORDER_EMPLOYEE : {
-                    orderController.updateOrderEmployee(customerController);
-                    break;
-                }
-                case UPDATE_ORDER_CUSTOMER : {
-                    orderController.updateOrderCustomer();
-                    break;
-                }
+//                case DELETE_ORDER_CUSTOMER : {
+//                    orderController.deleteOrderCustomer();
+//                    break;
+//                }
+//                case UPDATE_ORDER_EMPLOYEE : {
+//                    orderController.updateOrderEmployee(customerController);
+//                    break;
+//                }
+//                case UPDATE_ORDER_CUSTOMER : {
+//                    orderController.updateOrderCustomer();
+//                    break;
+//                }
                 case SET_ORDER_STATUS : {
                     orderController.setOrderStatus();
                     break;

@@ -130,4 +130,19 @@ public class Validator {
     public static boolean isValidPostalCode(String postalCode) {
         return postalCode.matches("^[0-9]{4}\\ ?[a-zA-Z]{2}$");
     }
+
+    static boolean isValidOrderStatusId(String respons) {
+        int responsInt;
+        try{
+            responsInt = Integer.parseInt(respons);
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
+        
+        if(responsInt >= 1 && responsInt <= 3)
+            return true;
+        else
+            return false;
+    }    
 }
