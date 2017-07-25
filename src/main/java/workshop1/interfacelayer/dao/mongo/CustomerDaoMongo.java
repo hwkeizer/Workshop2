@@ -94,8 +94,16 @@ public class CustomerDaoMongo implements CustomerDao {
     }
 
     @Override
-    public Optional<Customer> findCustomerByAccountId(int customerId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Optional<Customer> findCustomerByAccountId(int accountId) {
+        MongoDatabase database = DatabaseConnection.getInstance().getMongoDatabase();
+        MongoCollection collection = database.getCollection("customer");
+        BasicDBObject query = new BasicDBObject("account_id", accountId);
+        MongoCursor cursor = collection.find(query).iterator();
+        while(cursor.hasNext()) {
+            Document document = (Document) cursor.next();  
+            return Optional.ofNullable(map(document));
+        }
+        return Optional.empty();
     }
 
     @Override

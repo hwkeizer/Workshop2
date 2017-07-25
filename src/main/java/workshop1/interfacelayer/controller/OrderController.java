@@ -178,7 +178,9 @@ public class OrderController {
         //obtain the id of order to delete
         orderView.showDeleteOrderEmployeeStartScreen();
         orderView.showListToSelectOrderToDelete(orderList, customerList);
-        int index = orderView.requestOrderIdToSelectFromList(orderList);
+        Integer index = orderView.requestOrderIdToSelectFromList(orderList);
+        if(index == null)
+            return;
         Order selectedOrder = orderList.get(index);
         
         List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(selectedOrder.getId());
@@ -194,11 +196,6 @@ public class OrderController {
         }
         else {
             orderDao.deleteOrder(selectedOrder);
-            for(OrderItem orderItem: orderItemList) {
-                Product product = productDao.findProductById(orderItem.getProductId()).get();
-                product.setStock(product.getStock() + orderItem.getAmount());                
-                orderItemDao.deleteOrderItem(orderItem);
-            }
             
             //Update the stock after placing the order
             updateProductStockAfterDeletingOrder(orderItemList);
@@ -237,14 +234,18 @@ public class OrderController {
         //obtain the id of order to delete
         orderView.showSetOrderStatusStartScreen();
         orderView.showListToSelectOrderToSetOrderStatus(orderList, customerList);
-        int index = orderView.requestOrderIdToSelectFromList(orderList);
+        Integer index = orderView.requestOrderIdToSelectFromList(orderList);
+        if(index == null)
+            return;
         Order selectedOrder = orderList.get(index);
         
         List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(selectedOrder.getId());
         List<Product> productList = productDao.getAllProductsAsList();
         
         orderView.showOrderToSetOrderStatus(orderItemList, selectedOrder, customerList, productList);
-        int newOrderStatusId = orderView.requestInputForNewOrderStatus(selectedOrder);
+        Integer newOrderStatusId = orderView.requestInputForNewOrderStatus(selectedOrder);
+        if(newOrderStatusId == null)
+            return;
         
         
         orderView.showOrderToSetNewOrderStatusId(selectedOrder, newOrderStatusId, customerList, productList);

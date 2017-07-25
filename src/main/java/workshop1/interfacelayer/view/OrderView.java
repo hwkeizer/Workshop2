@@ -153,7 +153,7 @@ public class OrderView {
     }
     
     public void showCustomerThatOrderWasSelected() {
-        System.out.println("U heeft de volgende bestelling geselecteerd:");
+        System.out.println("U heeft de volgende bestelling geselecteerd:\n");
     }
         
     
@@ -236,8 +236,8 @@ public class OrderView {
     }
     
    public Integer requestConfirmationToDelete() {
+        printRequestForDeleteConfirmation();
         String respons = input.nextLine();
-        if (respons.equals("!")) return null; // User initiated abort
         while (!Validator.isValidConfirmation(respons)) {
             showInvalidRespons();
             printRequestForDeleteConfirmation();
