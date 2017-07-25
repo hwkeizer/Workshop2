@@ -32,17 +32,21 @@ public class AccountView {
                 + "Vul de gevraagde gegevens in. Als u een uitroepteken invult\n"
                 + "wordt het toevoegen van een nieuw account afgebroken en gaat u terug\n"
                 + "naar het menu. Al ingevulde gegevens worden dan niet bewaard!\n\n ");
-    }
-    
-    public void showChangePasswordScreen() {
-        System.out.println("\nU wilt een wachtwoord wijzigen van een account");
-    }
+    }    
     
     public void showDuplicateAccountError() {
         System.out.println("\nFout: U probeert een account toe te voegen dat al bestaat in de database.\n"
                 + "Als u het bestaande account wilt wijzigen kies dan voor 'Wijzigen account'\n"
                 + "Druk op <enter> om door te gaan>");
         input.nextLine();
+    }
+    
+    /**
+     * Methods related to the password change procedure
+     */
+    
+    public void showChangePasswordScreen() {
+        System.out.println("\nU wilt een wachtwoord wijzigen van een account");
     }
     
     public void showInvalidOldPassword() {

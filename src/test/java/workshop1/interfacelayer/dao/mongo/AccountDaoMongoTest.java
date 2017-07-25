@@ -7,6 +7,8 @@ package workshop1.interfacelayer.dao.mongo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

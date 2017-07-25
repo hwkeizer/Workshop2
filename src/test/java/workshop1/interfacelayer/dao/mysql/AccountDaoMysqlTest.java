@@ -23,13 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Ignore;
+import workshop1.interfacelayer.controller.PasswordHash;
 
 
 /**
  *
  * @author thoma
  */
-@Ignore("Temporary ignore to speed up testing of other DAO's")
+//@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class AccountDaoMysqlTest {
     
     private final int initialNumberOfAccounts = 6; // Initial number of accounts
@@ -58,6 +59,7 @@ public class AccountDaoMysqlTest {
         //Prepare an account to add to the database
         String testUsername = "dinges";
         String testPassword = "haas";
+        testPassword = PasswordHash.generateHash(testPassword);
         Integer testAccountTypeId = 2;
         Account testAccount = new Account(testUsername, testPassword, testAccountTypeId);
 
@@ -106,6 +108,7 @@ public class AccountDaoMysqlTest {
         Integer id = 3;
         String testUsername = "jan";
         String testPassword = "welkom";
+        testPassword = PasswordHash.generateHash(testPassword);
         Integer testAccountTypeId = 3;
         Account testAccount = new Account(id, testUsername, testPassword, testAccountTypeId);
         
@@ -298,6 +301,7 @@ public class AccountDaoMysqlTest {
         // Set new username, password and account type
         String newUsername = "UpdatedFred";
         String newPassword = "UpdatedGeheim";
+        newPassword = PasswordHash.generateHash(newPassword);
         Integer newAccountType = 2;
         
         testAccount.setUsername(newUsername);

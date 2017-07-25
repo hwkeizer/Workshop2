@@ -46,6 +46,10 @@ public class AccountController {
         if (name == null) return; // User interupted createAccount proces
         String password = accountView.requestPasswordInput();
         if (password == null) return; // User interupted createAccount proces
+        
+        // create a password hash from his password and store this in the database
+        password = PasswordHash.generateHash(password);
+        
         Integer accountType = accountView.requestAccountType(getAvailableAccountTypes());
         if (accountType == null) return;  // User interupted createAccount proces
                 
@@ -76,6 +80,9 @@ public class AccountController {
         String newPassword = accountView.requestUpdatePasswordInput();
         if (newPassword == null) {
             newPassword = accountBeforeUpdate.getPassword();
+        } else {
+            // create a password hash from his password and store this in the database
+            newPassword = PasswordHash.generateHash(newPassword);
         }
         Integer newAccountType = accountView.requestUpdateAccountType(getAvailableAccountTypes());
         if (newAccountType == null) {
@@ -106,6 +113,8 @@ public class AccountController {
         if (validateAccount(userName, oldPassword)) {
             String newPassword = accountView.requestNewPasswordInput();
             if (newPassword != null && Validator.isValidPassword(newPassword)) {
+                // create a password hash from his password and store this in the database
+                newPassword = PasswordHash.generateHash(newPassword);
                 account.setPassword(newPassword);
                 accountDao.updateAccount(account);
             }
@@ -140,7 +149,7 @@ public class AccountController {
     public boolean validateAccount(String userName, String password) {
         Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
         if (!optionalAccount.isPresent()) return false;
-        return optionalAccount.get().getPassword().equals(password);
+        return PasswordHash.validatePassword(password, optionalAccount.get().getPassword());
     }
     
     public Integer getUserRole(String userName) {

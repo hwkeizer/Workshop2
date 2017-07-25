@@ -8,9 +8,12 @@ package workshop1.interfacelayer.dao.mongo;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.InsertOneModel;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import org.bson.Document;
 import workshop1.interfacelayer.DatabaseConnection;
+import workshop1.interfacelayer.controller.PasswordHash;
 
 /**
  *
@@ -67,32 +70,39 @@ public class DatabaseTest {
             new InsertOneModel<>(new Document("_id", 3)
                     .append("status", "afgehandeld"))));  
 
-         // Account
+        // Account
+        // Generate the required password hashes
+        String pass1 = PasswordHash.generateHash("welkom");
+        String pass2 = PasswordHash.generateHash("welkom");
+        String pass3 = PasswordHash.generateHash("welkom");
+        String pass4 = PasswordHash.generateHash("geheim");
+        String pass5 = PasswordHash.generateHash("welkom");
+        String pass6 = PasswordHash.generateHash("welkom");
         collection = database.getCollection("account");
         collection.bulkWrite(Arrays.asList(
             new InsertOneModel<>(new Document("_id", 1)
                     .append("username", "piet")
-                    .append("password", "welkom")
+                    .append("password", pass1)
                     .append("account_type_id", 1)),
             new InsertOneModel<>(new Document("_id", 2)
                     .append("username", "klaas")
-                    .append("password", "welkom")
+                    .append("password", pass2)
                     .append("account_type_id", 2)),
             new InsertOneModel<>(new Document("_id", 3)
                     .append("username", "jan")
-                    .append("password", "welkom")
+                    .append("password", pass3)
                     .append("account_type_id", 3)),
             new InsertOneModel<>(new Document("_id", 4)
                     .append("username", "fred")
-                    .append("password", "geheim")
+                    .append("password", pass4)
                     .append("account_type_id", 3)),
             new InsertOneModel<>(new Document("_id", 5)
                     .append("username", "joost")
-                    .append("password", "welkom")
+                    .append("password", pass5)
                     .append("account_type_id", 3)),
             new InsertOneModel<>(new Document("_id", 6)
                     .append("username", "jaap")
-                    .append("password", "welkom")
+                    .append("password", pass6)
                     .append("account_type_id", 3))));
 
         // Customer
