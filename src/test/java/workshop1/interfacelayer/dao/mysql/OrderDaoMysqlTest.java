@@ -8,7 +8,6 @@ package workshop1.interfacelayer.dao.mysql;
 import workshop1.interfacelayer.dao.DaoFactory;
 import workshop1.interfacelayer.dao.OrderDao;
 import workshop1.domain.Order;
-import workshop1.domain.Product;
 import workshop1.interfacelayer.DatabaseConnection;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -16,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -37,7 +35,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author hwkei
  */
-@Ignore("Temporary ignore to speed up testing of other DAO's")
+//@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class OrderDaoMysqlTest {
     private static final Logger log = LoggerFactory.getLogger(OrderDaoMysqlTest.class);
     private final int initialNumberOfOrders = 9; // Initial number of products

@@ -29,7 +29,7 @@ import org.junit.Ignore;
  *
  * @author hwkei
  */
-@Ignore("Temporary ignore to speed up testing of other DAO's")
+//@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class ProductDaoMysqlTest {
     
     private final int initialNumberOfProducts = 6; // Initial number of products
@@ -209,9 +209,9 @@ public class ProductDaoMysqlTest {
         
         // Assert we found the productList and it is the productList we expected
         assertEquals("Number of items in the list should equal initial number of products in database", initialNumberOfProducts, productList.size());
-        assertEquals("First product in the list equals first entry in the database", "Goudse belegen kaas" , productList.get(0).getName());
-        assertEquals("First product in the list equals first entry in the database", "14.65" , productList.get(2).getPrice().toString());
-        assertEquals("First product in the list equals first entry in the database", 256 , productList.get(3).getStock());
+        assertEquals("First product in the list equals first entry in the database", "Boeren jonge kaas" , productList.get(0).getName());
+        assertEquals("First product in the list equals first entry in the database", "14.70" , productList.get(2).getPrice().toString());
+        assertEquals("First product in the list equals first entry in the database", 122 , productList.get(3).getStock());
 
     }
 

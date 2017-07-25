@@ -5,13 +5,9 @@
  */
 package workshop1.interfacelayer.dao.mysql;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 import workshop1.interfacelayer.DatabaseConnection;
 import workshop1.interfacelayer.controller.PasswordHash;
 
@@ -89,10 +85,5 @@ public class DatabaseTest {
         } catch (SQLException ex) {
             System.out.println("SQLException" + ex);
         }
-    }
-    
-    @Test
-    public void dummyTruthToPreventNoTestWasPerformed() {
-        assertTrue("Let this test pass no matter what", true);
     }
 }

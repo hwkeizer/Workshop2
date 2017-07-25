@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoma
  */
-@Ignore("Temporary ignore to speed up testing of other DAO's")
+//@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class CustomerDaoMysqlTest {
     
     private static final Logger log = LoggerFactory.getLogger(CustomerDaoMysqlTest.class);
@@ -101,33 +101,6 @@ public class CustomerDaoMysqlTest {
             System.out.println("SQL Exception: " + ex.getMessage());
         }     
     }
-    
-    /**
-     * Test of insertCustomer method, of class CustomerDaoMysql.
-     * Test if inserting existing customer will throw Exception
-     */
-//    @Test
-//    public void testInsertExistingCustomer() {
-//        System.out.println("insertExistingCustomer");
-//        
-//        // Prepare a customer to add to the database        
-//        String testFirstName = "Fred";
-//        String testLastName = "Boomsma";
-//        String testLastNamePrefix = null;
-//        Integer testAccountId = 4;
-//        Customer testCustomer = new Customer(testFirstName, testLastName, testLastNamePrefix, testAccountId);
-//
-//        // Add the prepared customer to the database
-//        try {
-//            CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
-//            customerDao.insertCustomer(testCustomer);
-//            fail("Adding an existing customer should have thrown a DuplicateCustomerException");
-//        } catch (DuplicateCustomerException ex) {
-//            // Assert expected exception
-//            assertTrue("Exception DuplicateCustomerException should be thrown", ex instanceof DuplicateCustomerException);
-//            assertEquals("Exception message should be as expected.", "Customer with name = " + testCustomer.getLastName() + " is already in the database", ex.getMessage());
-//        }       
-//    }
 
     /**
      * Test of findExistingCustomerById method, of class CustomerDaoMysql.
@@ -402,10 +375,11 @@ public class CustomerDaoMysqlTest {
         System.out.println("getAllCustomersAsList");
         CustomerDao customerDao = DaoFactory.getDaoFactory().createCustomerDao();
         List<Customer> expectedCustomers = new ArrayList<>();
-        expectedCustomers.add(new Customer(1,"Piet","Pietersen",null,1));
-        expectedCustomers.add(new Customer(2,"Klaas","Klaassen",null,2));
-        expectedCustomers.add(new Customer(3,"Jan","Jansen",null,3));
+        // Adjusted the list for the alphabetical order
         expectedCustomers.add(new Customer(4,"Fred","Boomsma",null,4));
+        expectedCustomers.add(new Customer(3,"Jan","Jansen",null,3));
+        expectedCustomers.add(new Customer(2,"Klaas","Klaassen",null,2));
+        expectedCustomers.add(new Customer(1,"Piet","Pietersen",null,1));        
         expectedCustomers.add(new Customer(5,"Joost","Snel",null,5));
         List<Customer> allCustomers = customerDao.getAllCustomersAsList();
         assertEquals("All Customers should be as expected", expectedCustomers, allCustomers);

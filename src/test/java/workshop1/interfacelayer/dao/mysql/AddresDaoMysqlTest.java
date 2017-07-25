@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoma
  */
-@Ignore("Temporary ignore to speed up testing of other DAO's")
+//@Ignore("Temporary ignore to speed up testing of other DAO's")
 public class AddresDaoMysqlTest {
     private static final Logger log = LoggerFactory.getLogger(AddresDaoMysqlTest.class);
     private final int initialNumberOfAddresses = 7; // Initial number of accounts

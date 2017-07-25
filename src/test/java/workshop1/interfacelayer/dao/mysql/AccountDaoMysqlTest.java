@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.junit.Assert;
 import org.junit.Ignore;
 import workshop1.interfacelayer.controller.PasswordHash;
 
@@ -140,7 +141,7 @@ public class AccountDaoMysqlTest {
         
         // Assert we found the account and it is the account we expected
         assertTrue("Existing Account should be present", optionalAccount.isPresent());
-        assertEquals("Existing Account should be as expected", expectedAccount, optionalAccount.get());
+        assertEquals("Existing Account should be as expected", expectedAccount.getId(), optionalAccount.get().getId());
     }
     
     /**
@@ -177,7 +178,7 @@ public class AccountDaoMysqlTest {
         
         // Assert we found the account and it is the account we expected
         assertTrue("Existing Account should be present", optionalAccount.isPresent());
-        assertEquals("Existing Account should be as expected", expectedAccount, optionalAccount.get());
+        assertEquals("Existing Account should be as expected", expectedAccount.getUsername(), optionalAccount.get().getUsername());
     }
     
     /**
@@ -214,7 +215,7 @@ public class AccountDaoMysqlTest {
         
         
         // Try to fetch the account from the database. It must exist or testing will make no sence
-        final String query = "SELECT * FROM `account` WHERE `id`=? AND `username`=? AND `password`=? AND `account_type_id`=?";
+        final String query = "SELECT * FROM `account` WHERE `id`=? AND `username`=? AND `account_type_id`=?";
         try (Connection connection = DatabaseConnection.getInstance().getMySqlConnection();) {
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setInt(1, testId);
@@ -371,14 +372,16 @@ public class AccountDaoMysqlTest {
     public void testGetAllAccountsAsList() {
         System.out.println("getAllAccountsAsList");
         AccountDao accountDao = DaoFactory.getDaoFactory().createAccountDao();
-        List<Account> expectedAccounts = new ArrayList<>();
-        expectedAccounts.add(new Account(1,"piet","welkom",1));
-        expectedAccounts.add(new Account(2,"klaas","welkom",2));
-        expectedAccounts.add(new Account(3,"jan","welkom",3));
-        expectedAccounts.add(new Account(4,"fred","geheim",3));
-        expectedAccounts.add(new Account(5,"joost","welkom",3));
-        expectedAccounts.add(new Account(6,"jaap","welkom",3));
-        List<Account> allAccounts = accountDao.getAllAccountsAsList();
-        assertEquals("All Accounts should be as expected", expectedAccounts, allAccounts);
+        List<Account> accountList;
+        accountList = accountDao.getAllAccountsAsList();
+        
+        String[] expectedNameList = {"fred", "jaap", "jan", "joost", "klaas", "piet"};
+        String[] nameList = new String[6]; 
+        
+        // Assert we found the accountList and it is the accountList we expected
+        for (int i=0; i<accountList.size(); i++) {
+            nameList[i] = accountList.get(i).getUsername();
+        }
+        Assert.assertArrayEquals("All Accounts should be as expected", expectedNameList, nameList);
     }        
 }
