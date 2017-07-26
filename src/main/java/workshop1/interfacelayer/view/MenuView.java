@@ -23,8 +23,10 @@ public class MenuView {
         System.out.println("            *******************************");
         System.out.println("");
         System.out.println("");
-        System.out.println("Geef uw gebruikersnaam en wachtwoord om in te loggen. ");
-        System.out.println("Type een ! en <enter> om af te breken");
+        System.out.println("Wilt u inloggen met:\n"
+                + "1) Gebruikersnaam en wachtwoord\n"
+                + "2) Met uw inlogsleutel");
+        System.out.print(">");
     }
     
     public void showSuccesfulLogin(String userName) {
@@ -53,6 +55,39 @@ public class MenuView {
         System.out.println("\nOngeldige waarde, druk op <enter> en probeer het astublieft opnieuw.");
         input.nextLine();
     }   
+    
+    public Integer requestLoginMethod() {        
+        
+        String respons =  input.nextLine();
+        if (respons.equals("!")) return null; // User initiated abort
+        while (!Validator.isValidConfirmation(respons)) {
+            showInvalidRespons();
+            printRequestLoginMethodInput();            
+            respons = input.nextLine();
+            if (respons.equals("!")) return null; // User initiated abort
+        }
+        return Integer.parseInt(respons);
+    }
+    
+    public String requestLoginKey() {
+        System.out.println("U heeft aangegeven in te willen loggen met uw inlogsleutel\n"
+                + "Voer hieronder uw inlogsleutel in:\n"); 
+        System.out.print(">");
+        return input.nextLine();
+    }
+    
+    public void showInvalidKey() {
+        System.out.println("De inlogsleutel is niet correct, probeer opnieuw in te loggen\n"
+                + "Druk op <enter> om door te gaan");
+        input.nextLine();
+    }
+    
+    private void  printRequestLoginMethodInput() {
+        System.out.println("Wilt u inloggen met:\n"
+                + "1) Gebruikersnaam en wachtwoord\n"
+                + "2) Met uw inlogsleutel");
+        System.out.print(">");
+    }
     
     public String requestUserName() {        
         

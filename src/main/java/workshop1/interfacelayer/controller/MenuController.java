@@ -33,38 +33,47 @@ public class MenuController {
     
     public boolean login() {
         // Show welcome and get the user credentials
-        menuView.showWelcome();
-        userName = menuView.requestUserName();
-        if (userName == null) return false; // User initiated abort
-        String password = menuView.requestPassword();
-        if (password == null) return false; // User initiated abort
-        
-        // Validate the user credentials
         AccountController accountController = new AccountController(new AccountView());
-        if (accountController.validateAccount(userName, password)) {
-            int userRole = accountController.getUserRole(userName);
-            switch (userRole) {
-                case ADMIN : {
-                    currentMenu = menuView.buildAdminMenu();
-                    break;
-                }
-                case MEDEWERKER : {
-                    currentMenu = menuView.buildEmployeeMenu();
-                    break;                           
-                }
-                case KLANT : {
-                    currentMenu = menuView.buildCustomerMenu();
-                    break;
-                } 
-                default : {
-                    log.error("Onbekende gebruikersrol gevonden bij gebruiker {}!", userName);
-                    return false;
-                }
+        menuView.showWelcome();
+        Integer respons =  menuView.requestLoginMethod();
+        if (respons == null) return false;
+        if (respons == 1) {
+            userName = menuView.requestUserName();
+            if (userName == null) return false; // User initiated abort
+            String password = menuView.requestPassword();
+            if (password == null) return false; // User initiated abort
+            if (!accountController.validateAccount(userName, password)) {
+                menuView.showUnsuccesfulLogin();
+                return login(); // keep trying until user aborts
             }
-        } else {
-            menuView.showUnsuccesfulLogin();
-            return login(); // keep trying until user aborts
-        } 
+        }  else {
+            System.out.println("\nSpiekbriefje: " + Token.createJWT("piet", "applikaasie", "login", 0) + "\n");
+            userName = Token.parseJWT(menuView.requestLoginKey());
+            if (userName == null) {
+                menuView.showInvalidKey();
+                return login();
+            }
+        }
+        // Validate the user credentials
+        int userRole = accountController.getUserRole(userName);
+        switch (userRole) {
+            case ADMIN : {
+                currentMenu = menuView.buildAdminMenu();
+                break;
+            }
+            case MEDEWERKER : {
+                currentMenu = menuView.buildEmployeeMenu();
+                break;                           
+            }
+            case KLANT : {
+                currentMenu = menuView.buildCustomerMenu();
+                break;
+            } 
+            default : {
+                log.error("Onbekende gebruikersrol gevonden bij gebruiker {}!", userName);
+                return false;
+            }
+        }        
         return true;
     }    
     
