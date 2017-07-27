@@ -16,6 +16,9 @@ import workshop1.interfacelayer.controller.FrontEndController;
 public class Applikaasie {
     public static void main(String[] args) { 
         
+        DatabaseInit dbInit = new DatabaseInit();
+        dbInit.installDatabase();
+        
         FrontEndController frontEndController = new FrontEndController();
         frontEndController.login();
     }
