@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import org.slf4j.Logger;
@@ -58,7 +59,8 @@ public class PasswordHash {
         int iterations = Integer.parseInt(parts[0]);
         byte[] salt = bytesFromHex(parts[1]);
         byte[] hash = bytesFromHex(parts[2]);
-        int diff = -1;
+        boolean valid = false;
+//        int diff = -1;
         
         // generateHash the raw key material
         PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), salt, iterations, hash.length * 8);
@@ -68,14 +70,11 @@ public class PasswordHash {
             // generateHash the hash
             byte[] testHash = skf.generateSecret(spec).getEncoded();
             // Compare the new generated hash with the stored hash
-            diff = hash.length ^ testHash.length;
-            for (int i = 0; i < hash.length && i < testHash.length; i++) {
-                diff |= hash[i] ^ testHash[i];
-            }       
+            valid = Arrays.equals(hash, testHash);      
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
             log.error("Ernstige fout bij de wachtwoordverwerking. Raadpleeg svp een beheerder!");
         }
-        return (diff == 0);
+        return valid;
     }
     
     private static byte[] getSalt() throws NoSuchAlgorithmException {
