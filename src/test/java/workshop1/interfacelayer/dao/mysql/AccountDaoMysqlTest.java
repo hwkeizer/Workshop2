@@ -52,6 +52,7 @@ public class AccountDaoMysqlTest {
     
     /**
      * Test of insertAccount method, of class AccountDaoMysql.
+     * @throws workshop1.interfacelayer.dao.DuplicateAccountException
      */
     @Test
     public void testInsertAccount() throws DuplicateAccountException {

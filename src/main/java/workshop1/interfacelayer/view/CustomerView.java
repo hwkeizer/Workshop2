@@ -139,6 +139,16 @@ public class CustomerView {
         input.nextLine();
     }
     
+    public void showAccountIsAlreadyInUse(Customer customer) {
+        System.out.println("\nHet geselecteerde account hoort al bij de volgende klant: \n");
+        System.out.printf("%-20s%-15s%-20s\n", "Voornaam", "Tussenvoegsel", "Achternaam");
+        System.out.println("--------------------------------------------------");
+        System.out.println(customer.toStringNoId());
+        System.out.println("Kies een ander account of maak eerst een nieuw account voor deze klant\n"
+                + "Druk op <enter> om door te gaan");
+        input.nextLine();
+    }
+    
     
     /*
      * Methods related to deleteCustomer

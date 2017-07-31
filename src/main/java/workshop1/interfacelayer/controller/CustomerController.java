@@ -46,17 +46,26 @@ public class CustomerController {
     public void linkAccountToCustomer(AccountController accountController) {
         customerView.showLinkAccountToCustomerScreen();
         
+        // Select the customer
         Optional<Customer> optionalCustomer = selectCustomerByUser();
         if (!optionalCustomer.isPresent()) return; // No customer selected so abort
-        if (!Validator.isPositiveInteger(optionalCustomer.get().getAccountId().toString())) {
+        if (Validator.isValidId(optionalCustomer.get().getAccountId())) {
             customerView.showCustomerHasAlreadyAccount();
             return;
         }
+        
+        // Select the account
         Optional<Account> optionalAccount = accountController.selectAccountByUser();
         if (!optionalAccount.isPresent()) return; // No account selected so abort
-        // TODO: check inbouwen dat account niet al ergens aan gekoppeld is!
+        Optional<Customer> cust = searchCustomerByAccount(optionalAccount.get().getId());
+        if (cust.isPresent()) {
+            customerView.showAccountIsAlreadyInUse(cust.get());
+            return;
+        }
+        
+        // if all is ok link customer and account
         optionalCustomer.get().setAccountId(optionalAccount.get().getId());
-        log.debug("Linking customerid {} to accountid {}", optionalCustomer.get().getId(), optionalAccount.get().getId());
+        log.debug("Linking customer {} to account {}", optionalCustomer.get().getLastName(), optionalAccount.get().getUsername());
         customerDao.updateCustomer(optionalCustomer.get());
     }
     
@@ -74,7 +83,16 @@ public class CustomerController {
         }        
     }
     
-    public void searchCustomer() {        
+    public Optional<Customer> searchCustomerByAccount(Integer accountId) {
+        List<Customer> customerList = listAllCustomers();
+        for (Customer cust : customerList) {
+            if (Validator.isValidId(cust.getAccountId())) {
+                if (cust.getAccountId().equals(accountId)) {
+                    return Optional.ofNullable(cust);
+                }
+            }            
+        }
+        return Optional.empty();
     }
     
     List<Customer> listAllCustomers() {

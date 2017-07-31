@@ -67,6 +67,12 @@ public class Validator {
         return (intOption >= 0);
     }
     
+    
+    public static boolean isValidId(Integer id) {
+        if (id == null) return false;
+        return (id > 0);
+    }
+    
     public static boolean isValidListIndex(int listSize, String respons) {
         int responsInt;
         try {

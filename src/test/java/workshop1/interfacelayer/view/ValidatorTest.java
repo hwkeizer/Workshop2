@@ -229,6 +229,20 @@ public class ValidatorTest {
         
     }
     
+    @Test
+    public void testIsValidId() {
+        System.out.println("isValidId");
+        Integer id = 1;
+        assertTrue("Valid id should return true", Validator.isValidId(id));
+        id = 0;
+        assertFalse("Id 0 should return false", Validator.isValidId(id));
+        id = null;
+        assertFalse("Id null should return false", Validator.isValidId(id));
+        id = -1;
+        assertFalse("Id -1 should return false", Validator.isValidId(id));
+        
+    }
+    
     
     
 }
