@@ -17,7 +17,6 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import workshop1.interfacelayer.DatabaseConnection;
 import workshop1.interfacelayer.controller.PasswordHash;
 
 /**
@@ -38,15 +37,13 @@ public class DatabaseInit {
         getConnection();
         boolean alreadyExists = checkIfDatabaseAlreadyExists();
         if(alreadyExists){
-            log.debug("Already exists, so returning and running the applikaasie");
+            log.debug("Database found");
             return;
         }
         
-        log.debug("Did not exist yet so installing now");
+        log.debug("No database found, demo mode assumed");
         initializeDatabase();
-        populateDatabase();
-        
-        log.debug("Database now initialized and ready to go");
+        populateDatabase();        
     }
     
     private void readMySqlXML(){
@@ -80,7 +77,6 @@ public class DatabaseInit {
             
             mySqlConnectionString = databasePrefix + "://" + serverName + ":" 
                     + portNumber + urlSuffix;
-            log.debug("MySql Connectiestring: {}", mySqlConnectionString);
         }
         catch(DocumentException e){
             log.debug("Probleem met het lezen van het configuratie document", e);
@@ -108,8 +104,8 @@ public class DatabaseInit {
     }
     
     private boolean checkIfDatabaseAlreadyExists() {
-        try (Connection connection = getConnection();) {
-            ResultSet resultSet = connection.getMetaData().getCatalogs();
+        try (Connection connection = getConnection(); 
+                ResultSet resultSet = connection.getMetaData().getCatalogs();) {
 
             //iterate each catalog in the ResultSet
             while (resultSet.next()) {
@@ -119,7 +115,6 @@ public class DatabaseInit {
                     return true;
                 }
             }
-            resultSet.close();
 
         }
         catch(SQLException ex) {
@@ -179,7 +174,7 @@ public class DatabaseInit {
         String insert_account = "INSERT INTO `"+databaseName+"`.`account`(`id`,`username`,`password`,`account_type_id`) VALUES (1,\"piet\",\""+pass1+"\",1),(2,\"klaas\",\""+pass2+"\",2),(3,\"jan\",\""+pass3+"\",3),(4,\"fred\",\""+pass4+"\",3),(5,\"joost\",\""+pass5+ "\",3),(6,\"jaap\",\""+pass6+"\",3)";
         String insert_customer = "INSERT INTO `"+databaseName+"`.`customer`(`id`,`first_name`,`last_name`,`ln_prefix`,`account_id`) VALUES (1,\"Piet\",\"Pietersen\",null,1), (2,\"Klaas\",\"Klaassen\",null,2),(3,\"Jan\",\"Jansen\",null,3),(4,\"Fred\",\"Boomsma\",null,4),(5,\"Joost\",\"Snel\",null,5)";
         String insert_address = "INSERT INTO `"+databaseName+"`.`address`(`id`,`street_name`,`number`,`addition`,`postal_code`,`city`,`customer_id`,`address_type_id`) VALUES (1,\"Postweg\",201,\"h\",\"3781JK\",\"Aalst\",1,1),(2,\"Snelweg\",56,null,\"3922JL\",\"Ee\",2,1),(3,\"Torenstraat\",82,null,\"7620CX\",\"Best\",2,2),(4,\"Valkstraat\",9,\"e\",\"2424DF\",\"Goorle\",2,3),(5,\"Dorpsstraat\",5,null,\"9090NM\",\"Best\",3,1),(6,\"Plein\",45,null,\"2522BH\",\"Oss\",4,1),(7,\"Maduralaan\",23,null,\"8967HJ\",\"Apeldoorn\",5,1)";
-        String insert_order = "INSERT INTO `"+databaseName+"`.`order`(`id`,`total_price`,`customer_id`,`date`,`order_status_id`) VALUES (1,230.78,1,\"2016-01-01 01:01:01\",3),(2,62.97,1,\"2016-05-02 01:01:01\",3),(3,144.12,1,\"2017-03-02 01:01:01\",2),(4,78.23,2,\"2017-04-08 01:01:01\",3),(5,6.45,3,\"2017-06-28 01:01:01\",1),(6,324.65,3,\"2017-06-07 01:01:01\",3),(7,46.08,3,\"2017-07-07 01:01:01\",2),(8,99.56,4,\"2017-08-17 01:01:01\",1),(9,23.23,5,\"2017-09-13 01:01:01\",3)";
+        String insert_order = "INSERT INTO `"+databaseName+"`.`order`(`id`,`total_price`,`customer_id`,`date`,`order_status_id`) VALUES (1,230.78,1,\"2016-01-01 01:01:01\",3),(2,62.97,1,\"2016-05-02 01:01:01\",3),(3,144.12,1,\"2017-03-02 01:01:01\",2),(4,78.23,2,\"2017-04-08 01:01:01\",3),(5,6.45,3,\"2017-06-28 01:01:01\",1),(6,324.65,3,\"2017-06-07 01:01:01\",3),(7,46.08,3,\"2017-07-07 01:01:01\",2),(8,99.56,4,\"2017-07-17 01:01:01\",1),(9,23.23,5,\"2017-07-13 01:01:01\",3)";
         String insert_product = "INSERT INTO `"+databaseName+"`.`product`(`id`,`name`,`price`,`stock`) VALUES (1,\"Goudse belegen kaas\",12.90,134),(2,\"Goudse extra belegen kaas\",14.70,239),(3,\"Leidse oude kaas\",14.65,89),(4,\"Schimmelkaas\",11.74,256),(5,\"Leidse jonge kaas\",11.24,122),(6,\"Boeren jonge kaas\",12.57,85)";
         String insert_order_item = "INSERT INTO `"+databaseName+"`.`order_item`(`id`,`order_id`,`product_id`,`amount`,`subtotal`) VALUES (1,1,6,23,254.12),(2,1,1,26,345.20),(3,1,2,2,24.14),(4,2,1,25,289.89),(5,3,4,2,34.89),(6,4,2,13,156.76),(7,4,5,2,23.78),(8,5,2,2,21.34),(9,6,1,3,35.31),(10,6,3,1,11.23),(11,7,6,1,14.23),(12,7,2,3,31.87),(13,8,4,23,167.32),(14,9,1,1,11.34),(15,9,2,2,22.41)"; 
         try (Connection connection = getConnection();) {
@@ -198,7 +193,7 @@ public class DatabaseInit {
             System.out.println("SQLException" + ex);
         }
         
-        log.debug("Database now filled with data");
+        log.debug("Database populated with testdata");
     }
     
 }

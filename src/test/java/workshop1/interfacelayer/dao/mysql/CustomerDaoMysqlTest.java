@@ -298,7 +298,7 @@ public class CustomerDaoMysqlTest {
         Integer testAccountId = 3;
         Customer testCustomer = new Customer(testId, testFirstName, testLastName, testLastNamePrefix, testAccountId);
         
-        // Set new username, password and customer type
+        // Set new firstname, lastname and lastname prefix
         String newFirstName = "Willem";
         String newLastName = "Willemsen";
         String newLastNamePrefix = "van";

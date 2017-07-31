@@ -5,7 +5,6 @@
  */
 package workshop1.interfacelayer.controller;
 
-import workshop1.interfacelayer.DatabaseConnection;
 import workshop1.interfacelayer.MenuActions;
 import workshop1.interfacelayer.view.AccountView;
 import workshop1.interfacelayer.view.AddressView;
@@ -26,7 +25,6 @@ public class FrontEndController {
     private CustomerController customerController;
     private OrderController orderController;
     private AddressController addressController;
-
     
     public FrontEndController() {
         menuController = new MenuController(new MenuView());
@@ -115,26 +113,10 @@ public class FrontEndController {
                     orderController.deleteOrderEmployee(customerController);
                     break;
                 }
-//                case DELETE_ORDER_CUSTOMER : {
-//                    orderController.deleteOrderCustomer();
-//                    break;
-//                }
-//                case UPDATE_ORDER_EMPLOYEE : {
-//                    orderController.updateOrderEmployee(customerController);
-//                    break;
-//                }
-//                case UPDATE_ORDER_CUSTOMER : {
-//                    orderController.updateOrderCustomer();
-//                    break;
-//                }
                 case SET_ORDER_STATUS : {
                     orderController.setOrderStatus();
                     break;
                 }
-                
-                //OrderItem
-                //No specific action, handled from OrderController
-                
                 
                 //Product                
                 case CREATE_PRODUCT : {
@@ -170,12 +152,5 @@ public class FrontEndController {
             currentAction = menuController.getMenuAction() ;
         }
         menuController.logout();
-    }
-    
-     public void showAdminMenu() {
-        
-    }
-    
-    public void showCustomerMenu() {
     }
 }
