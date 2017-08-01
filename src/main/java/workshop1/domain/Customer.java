@@ -120,7 +120,7 @@ public class Customer {
         if (this.id != other.id) {
             return false;
         }
-        if (this.accountId != other.accountId) {
+        if (!Objects.equals(this.accountId, other.accountId)) {
             return false;
         }
         if (!Objects.equals(this.firstName, other.firstName)) {
@@ -129,10 +129,7 @@ public class Customer {
         if (!Objects.equals(this.lastName, other.lastName)) {
             return false;
         }
-        if (!Objects.equals(this.lastNamePrefix, other.lastNamePrefix)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.lastNamePrefix, other.lastNamePrefix);
     }
     
 }

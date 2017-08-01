@@ -9,10 +9,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import java.security.Key;
 import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
@@ -26,20 +24,21 @@ import org.slf4j.LoggerFactory;
  */
 public class Token {
     private static final Logger log = LoggerFactory.getLogger(Token.class);
+    
     static String createJWT(String id, String issuer, String subject, long ttlMillis) {
  
-        //The JWT signature algorithm we will be using to sign the token
+        //The JWT signature algorithm to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
 
-        //We will sign our JWT with our ApiKey secret
+        //Sign the JWT with a secret
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("Geheim");
         
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
-        //Let's set the JWT Claims
+        //Set the claims
         JwtBuilder builder = Jwts.builder().setId(id)
                                     .setIssuedAt(now)
                                     .setSubject(subject)
@@ -47,30 +46,28 @@ public class Token {
                                     .signWith(signatureAlgorithm, signingKey);
         
 
-        //if it has been specified, let's add the expiration
+        //if expiration is specified then set it
         if (ttlMillis > 0) {
         long expMillis = nowMillis + ttlMillis;
             Date exp = new Date(expMillis);
             builder.setExpiration(exp);
         }
 
-        //Builds the JWT and serializes it to a compact, URL-safe string
+        //Build the JWT and serialize it to a compact, URL-safe string
         return builder.compact();
     }
     
-    //Sample method to validate and read the JWT
-    static String parseJWT(String jwt) {
- 
-        //This line will throw an exception if it is not a signed JWS (as expected)
-        
+    //Validate and read the JWT
+    static String parseJWT(String jwt) { 
+        //This will throw an exception if it is not a signed JWS (as expected)        
         try {
             Claims claims = Jwts.parser()         
            .setSigningKey(DatatypeConverter.parseBase64Binary("Geheim"))
            .parseClaimsJws(jwt).getBody();
-            System.out.println("ID: " + claims.getId());
-            System.out.println("Subject: " + claims.getSubject());
-            System.out.println("Issuer: " + claims.getIssuer());
-            System.out.println("Expiration: " + claims.getExpiration());
+            log.debug("ID: " + claims.getId());
+            log.debug("Subject: " + claims.getSubject());
+            log.debug("Issuer: " + claims.getIssuer());
+            log.debug("Expiration: " + claims.getExpiration());
             String userName = claims.getId();
             return userName;
         } catch (ExpiredJwtException | SignatureException e) {

@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Scanner;
 import workshop1.domain.OrderItem;
 import workshop1.domain.Product;
-import workshop1.interfacelayer.dao.DaoFactory;
-import workshop1.interfacelayer.dao.ProductDao;
 
 /**
  *
@@ -33,6 +31,8 @@ public class OrderItemView {
     
     /**
      * Methods related to createOrder
+     * @param productList
+     * @return 
      */
     public List<OrderItem> createOrderItemListForNewOrder(List<Product> productList) {
         List<OrderItem> orderItemList = new ArrayList<>();

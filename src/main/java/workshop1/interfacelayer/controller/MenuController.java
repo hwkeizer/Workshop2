@@ -78,7 +78,7 @@ public class MenuController {
     }    
     
     public MenuActions getMenuAction() {        
-        while (!currentMenu.isAction())            
+        while (!currentMenu.isAction()) {            
             switch (currentMenu.getAction()) {
                 case SHOW_SUBMENU : {
                     menuView.showCurrentMenuHeader(currentMenu.getName(),userName);
@@ -109,7 +109,8 @@ public class MenuController {
                     currentMenu = currentMenu.getMainScreen();
                     break;
                 }
-            }    
+            }
+        }
         MenuActions executeAction = currentMenu.getAction();
         currentMenu = currentMenu.getParent();
         return executeAction;                    
