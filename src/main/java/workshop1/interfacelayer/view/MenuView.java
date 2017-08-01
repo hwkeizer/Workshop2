@@ -6,7 +6,7 @@
 package workshop1.interfacelayer.view;
 
 import java.util.Scanner;
-import workshop1.interfacelayer.MenuActions;
+import workshop1.interfacelayer.MenuAction;
 import workshop1.interfacelayer.MenuItem;
 
 /**
@@ -128,14 +128,14 @@ public class MenuView {
     }
 
     public MenuItem buildAdminMenu() {
-        MenuItem adminMenu = new MenuItem(null, 1, "Hoofdscherm", MenuActions.SHOW_SUBMENU, false);        
-        MenuItem adminProduct = new MenuItem(adminMenu, 11, "Menu producten", MenuActions.SHOW_SUBMENU, false);
-        MenuItem adminOrder = new MenuItem(adminMenu, 12, "Menu bestellingen", MenuActions.SHOW_SUBMENU, false);        
-        MenuItem adminCustomer = new MenuItem(adminMenu, 13, "Menu klanten", MenuActions.SHOW_SUBMENU, false); 
-        MenuItem adminAccount = new MenuItem(adminMenu, 14, "Menu accounts", MenuActions.SHOW_SUBMENU, false);
-        MenuItem adminInformation = new MenuItem(adminMenu, 15, "Menu eigen gegevens", MenuActions.SHOW_SUBMENU, false);
-        MenuItem adminDatabase = new MenuItem(adminMenu, 16, "Database instellingen", MenuActions.SHOW_SUBMENU, false);
-        MenuItem adminLogout = new MenuItem(adminMenu, 10, "Uitloggen", MenuActions.LOGOUT, true);
+        MenuItem adminMenu = new MenuItem(null, 1, "Hoofdscherm", MenuAction.SHOW_SUBMENU, false);        
+        MenuItem adminProduct = new MenuItem(adminMenu, 11, "Menu producten", MenuAction.SHOW_SUBMENU, false);
+        MenuItem adminOrder = new MenuItem(adminMenu, 12, "Menu bestellingen", MenuAction.SHOW_SUBMENU, false);        
+        MenuItem adminCustomer = new MenuItem(adminMenu, 13, "Menu klanten", MenuAction.SHOW_SUBMENU, false); 
+        MenuItem adminAccount = new MenuItem(adminMenu, 14, "Menu accounts", MenuAction.SHOW_SUBMENU, false);
+        MenuItem adminInformation = new MenuItem(adminMenu, 15, "Menu eigen gegevens", MenuAction.SHOW_SUBMENU, false);
+        MenuItem adminDatabase = new MenuItem(adminMenu, 16, "Database instellingen", MenuAction.SHOW_SUBMENU, false);
+        MenuItem adminLogout = new MenuItem(adminMenu, 10, "Uitloggen", MenuAction.LOGOUT, true);
         adminMenu.addSubMenu(adminProduct);
         adminMenu.addSubMenu(adminOrder);
         adminMenu.addSubMenu(adminCustomer);
@@ -144,103 +144,103 @@ public class MenuView {
         adminMenu.addSubMenu(adminDatabase);
         adminMenu.addSubMenu(adminLogout);
         
-        adminProduct.addSubMenu(new MenuItem(adminProduct, 111, "Toevoegen product", MenuActions.CREATE_PRODUCT, true));
-        adminProduct.addSubMenu(new MenuItem(adminProduct, 112, "Wijzigen product", MenuActions.UPDATE_PRODUCT, true));
-        adminProduct.addSubMenu(new MenuItem(adminProduct, 113, "Verwijderen product", MenuActions.DELETE_PRODUCT, true));
-        adminProduct.addSubMenu(new MenuItem(adminProduct, 119, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
-        adminProduct.addSubMenu(new MenuItem(adminProduct, 110, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 111, "Toevoegen product", MenuAction.CREATE_PRODUCT, true));
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 112, "Wijzigen product", MenuAction.UPDATE_PRODUCT, true));
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 113, "Verwijderen product", MenuAction.DELETE_PRODUCT, true));
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 119, "Naar vorige scherm", MenuAction.PREVIOUS_SCREEN, false));
+        adminProduct.addSubMenu(new MenuItem(adminProduct, 110, "Naar hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
-        adminOrder.addSubMenu(new MenuItem(adminOrder, 121, "Bestelling voor klant plaatsen", MenuActions.CREATE_ORDER_EMPLOYEE, true));
-        adminOrder.addSubMenu(new MenuItem(adminOrder, 122, "Bestelling voor klant verwijderen", MenuActions.DELETE_ORDER_EMPLOYEE, true));
-        adminOrder.addSubMenu(new MenuItem(adminOrder, 123, "Bestelstatus van een bestelling aanpassen", MenuActions.SET_ORDER_STATUS, true));
-        adminOrder.addSubMenu(new MenuItem(adminOrder, 129, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
-        adminOrder.addSubMenu(new MenuItem(adminOrder, 120, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        adminOrder.addSubMenu(new MenuItem(adminOrder, 121, "Bestelling voor klant plaatsen", MenuAction.CREATE_ORDER_EMPLOYEE, true));
+        adminOrder.addSubMenu(new MenuItem(adminOrder, 122, "Bestelling voor klant verwijderen", MenuAction.DELETE_ORDER_EMPLOYEE, true));
+        adminOrder.addSubMenu(new MenuItem(adminOrder, 123, "Bestelstatus van een bestelling aanpassen", MenuAction.SET_ORDER_STATUS, true));
+        adminOrder.addSubMenu(new MenuItem(adminOrder, 129, "Naar vorige scherm", MenuAction.PREVIOUS_SCREEN, false));
+        adminOrder.addSubMenu(new MenuItem(adminOrder, 120, "Naar hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
-        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 131, "Toevoegen klant", MenuActions.CREATE_CUSTOMER, true));
-        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 132, "Wijzigen klant", MenuActions.UPDATE_CUSTOMER, true));
-        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 133, "Verwijderen klant", MenuActions.DELETE_CUSTOMER, true));
-        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 134, "Adres toevoegen", MenuActions.CREATE_ADDRESS, true));
-        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 135, "Adres verwijderen", MenuActions.DELETE_ADDRESS, true));
-        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 136, "Adres aanpassen", MenuActions.UPDATE_ADDRESS, true));
-        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 139, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
-        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 130, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 131, "Toevoegen klant", MenuAction.CREATE_CUSTOMER, true));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 132, "Wijzigen klant", MenuAction.UPDATE_CUSTOMER, true));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 133, "Verwijderen klant", MenuAction.DELETE_CUSTOMER, true));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 134, "Adres toevoegen", MenuAction.CREATE_ADDRESS, true));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 135, "Adres verwijderen", MenuAction.DELETE_ADDRESS, true));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 136, "Adres aanpassen", MenuAction.UPDATE_ADDRESS, true));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 139, "Naar vorige scherm", MenuAction.PREVIOUS_SCREEN, false));
+        adminCustomer.addSubMenu(new MenuItem(adminCustomer, 130, "Naar hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
-        adminAccount.addSubMenu(new MenuItem(adminAccount, 141, "Toevoegen account", MenuActions.CREATE_ACCOUNT, true));
-        adminAccount.addSubMenu(new MenuItem(adminAccount, 142, "Wijzigen account", MenuActions.UPDATE_ACCOUNT, true));
-        adminAccount.addSubMenu(new MenuItem(adminAccount, 143, "Verwijderen account", MenuActions.DELETE_ACCOUNT, true));
-        adminAccount.addSubMenu(new MenuItem(adminAccount, 144, "Koppel account aan klant", MenuActions.LINK_ACCOUNT_TO_CUSTOMER, true));
-        adminAccount.addSubMenu(new MenuItem(adminAccount, 149, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
-        adminAccount.addSubMenu(new MenuItem(adminAccount, 140, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 141, "Toevoegen account", MenuAction.CREATE_ACCOUNT, true));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 142, "Wijzigen account", MenuAction.UPDATE_ACCOUNT, true));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 143, "Verwijderen account", MenuAction.DELETE_ACCOUNT, true));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 144, "Koppel account aan klant", MenuAction.LINK_ACCOUNT_TO_CUSTOMER, true));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 149, "Naar vorig scherm", MenuAction.PREVIOUS_SCREEN, false));
+        adminAccount.addSubMenu(new MenuItem(adminAccount, 140, "Naar hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
-        adminInformation.addSubMenu(new MenuItem(adminInformation, 151, "Wachtwoord wijzigen", MenuActions.CHANGE_OWN_PASSWORD, true));
-        adminInformation.addSubMenu(new MenuItem(adminInformation, 159, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
-        adminInformation.addSubMenu(new MenuItem(adminInformation, 150, "Naar Hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        adminInformation.addSubMenu(new MenuItem(adminInformation, 151, "Wachtwoord wijzigen", MenuAction.CHANGE_OWN_PASSWORD, true));
+        adminInformation.addSubMenu(new MenuItem(adminInformation, 159, "Naar vorig scherm", MenuAction.PREVIOUS_SCREEN, false));
+        adminInformation.addSubMenu(new MenuItem(adminInformation, 150, "Naar Hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
-        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 161, "Wijzigen database type", MenuActions.SET_DATABASE_TYPE, true));
-        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 162, "Aan/uit zetten connectie pool", MenuActions.SET_CONNECTION_POOL, true));
-        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 169, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
-        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 160, "Naar Hoofdscherm", MenuActions.MAIN_SCREEN, false));   
+        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 161, "Wijzigen database type", MenuAction.SET_DATABASE_TYPE, true));
+        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 162, "Aan/uit zetten connectie pool", MenuAction.SET_CONNECTION_POOL, true));
+        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 169, "Naar vorig scherm", MenuAction.PREVIOUS_SCREEN, false));
+        adminDatabase.addSubMenu(new MenuItem(adminDatabase, 160, "Naar Hoofdscherm", MenuAction.MAIN_SCREEN, false));   
         
         return adminMenu;
     }
 
     public MenuItem buildEmployeeMenu() {
-        MenuItem employeeMenu = new MenuItem(null, 2, "Hoofdscherm", MenuActions.SHOW_SUBMENU, false);
-        MenuItem employeeProduct = new MenuItem(employeeMenu, 21, "Menu producten", MenuActions.SHOW_SUBMENU, false);
-        MenuItem employeeOrder = new MenuItem(employeeMenu, 22, "Menu bestellingen", MenuActions.SHOW_SUBMENU, false);        
-        MenuItem employeeCustomer = new MenuItem(employeeMenu, 23, "Menu klanten", MenuActions.SHOW_SUBMENU, false);  
-        MenuItem employeeInformation = new MenuItem(employeeMenu, 24, "Menu eigen gegevens", MenuActions.SHOW_SUBMENU, false);
-        MenuItem employeeLogout = new MenuItem(employeeMenu, 20, "Uitloggen", MenuActions.LOGOUT, true);
+        MenuItem employeeMenu = new MenuItem(null, 2, "Hoofdscherm", MenuAction.SHOW_SUBMENU, false);
+        MenuItem employeeProduct = new MenuItem(employeeMenu, 21, "Menu producten", MenuAction.SHOW_SUBMENU, false);
+        MenuItem employeeOrder = new MenuItem(employeeMenu, 22, "Menu bestellingen", MenuAction.SHOW_SUBMENU, false);        
+        MenuItem employeeCustomer = new MenuItem(employeeMenu, 23, "Menu klanten", MenuAction.SHOW_SUBMENU, false);  
+        MenuItem employeeInformation = new MenuItem(employeeMenu, 24, "Menu eigen gegevens", MenuAction.SHOW_SUBMENU, false);
+        MenuItem employeeLogout = new MenuItem(employeeMenu, 20, "Uitloggen", MenuAction.LOGOUT, true);
         employeeMenu.addSubMenu(employeeProduct);
         employeeMenu.addSubMenu(employeeOrder);
         employeeMenu.addSubMenu(employeeCustomer);
         employeeMenu.addSubMenu(employeeInformation);
         employeeMenu.addSubMenu(employeeLogout);
         
-        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 211, "Toevoegen product", MenuActions.CREATE_PRODUCT, true));
-        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 212, "Wijzigen product", MenuActions.UPDATE_PRODUCT, true));
-        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 213, "Verwijderen product", MenuActions.DELETE_PRODUCT, true));
-        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 219, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
-        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 210, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 211, "Toevoegen product", MenuAction.CREATE_PRODUCT, true));
+        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 212, "Wijzigen product", MenuAction.UPDATE_PRODUCT, true));
+        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 213, "Verwijderen product", MenuAction.DELETE_PRODUCT, true));
+        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 219, "Naar vorige scherm", MenuAction.PREVIOUS_SCREEN, false));
+        employeeProduct.addSubMenu(new MenuItem(employeeProduct, 210, "Naar hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
-        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 221, "Bestelling voor klant plaatsen", MenuActions.CREATE_ORDER_EMPLOYEE, true));
-        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 222, "Bestelling voor klant verwijderen", MenuActions.DELETE_ORDER_EMPLOYEE, true));
-        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 223, "Bestelstatus van een bestelling aanpassen", MenuActions.SET_ORDER_STATUS, true));
-        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 229, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
-        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 220, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 221, "Bestelling voor klant plaatsen", MenuAction.CREATE_ORDER_EMPLOYEE, true));
+        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 222, "Bestelling voor klant verwijderen", MenuAction.DELETE_ORDER_EMPLOYEE, true));
+        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 223, "Bestelstatus van een bestelling aanpassen", MenuAction.SET_ORDER_STATUS, true));
+        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 229, "Naar vorige scherm", MenuAction.PREVIOUS_SCREEN, false));
+        employeeOrder.addSubMenu(new MenuItem(employeeOrder, 220, "Naar hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
-        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 231, "Toevoegen klant", MenuActions.CREATE_CUSTOMER, true));
-        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 232, "Wijzigen klant", MenuActions.UPDATE_CUSTOMER, true));
-        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 233, "Verwijderen klant", MenuActions.DELETE_CUSTOMER, true));
-        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 234, "Toevoegen adres", MenuActions.CREATE_ADDRESS, true));
-        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 235, "Verwijderen adres", MenuActions.DELETE_ADDRESS, true));
-        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 236, "Aanpassen adres", MenuActions.UPDATE_ADDRESS, true));
-        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 239, "Naar vorige scherm", MenuActions.PREVIOUS_SCREEN, false));
-        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 230, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 231, "Toevoegen klant", MenuAction.CREATE_CUSTOMER, true));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 232, "Wijzigen klant", MenuAction.UPDATE_CUSTOMER, true));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 233, "Verwijderen klant", MenuAction.DELETE_CUSTOMER, true));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 234, "Toevoegen adres", MenuAction.CREATE_ADDRESS, true));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 235, "Verwijderen adres", MenuAction.DELETE_ADDRESS, true));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 236, "Aanpassen adres", MenuAction.UPDATE_ADDRESS, true));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 239, "Naar vorige scherm", MenuAction.PREVIOUS_SCREEN, false));
+        employeeCustomer.addSubMenu(new MenuItem(employeeCustomer, 230, "Naar hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
-        employeeInformation.addSubMenu(new MenuItem(employeeInformation, 241, "Wachtwoord wijzigen", MenuActions.CHANGE_OWN_PASSWORD, true));
-        employeeInformation.addSubMenu(new MenuItem(employeeInformation, 249, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
-        employeeInformation.addSubMenu(new MenuItem(employeeInformation, 240, "Naar Hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        employeeInformation.addSubMenu(new MenuItem(employeeInformation, 241, "Wachtwoord wijzigen", MenuAction.CHANGE_OWN_PASSWORD, true));
+        employeeInformation.addSubMenu(new MenuItem(employeeInformation, 249, "Naar vorig scherm", MenuAction.PREVIOUS_SCREEN, false));
+        employeeInformation.addSubMenu(new MenuItem(employeeInformation, 240, "Naar Hoofdscherm", MenuAction.MAIN_SCREEN, false));
         return employeeMenu;
     }
     
     public MenuItem buildCustomerMenu() {
-        MenuItem customerMenu = new MenuItem(null, 3, "Hoofdscherm", MenuActions.SHOW_SUBMENU, false);
-        MenuItem customerOrder = new MenuItem(customerMenu, 31, "Menu bestellingen", MenuActions.SHOW_SUBMENU, false);
-        MenuItem customerInformation = new MenuItem(customerMenu, 32, "Menu eigen gegevens", MenuActions.SHOW_SUBMENU, false);
-        MenuItem customerLogout = new MenuItem(customerMenu, 30, "Uitloggen", MenuActions.LOGOUT, true);
+        MenuItem customerMenu = new MenuItem(null, 3, "Hoofdscherm", MenuAction.SHOW_SUBMENU, false);
+        MenuItem customerOrder = new MenuItem(customerMenu, 31, "Menu bestellingen", MenuAction.SHOW_SUBMENU, false);
+        MenuItem customerInformation = new MenuItem(customerMenu, 32, "Menu eigen gegevens", MenuAction.SHOW_SUBMENU, false);
+        MenuItem customerLogout = new MenuItem(customerMenu, 30, "Uitloggen", MenuAction.LOGOUT, true);
         customerMenu.addSubMenu(customerOrder);
         customerMenu.addSubMenu(customerInformation);
         customerMenu.addSubMenu(customerLogout);
         
-        customerOrder.addSubMenu(new MenuItem(customerOrder, 311, "Bestelling plaatsen", MenuActions.CREATE_ORDER_CUSTOMER, true));
-        customerOrder.addSubMenu(new MenuItem(customerOrder, 312, "Bestelling inzien", MenuActions.VIEW_ORDER_CUSTOMER, true));
-        customerOrder.addSubMenu(new MenuItem(customerOrder, 319, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
-        customerOrder.addSubMenu(new MenuItem(customerOrder, 310, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        customerOrder.addSubMenu(new MenuItem(customerOrder, 311, "Bestelling plaatsen", MenuAction.CREATE_ORDER_CUSTOMER, true));
+        customerOrder.addSubMenu(new MenuItem(customerOrder, 312, "Bestelling inzien", MenuAction.VIEW_ORDER_CUSTOMER, true));
+        customerOrder.addSubMenu(new MenuItem(customerOrder, 319, "Naar vorig scherm", MenuAction.PREVIOUS_SCREEN, false));
+        customerOrder.addSubMenu(new MenuItem(customerOrder, 310, "Naar hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
-        customerInformation.addSubMenu(new MenuItem(customerInformation, 321, "Wachtwoord wijzigen", MenuActions.CHANGE_OWN_PASSWORD, true));
-        customerInformation.addSubMenu(new MenuItem(customerInformation, 329, "Naar vorig scherm", MenuActions.PREVIOUS_SCREEN, false));
-        customerInformation.addSubMenu(new MenuItem(customerInformation, 320, "Naar hoofdscherm", MenuActions.MAIN_SCREEN, false));
+        customerInformation.addSubMenu(new MenuItem(customerInformation, 321, "Wachtwoord wijzigen", MenuAction.CHANGE_OWN_PASSWORD, true));
+        customerInformation.addSubMenu(new MenuItem(customerInformation, 329, "Naar vorig scherm", MenuAction.PREVIOUS_SCREEN, false));
+        customerInformation.addSubMenu(new MenuItem(customerInformation, 320, "Naar hoofdscherm", MenuAction.MAIN_SCREEN, false));
         
         return customerMenu;
     } 

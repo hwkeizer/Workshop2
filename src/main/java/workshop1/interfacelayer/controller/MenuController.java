@@ -7,7 +7,7 @@ package workshop1.interfacelayer.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import workshop1.interfacelayer.MenuActions;
+import workshop1.interfacelayer.MenuAction;
 import workshop1.interfacelayer.MenuItem;
 import workshop1.interfacelayer.view.AccountView;
 import workshop1.interfacelayer.view.MenuView;
@@ -77,7 +77,7 @@ public class MenuController {
         return true;
     }    
     
-    public MenuActions getMenuAction() {        
+    public MenuAction getMenuAction() {        
         while (!currentMenu.isAction()) {            
             switch (currentMenu.getAction()) {
                 case SHOW_SUBMENU : {
@@ -111,7 +111,7 @@ public class MenuController {
                 }
             }
         }
-        MenuActions executeAction = currentMenu.getAction();
+        MenuAction executeAction = currentMenu.getAction();
         currentMenu = currentMenu.getParent();
         return executeAction;                    
     }

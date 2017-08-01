@@ -10,7 +10,7 @@ package workshop1.interfacelayer;
  *
  * @author hwkei
  */
-public enum MenuActions {
+public enum MenuAction {
     //Menu
     SHOW_SUBMENU, LOGOUT, PREVIOUS_SCREEN, MAIN_SCREEN,
     

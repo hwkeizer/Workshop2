@@ -5,7 +5,7 @@
  */
 package workshop1.interfacelayer.controller;
 
-import workshop1.interfacelayer.MenuActions;
+import workshop1.interfacelayer.MenuAction;
 import workshop1.interfacelayer.view.AccountView;
 import workshop1.interfacelayer.view.AddressView;
 import workshop1.interfacelayer.view.CustomerView;
@@ -42,8 +42,8 @@ public class FrontEndController {
     }
     
     public void showMenu() {
-        MenuActions currentAction = menuController.getMenuAction() ;
-        while (currentAction != MenuActions.LOGOUT) {
+        MenuAction currentAction = menuController.getMenuAction() ;
+        while (currentAction != MenuAction.LOGOUT) {
             switch (currentAction) {                  
                 
                 //Account

@@ -17,11 +17,11 @@ public class MenuItem {
     private final List<MenuItem> subMenu;
     private final int id;
     private final String name;
-    private final MenuActions action;
+    private final MenuAction action;
     private final boolean isAction;
     
     
-    public MenuItem(MenuItem parent, int id, String name, MenuActions action, boolean isAction) {
+    public MenuItem(MenuItem parent, int id, String name, MenuAction action, boolean isAction) {
         this.subMenu = new ArrayList<>();
         this.parentMenu = parent;
         this.id = id;
@@ -32,30 +32,6 @@ public class MenuItem {
     
     public void addSubMenu(MenuItem menuItem) {
         subMenu.add(menuItem);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public MenuActions getAction() {
-        return action;
-    }
-
-    public List<MenuItem> getSubMenu() {
-        return subMenu;
-    }
-
-    public MenuItem getParent() {
-        return parentMenu;
-    }
-
-    public boolean isAction() {
-        return isAction;
-    }
-    
-    public void printItem() {        
-        System.out.println(getItemChoice() + ") " + name);
     }
     
     public String getItemChoice() {
@@ -75,4 +51,30 @@ public class MenuItem {
     public boolean isMainScreen() {
         return name.equals("Hoofdscherm");
     }
+    
+    public void printItem() {        
+        System.out.println(getItemChoice() + ") " + name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public MenuAction getAction() {
+        return action;
+    }
+
+    public List<MenuItem> getSubMenu() {
+        return subMenu;
+    }
+
+    public MenuItem getParent() {
+        return parentMenu;
+    }
+
+    public boolean isAction() {
+        return isAction;
+    }
+    
+   
 }
