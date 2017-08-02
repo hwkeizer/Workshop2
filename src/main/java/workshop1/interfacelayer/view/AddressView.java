@@ -35,7 +35,7 @@ public class AddressView {
         System.out.println("\n\nU gaat een nieuw adres aan de database toevoegen.");
         System.out.println("Een adres is altijd gekoppeld aan een klant.");
         System.out.println("Druk op <enter> en selecteer in het volgende scherm eerst de\n"
-                + " klant waar u een adres voor wilt maken.");
+                + "klant waar u een adres voor wilt maken.");
         input.nextLine();
     }
     
@@ -270,7 +270,8 @@ public class AddressView {
     public void showUpdateAddressStartScreen() {
         System.out.println("\n\nU gaat een adres uit de database aanpassen.");
         System.out.println("Een adres is altijd gekoppeld aan een klant.");
-        System.out.println("Druk op <enter> en selecteer in het volgende scherm eerst de klant waar u een adres van wilt aanpassen.");
+        System.out.println("Druk op <enter> en selecteer in het volgende scherm eerst \n"
+                + "de klant waar u een adres van wilt aanpassen.");
         input.nextLine();
     }
     
