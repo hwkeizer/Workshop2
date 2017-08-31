@@ -13,6 +13,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +31,15 @@ public class DatabaseConnection {
     private HikariConfig config;
     private HikariDataSource ds;
     private MongoClient mongoClient;
+    // New field for Hibernate
+    private final EntityManagerFactory entityManagerFactory;
     
     private DatabaseConnection() {
         // The default configuration is created
         configuration = new Configuration();
         databaseType = configuration.getDatabaseType();
+        // Added for Hibernate
+        entityManagerFactory = Persistence.createEntityManagerFactory("Hibernate");
     }    
 
     private static class SingletonHolder {
@@ -41,6 +48,11 @@ public class DatabaseConnection {
     
     public static DatabaseConnection getInstance() {
         return SingletonHolder.INSTANCE;
+    }
+
+    
+    public EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
     }
     
     /**

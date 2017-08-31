@@ -13,9 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.dao.AccountDao;
-import workshop2.interfacelayer.dao.DaoFactory;
-import workshop2.interfacelayer.dao.DuplicateAccountException;
 import workshop2.interfacelayer.view.Validator;
+import workshop2.persistencelayer.PersistenceService;
 
 /**
  *
@@ -25,41 +24,39 @@ public class AccountController {
     private static final Logger log = LoggerFactory.getLogger(AccountController.class);   
     private final AccountView accountView;
     private Account account;
-    private AccountDao accountDao;
+    private Optional<Account> optionalAccount;
+    
+    // member field van maken voor latere injectie???
+    private PersistenceService persistenceService;
+
     
     // Public constructor only requires accountView parameter
     public AccountController(AccountView accountView) {
         this.accountView = accountView;
-        accountDao = DaoFactory.getDaoFactory().createAccountDao();
+        persistenceService = new PersistenceService();
     }
     
     // Package private constructor can be injected with accountView AND AccountDao for 
     AccountController(AccountView accountView, AccountDao accountDao) {
         this.accountView = accountView;
-        this.accountDao = accountDao;
     }
     
     public void createAccount() {
-        accountView.showNewAccountScreen();
-        
+        accountView.showNewAccountScreen();        
         String name = accountView.requestUsernameInput();
         if (name == null) return; // User interupted createAccount proces
         String password = accountView.requestPasswordInput();
-        if (password == null) return; // User interupted createAccount proces
-        
-        // create a password hash from his password and store this in the database
-        password = PasswordHash.generateHash(password);
-        
-        Integer accountType = accountView.requestAccountType(getAvailableAccountTypes());
-        if (accountType == null) return;  // User interupted createAccount proces
-                
+        if (password == null) return; // User interupted createAccount proces        
+        // create a password hash from his password that will be stored in the database
+        password = PasswordHash.generateHash(password);        
+        // Get requested account type from user
+// TODO: Dit gaat uit van kennis van het databaseID, moet worden aangepast!!!!!!!!!!!!
+// Of de view moet een AccountType teruggeven óf we embedden het accounttype in de account entity
+        Integer accountTypeId = accountView.requestAccountType(getAvailableAccountTypes());
+        if (accountTypeId == null) return;  // User interupted createAccount proces                
         // Prepare the account with the validated values and add it to the database
-        account = new Account(name, password, accountType);
-        try {
-            accountDao.insertAccount(account);
-        } catch(DuplicateAccountException e) {
-            accountView.showDuplicateAccountError();
-        }
+        account = new Account(name, password, null);
+        persistenceService.createAccount(account, accountTypeId.longValue());
     }
        
     public void updateAccount() {
@@ -147,7 +144,7 @@ public class AccountController {
     }
         
     public boolean validateAccount(String userName, String password) {
-        Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
+        optionalAccount = persistenceService.findAccountByUserName(userName);
         if (!optionalAccount.isPresent()) return false;
         return PasswordHash.validatePassword(password, optionalAccount.get().getPassword());
     }

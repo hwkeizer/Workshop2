@@ -16,9 +16,11 @@ import workshop2.interfacelayer.controller.FrontEndController;
 public class Applikaasie {
     public static void main(String[] args) { 
         
-        DatabaseInit dbInit = new DatabaseInit();
-        dbInit.installDatabase();
-        
+        Database database = new Database();
+        if (!database.init()) {
+            System.out.println("Database kan niet worden gevonden, raadpleeg de applicatie beheerder");
+            System.exit(1);
+        }        
         FrontEndController frontEndController = new FrontEndController();
         frontEndController.login();
     }

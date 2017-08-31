@@ -6,43 +6,51 @@
 package workshop2.domain;
 
 
+import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author thoma
  */
-public class Account {
-    private int id;
+@NamedQueries({
+    @NamedQuery(
+        name = "findAccountByUserName",
+        query = "select i from Account i where i.username = :username"
+    )
+})
+@Entity
+public class Account implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
     private String username;
     private String password;
-    private int accountTypeId;
+    @OneToOne
+    private AccountType accountType;
     
     public Account(){
-        this.id = -1;
     }
 
-    public Account(String username, String password, int accountTypeId) {
-        this.id = -1;
+    public Account(String username, String password, AccountType accountType) {
         this.username = username;
         this.password = password;
-        this.accountTypeId = accountTypeId;
+        this.accountType = accountType;
     }
 
-    public Account(int id, String username, String password, int accountTypeId) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.accountTypeId = accountTypeId;
-        
-    }
+//    public Account(String name, String password, Integer accountType) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
     
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -61,30 +69,30 @@ public class Account {
         this.password = password;
     }
 
-    public int getAccountTypeId() {
-        return accountTypeId;
+    public AccountType getAccountType() {
+        return accountType;
     }
 
-    public void setAccountType(int accountTypeId) {
-        this.accountTypeId = accountTypeId;
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
     }
     
      @Override
     public String toString(){
-        return String.format("%-5d%-20s%-20s%-5d", this.getId(), this.getUsername(), getPassword(), this.getAccountTypeId());
+        return String.format("%-5d%-20s%-20s%-20s", this.getId(), this.getUsername(), "********", this.getAccountType().toString());
     }
     
     public String toStringNoId(){
-        return String.format("%-20s%-20s%-5d", this.getUsername(), "********", this.getAccountTypeId());
+        return String.format("%-20s%-20s%-20s", this.getUsername(), "********", this.getAccountType().toString());
     }
     
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 73 * hash + this.id;
+        hash = 73 * hash + Objects.hashCode(this.id);
         hash = 73 * hash + Objects.hashCode(this.username);
         hash = 73 * hash + Objects.hashCode(this.password);
-        hash = 73 * hash + this.accountTypeId;
+        hash = 73 * hash + Objects.hashCode(this.accountType);
         return hash;
     }
 
@@ -100,20 +108,15 @@ public class Account {
             return false;
         }
         final Account other = (Account) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        if (this.accountTypeId != other.accountTypeId) {
+        if (!Objects.equals(this.accountType, other.accountType)) {
             return false;
         }
         if (!Objects.equals(this.username, other.username)) {
             return false;
         }
-        if (!Objects.equals(this.password, other.password)) {
-            return false;
-        }
-        return true;
-    }
-    
-    
+        return Objects.equals(this.password, other.password);
+    }    
 }
