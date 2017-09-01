@@ -11,7 +11,7 @@ import workshop2.domain.Account;
 import workshop2.interfacelayer.view.AccountView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static workshop2.domain.AccountType.*;
+import workshop2.domain.AccountType;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.dao.AccountDao;
 import workshop2.interfacelayer.view.Validator;
@@ -43,21 +43,20 @@ public class AccountController {
     }
     
     public void createAccount() {
+        
+        // Collect the information from the user
         accountView.showNewAccountScreen();        
         String name = accountView.requestUsernameInput();
         if (name == null) return; // User interupted createAccount proces
         String password = accountView.requestPasswordInput();
         if (password == null) return; // User interupted createAccount proces        
-        // create a password hash from his password that will be stored in the database
         password = PasswordHash.generateHash(password); 
-        // Get requested account type from user
-// TODO: Dit gaat uit van kennis van het databaseID, moet worden aangepast!!!!!!!!!!!!
-// Of de view moet een AccountType teruggeven óf we embedden het accounttype in de account entity
-        Integer accountTypeId = accountView.requestAccountType(getAvailableAccountTypes());
-        if (accountTypeId == null) return;  // User interupted createAccount proces                
+        AccountType accountType = accountView.requestAccountType();
+        if (accountType == null) return;  // User interupted createAccount proces
+        
         // Prepare the account with the validated values and add it to the database
-        account = new Account(name, password, ADMIN);
-        persistenceService.createAccount(account, accountTypeId.longValue());
+        account = new Account(name, password, accountType);
+        persistenceService.createAccount(account);
     }
        
     public void updateAccount() {
@@ -150,10 +149,10 @@ public class AccountController {
         return PasswordHash.validatePassword(password, optionalAccount.get().getPassword());
     }
     
-    public Integer getUserRole(String userName) {
-        Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
+    public AccountType getUserRole(String userName) {
+       optionalAccount = persistenceService.findAccountByUserName(userName);
         if (optionalAccount.isPresent()) account = optionalAccount.get();
-        return account.getAccountTypeId();
+        return account.getAccountType();
     }
     
     public List<String> getAvailableAccountTypes() {

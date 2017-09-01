@@ -10,8 +10,8 @@ import javax.persistence.EntityTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Account;
-import workshop2.domain.AccountType;
 import static workshop2.domain.AccountType.*;
+import workshop2.domain.Customer;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.controller.PasswordHash;
 
@@ -21,27 +21,20 @@ import workshop2.interfacelayer.controller.PasswordHash;
  */
 public class Database {
     private static final Logger log = LoggerFactory.getLogger(Database.class);
-    
-//    private final String dbSettingsFileName = "database_settings.xml";
-//    private String databaseName;
-//    private String mySqlConnectionString;
-//    private String user;
-//    private String password;
 
     public boolean init() {
 
-        // Establish the database connection
-        EntityManager entityManager = null;
         try {
-            entityManager = DatabaseConnection.getInstance().getEntityManager();
+            EntityManager entityManager = DatabaseConnection.getInstance().getEntityManager();
             
-            // TODO: Keuze inbouwen maar nu voorlopig standaard testdata aanmaken
+            // TODO: Voorlopig maken we standaard de testdata aan
+            // Spring biedt straks mogelijkheid om test, acceptatie en productie profielen te maken
             initializeDatabase();
         } catch(Exception e) {
             System.out.println("Kan geen verbinding maken met de database: " + e.getStackTrace());
             return false;
         }  
-        // TODO: Misschien wat validatie inbouwen, voorlopig gewoon true retour
+        // TODO: Misschien wat validatie inbouwen, voorlopig even true retour
         return true;        
         
     }
@@ -67,8 +60,22 @@ public class Database {
             em.persist(account3);
             em.persist(account4);
             em.persist(account5);
-            em.persist(account6);            
+            em.persist(account6);
+
+            // Customer
+            Customer customer1 = new Customer("Piet", "Pietersen", null, account1);
+            Customer customer2 = new Customer("Klaas", "Klaassen", "van", account2);
+            Customer customer3 = new Customer("Jan", "Jansen", null, account3);
+            Customer customer4 = new Customer("Fred", "Horst", "ter", account4);
+            Customer customer5 = new Customer("Joost", "Draaier", "den", account5);
+            em.persist(customer1);
+            em.persist(customer2);
+            em.persist(customer3);
+            em.persist(customer4);
+            em.persist(customer5);
             et.commit();
+            
+            
 
     }
 //        // Prepare the SQL statements to create the DATABASE and recreate it

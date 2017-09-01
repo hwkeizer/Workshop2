@@ -7,6 +7,7 @@ package workshop2.interfacelayer.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import workshop2.domain.AccountType;
 import workshop2.interfacelayer.MenuAction;
 import workshop2.interfacelayer.MenuItem;
 import workshop2.interfacelayer.view.AccountView;
@@ -18,9 +19,6 @@ import workshop2.interfacelayer.view.MenuView;
  */
 public class MenuController {
     private static final Logger log = LoggerFactory.getLogger(MenuController.class);
-    final int ADMIN = 1;
-    final int MEDEWERKER = 2;
-    final int KLANT = 3;
     
     MenuItem currentMenu;
     
@@ -55,7 +53,7 @@ public class MenuController {
             }
         }
         // Validate the user credentials
-        int userRole = accountController.getUserRole(userName);
+        AccountType userRole = accountController.getUserRole(userName);
         switch (userRole) {
             case ADMIN : {
                 currentMenu = menuView.buildAdminMenu();

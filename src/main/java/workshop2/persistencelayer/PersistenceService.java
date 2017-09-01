@@ -28,13 +28,9 @@ public class PersistenceService {
         accountDao = new GenericDaoImpl(Account.class, entityManager);
     }
     
-    public void createAccount(Account account, Long accountTypeId) {
+    public void createAccount(Account account) {
         try {
-            entityManager.getTransaction().begin();
-            // Retrieve the accountType            
-//            AccountType accountType = (AccountType)accountTypeDao.findById(accountTypeId);                
-//            // Add the AccountType to the given Account (temporary workarround)
-//            account.setAccountType(accountType);       
+            entityManager.getTransaction().begin();       
             accountDao.persist(account);            
             entityManager.getTransaction().commit();            
         } catch (Exception ex) {

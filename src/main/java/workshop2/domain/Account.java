@@ -8,6 +8,7 @@ package workshop2.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  *
@@ -28,17 +30,21 @@ import javax.persistence.NamedQuery;
     )
 })
 @Entity
+@Table(name = "ACCOUNT")
 public class Account implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "ID")
     private Long id;
+    @Column(name = "USERNAME")
     private String username;
+    @Column(name = "PASSWORD")
     private String password;
     @Enumerated(EnumType.ORDINAL)
+    @Column(name = "ACCOUNT_TYPE")
     private AccountType accountType;
     
-    public Account(){
-    }
+    public Account() {}
 
     public Account(String username, String password, AccountType accountType) {
         this.username = username;

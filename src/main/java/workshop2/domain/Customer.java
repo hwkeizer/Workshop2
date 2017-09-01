@@ -5,45 +5,47 @@
  */
 package workshop2.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author thoma
  */
-public class Customer {
-    private int id;
+@Entity
+public class Customer implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "ID")
+    private Long id;
+    @Column(name = "FIRST_NAME")
     private String firstName;
+    @Column(name = "LAST_NAME")
     private String lastName;
+    @Column(name = "LAST_NAME_PREFIX")
     private String lastNamePrefix;
-    private Integer accountId;
+    @OneToOne
+    @JoinColumn(name = "ACCOUNT_ID")
+    private Account account;
     
-    public Customer(){
-        
-    }
+    public Customer() {}
 
-    public Customer(String firstName, String lastName, String lastNamePrefix, Integer accountId) {
-        this.id = -1;
+    public Customer(String firstName, String lastName, String lastNamePrefix, Account account) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.lastNamePrefix = lastNamePrefix;
-        this.accountId = accountId;
+        this.account = account;
     }
     
-    public Customer(int id, String firstName, String lastName, String lastNamePrefix, Integer accountId) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.lastNamePrefix = lastNamePrefix;
-        this.accountId = accountId;
-    }
-    
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -70,12 +72,12 @@ public class Customer {
         this.lastNamePrefix = lastNamePrefix;
     }
 
-    public Integer getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
     
     @Override
@@ -93,15 +95,15 @@ public class Customer {
         else
             return String.format("%-20s%-15s%-20s", getFirstName(), "", getLastName());
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 73 * hash + this.id;
-        hash = 73 * hash + Objects.hashCode(this.firstName);
-        hash = 73 * hash + Objects.hashCode(this.lastName);
-        hash = 73 * hash + Objects.hashCode(this.lastNamePrefix);
-        hash = 73 * hash + this.accountId;
+        hash = 83 * hash + Objects.hashCode(this.id);
+        hash = 83 * hash + Objects.hashCode(this.firstName);
+        hash = 83 * hash + Objects.hashCode(this.lastName);
+        hash = 83 * hash + Objects.hashCode(this.lastNamePrefix);
+        hash = 83 * hash + Objects.hashCode(this.account);
         return hash;
     }
 
@@ -117,19 +119,22 @@ public class Customer {
             return false;
         }
         final Customer other = (Customer) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (!Objects.equals(this.accountId, other.accountId)) {
-            return false;
-        }
         if (!Objects.equals(this.firstName, other.firstName)) {
             return false;
         }
         if (!Objects.equals(this.lastName, other.lastName)) {
             return false;
         }
-        return Objects.equals(this.lastNamePrefix, other.lastNamePrefix);
+        if (!Objects.equals(this.lastNamePrefix, other.lastNamePrefix)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.account, other.account)) {
+            return false;
+        }
+        return true;
     }
-    
+        
 }

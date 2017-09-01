@@ -5,16 +5,22 @@
  */
 package workshop2.interfacelayer.view;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import workshop2.domain.Account;
+import workshop2.domain.AccountType;
 
 /**
  *
  * @author hwkei
  */
 public class AccountView {
+    private static final Logger log = LoggerFactory.getLogger(AccountView.class);
     Scanner input;
     
      // Default public constructor will use System.in
@@ -218,31 +224,27 @@ public class AccountView {
     
     /**
      * Returns a valid accountType or null if the user aborts
-     * @param types
-     * @return Account type id
+     * @return AccountType
      */
-    public Integer requestAccountType(List<String> types) {
+    public AccountType requestAccountType() {
+        List<AccountType> enumTypes = new ArrayList<>(EnumSet.allOf(AccountType.class));
+        
         System.out.println("De beschikbare account types zijn:");
         System.out.printf("%-5s%-20s\n", "ID", "Account Type");
         System.out.println("------------------------------");
-        for (int i = 0; i < types.size(); i++) {
-            System.out.printf("%-10s%-30s\n", i + 1, types.get(i));
+        for (int i = 0; i < enumTypes.size(); i++) {
+            System.out.printf("%-10s%-30s\n", i + 1, enumTypes.get(i));
         }
         printRequestForAccountType();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
-        while (!Validator.isPositiveInteger(respons)) {
+        while (!Validator.isValidListIndex(enumTypes.size(), respons)) {
             printInvalidRespons();
             printRequestForAccountType();
             respons = input.nextLine();
             if (respons.equals("!")) return null; // User initiated abort
-        }
-        try {
-            types.get(Integer.parseInt(respons) - 1);
-            return Integer.parseInt(respons);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
+        }        
+        return enumTypes.get(Integer.parseInt(respons) - 1);       
     }
     
     /**
