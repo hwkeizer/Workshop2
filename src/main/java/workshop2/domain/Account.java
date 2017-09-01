@@ -9,12 +9,13 @@ package workshop2.domain;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 
 /**
  *
@@ -33,7 +34,7 @@ public class Account implements Serializable {
     private Long id;
     private String username;
     private String password;
-    @OneToOne
+    @Enumerated(EnumType.ORDINAL)
     private AccountType accountType;
     
     public Account(){
@@ -44,10 +45,6 @@ public class Account implements Serializable {
         this.password = password;
         this.accountType = accountType;
     }
-
-//    public Account(String name, String password, Integer accountType) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
     
     public Long getId() {
         return id;
@@ -85,14 +82,14 @@ public class Account implements Serializable {
     public String toStringNoId(){
         return String.format("%-20s%-20s%-20s", this.getUsername(), "********", this.getAccountType().toString());
     }
-    
+
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 73 * hash + Objects.hashCode(this.id);
-        hash = 73 * hash + Objects.hashCode(this.username);
-        hash = 73 * hash + Objects.hashCode(this.password);
-        hash = 73 * hash + Objects.hashCode(this.accountType);
+        int hash = 7;
+        hash = 79 * hash + Objects.hashCode(this.id);
+        hash = 79 * hash + Objects.hashCode(this.username);
+        hash = 79 * hash + Objects.hashCode(this.password);
+        hash = 79 * hash + Objects.hashCode(this.accountType);
         return hash;
     }
 
@@ -108,15 +105,19 @@ public class Account implements Serializable {
             return false;
         }
         final Account other = (Account) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        if (!Objects.equals(this.username, other.username)) {
+            return false;
+        }
+        if (!Objects.equals(this.password, other.password)) {
             return false;
         }
         if (!Objects.equals(this.accountType, other.accountType)) {
             return false;
         }
-        if (!Objects.equals(this.username, other.username)) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        return Objects.equals(this.password, other.password);
-    }    
+        return true;
+    }
+    
 }

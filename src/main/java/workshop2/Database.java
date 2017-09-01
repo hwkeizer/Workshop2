@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Account;
 import workshop2.domain.AccountType;
+import static workshop2.domain.AccountType.*;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.controller.PasswordHash;
 
@@ -50,28 +51,17 @@ public class Database {
             EntityManager em = DatabaseConnection.getInstance().getEntityManager();
             EntityTransaction et = em.getTransaction();
             et.begin();
-            
-            // AccountType            
-            AccountType accountType1 = new AccountType();
-            AccountType accountType2 = new AccountType();
-            AccountType accountType3 = new AccountType();
-            accountType1.setType("admin");
-            accountType2.setType("medewerker");
-            accountType3.setType("klant");
-            em.persist(accountType1);
-            em.persist(accountType2);
-            em.persist(accountType3);
 
             // Account
             String pass1 = PasswordHash.generateHash("welkom");
             String pass2 = PasswordHash.generateHash("welkom");
             String pass3 = PasswordHash.generateHash("welkom");
-            Account account1 = new Account("piet", pass1, accountType1);
-            Account account2 = new Account("klaas", pass2, accountType2);
-            Account account3 = new Account("jan", pass3, accountType3);
-            Account account4 = new Account("fred", pass1, accountType3);
-            Account account5 = new Account("joost", pass2, accountType3);
-            Account account6 = new Account("jaap", pass3, accountType3);
+            Account account1 = new Account("piet", pass1, ADMIN);
+            Account account2 = new Account("klaas", pass2, MEDEWERKER);
+            Account account3 = new Account("jan", pass3, KLANT);
+            Account account4 = new Account("fred", pass1, KLANT);
+            Account account5 = new Account("joost", pass2, KLANT);
+            Account account6 = new Account("jaap", pass3, KLANT);
             em.persist(account1);
             em.persist(account2);
             em.persist(account3);

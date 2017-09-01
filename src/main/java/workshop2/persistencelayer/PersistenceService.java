@@ -12,7 +12,6 @@ import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Account;
-import workshop2.domain.AccountType;
 import workshop2.interfacelayer.DatabaseConnection;
 
 /**
@@ -23,21 +22,19 @@ public class PersistenceService {
     private static final Logger log = LoggerFactory.getLogger(PersistenceService.class);
     private final EntityManager entityManager;
     private final GenericDaoImpl accountDao;
-    private final GenericDaoImpl accountTypeDao;
     
     public PersistenceService() {
         entityManager = DatabaseConnection.getInstance().getEntityManager();
         accountDao = new GenericDaoImpl(Account.class, entityManager);
-        accountTypeDao = new GenericDaoImpl(AccountType.class, entityManager);
     }
     
     public void createAccount(Account account, Long accountTypeId) {
         try {
             entityManager.getTransaction().begin();
             // Retrieve the accountType            
-            AccountType accountType = (AccountType)accountTypeDao.findById(accountTypeId);                
-            // Add the AccountType to the given Account (temporary workarround)
-            account.setAccountType(accountType);       
+//            AccountType accountType = (AccountType)accountTypeDao.findById(accountTypeId);                
+//            // Add the AccountType to the given Account (temporary workarround)
+//            account.setAccountType(accountType);       
             accountDao.persist(account);            
             entityManager.getTransaction().commit();            
         } catch (Exception ex) {

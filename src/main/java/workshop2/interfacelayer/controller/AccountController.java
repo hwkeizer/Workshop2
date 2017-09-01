@@ -11,6 +11,7 @@ import workshop2.domain.Account;
 import workshop2.interfacelayer.view.AccountView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static workshop2.domain.AccountType.*;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.dao.AccountDao;
 import workshop2.interfacelayer.view.Validator;
@@ -48,14 +49,14 @@ public class AccountController {
         String password = accountView.requestPasswordInput();
         if (password == null) return; // User interupted createAccount proces        
         // create a password hash from his password that will be stored in the database
-        password = PasswordHash.generateHash(password);        
+        password = PasswordHash.generateHash(password); 
         // Get requested account type from user
 // TODO: Dit gaat uit van kennis van het databaseID, moet worden aangepast!!!!!!!!!!!!
 // Of de view moet een AccountType teruggeven óf we embedden het accounttype in de account entity
         Integer accountTypeId = accountView.requestAccountType(getAvailableAccountTypes());
         if (accountTypeId == null) return;  // User interupted createAccount proces                
         // Prepare the account with the validated values and add it to the database
-        account = new Account(name, password, null);
+        account = new Account(name, password, ADMIN);
         persistenceService.createAccount(account, accountTypeId.longValue());
     }
        
