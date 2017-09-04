@@ -24,9 +24,7 @@ public class Database {
 
     public boolean init() {
 
-        try {
-            EntityManager entityManager = DatabaseConnection.getInstance().getEntityManager();
-            
+        try {            
             // TODO: Voorlopig maken we standaard de testdata aan
             // Spring biedt straks mogelijkheid om test, acceptatie en productie profielen te maken
             initializeDatabase();
@@ -41,7 +39,8 @@ public class Database {
         
     void initializeDatabase() {
         // Quick en Dirty met een eigen EntityManager gedaan
-            EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        try {            
             EntityTransaction et = em.getTransaction();
             et.begin();
 
@@ -74,7 +73,9 @@ public class Database {
             em.persist(customer4);
             em.persist(customer5);
             et.commit();
-            
+        } finally {              
+            em.close();
+        }
             
 
     }

@@ -12,8 +12,6 @@ import workshop2.interfacelayer.view.AccountView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.AccountType;
-import workshop2.interfacelayer.DatabaseConnection;
-import workshop2.interfacelayer.dao.AccountDao;
 import workshop2.interfacelayer.view.Validator;
 import workshop2.persistencelayer.PersistenceService;
 
@@ -28,7 +26,7 @@ public class AccountController {
     private Optional<Account> optionalAccount;
     
     // member field van maken voor latere injectie???
-    private PersistenceService persistenceService;
+    private final PersistenceService persistenceService;
 
     
     // Public constructor only requires accountView parameter
@@ -36,11 +34,7 @@ public class AccountController {
         this.accountView = accountView;
         persistenceService = new PersistenceService();
     }
-    
-    // Package private constructor can be injected with accountView AND AccountDao for 
-    AccountController(AccountView accountView, AccountDao accountDao) {
-        this.accountView = accountView;
-    }
+
     
     public void createAccount() {
         
@@ -60,47 +54,49 @@ public class AccountController {
     }
        
     public void updateAccount() {
-        // Prompt for which account to update
+        // Collect the information from the user
         List<Account> accountList = listAllAccounts();
-        int accountListSize = accountList.size();
-        
-        Integer index = accountView.requestAccountIdToUpdateInput(accountListSize);
+        int accountListSize = accountList.size();        
+        Long index = accountView.requestAccountIdToUpdateInput(accountListSize);
         if (index == null) return;
-        
-        Account accountBeforeUpdate = accountList.get(index);
-        accountView.showAccountToBeUpdated(accountBeforeUpdate);
-        int Id = accountBeforeUpdate.getId();
+        account = accountList.get(index.intValue());        
+        accountView.showAccountToBeUpdated(account);
         String newName = accountView.requestUpdateUsernameInput();
         if (newName == null) {
-            newName = accountBeforeUpdate.getUsername();
+            newName = account.getUsername();
         }
         String newPassword = accountView.requestUpdatePasswordInput();
-        if (newPassword == null) {
-            newPassword = accountBeforeUpdate.getPassword();
+        if (newPassword == null) {            
+            newPassword = account.getPassword();
         } else {
-            // create a password hash from his password and store this in the database
             newPassword = PasswordHash.generateHash(newPassword);
         }
-        Integer newAccountType = accountView.requestUpdateAccountType(getAvailableAccountTypes());
+        AccountType newAccountType = accountView.requestUpdateAccountType();
         if (newAccountType == null) {
-            newAccountType = accountBeforeUpdate.getAccountTypeId();
+            newAccountType = account.getAccountType();
         }
+        Account newValues = new Account(newName, newPassword, newAccountType);
         
-        Account accountAfterUpdate = new Account(Id, newName, newPassword, newAccountType);
         //Promp for confirmation of the selected update
-        accountView.showAccountUpdateChanges(accountBeforeUpdate, accountAfterUpdate);
+        accountView.showAccountUpdateChanges(account, newValues);
         Integer confirmed = accountView.requestConfirmationToUpdate();
+        
+        // Update the account or skip the update if user cancels
         if (confirmed == null || confirmed == 2){
             return;
         }
         else {
-            log.debug(accountAfterUpdate.toString());
-            accountDao.updateAccount(accountAfterUpdate);
+            log.debug("Changing account: \n{}\nto\n{}", account.toStringNoId(), newValues.toStringNoId());
+            account.setUsername(newName);
+            account.setPassword(newPassword);
+            account.setAccountType(newAccountType);
+            persistenceService.updateAccount(account);
+            
         }
     }
     
     public void changeOwnPassword(String userName) {
-        Optional<Account> optionalAccount = accountDao.findAccountByUserName(userName);
+        optionalAccount = persistenceService.findAccountByUserName(userName);
         if (!optionalAccount.isPresent()) {
             log.error("Gebruiker {} niet gevonden in de database!", userName);
             return;
@@ -113,7 +109,7 @@ public class AccountController {
                 // create a password hash from his password and store this in the database
                 newPassword = PasswordHash.generateHash(newPassword);
                 account.setPassword(newPassword);
-                accountDao.updateAccount(account);
+                persistenceService.updateAccount(account);
             }
         } else {
             accountView.showInvalidOldPassword();
@@ -127,10 +123,10 @@ public class AccountController {
         log.debug("accountListSize is " + accountListSize);
         Integer index = accountView.requestAccountIdInput(accountListSize);
         if (index == null) return;
-        int id = accountList.get(index).getId();
+        Long id = accountList.get(index).getId();
         
         //Retreive the account to delete from the database
-        Optional<Account> optionalAccount = accountDao.findAccountById(id);
+        optionalAccount = persistenceService.findAccountById(id);
         if (optionalAccount.isPresent()) account = optionalAccount.get();
         
         //Promp for confirmation if this is indeed the account to delete
@@ -139,7 +135,7 @@ public class AccountController {
         if (confirmed == null || confirmed == 2){
         }
         else {
-            accountDao.deleteAccount(account);
+            persistenceService.deleteAccount(account);
         }
     }
         
@@ -155,48 +151,14 @@ public class AccountController {
         return account.getAccountType();
     }
     
-    public List<String> getAvailableAccountTypes() {
-        return accountDao.getAllAccountTypesAsList();
-    }
-    
     public List<Account> listAllAccounts() {
         List<Account> accountList;
-        accountList = accountDao.getAllAccountsAsList();        
+        accountList = persistenceService.findAllAccounts();        
         accountView.showListOfAllAccounts(accountList);        
         return accountList;
     }
     
     public Optional<Account> selectAccountByUser() {
         return accountView.selectAccount(listAllAccounts());
-    }
-    
-    /**
-     * Sets a new datasetype to be used. This option is only used for demonstration
-     * purposes as this will also replace the database that is being used
-     * @return 
-     */
-    public boolean setDatabaseType() {
-        Integer newType = accountView.requestDatabaseTypeInput(DatabaseConnection.getInstance().getDatabaseType());
-        if (newType == null) return false; // nothing changed
-        if (newType == 1) {
-            DatabaseConnection.getInstance().setDatabaseType("MYSQL");
-        } else {
-            DatabaseConnection.getInstance().setDatabaseType("MONGO");
-        }
-        // Databasetype has been changed
-        return true;
-    }
-    
-    /**
-     * Sets the connection pool on or off. This option is only used for demonstration
-     * purposes
-     */
-    public void setConnectionPool() {
-        boolean newPoolSetting = accountView.requestConnectionPoolInput(DatabaseConnection.getInstance().getUseConnectionPool());
-        DatabaseConnection.getInstance().useConnectionPool(newPoolSetting);
-    }
-    
-    public void showCurrentDatabaseSettings() {
-        
     }
 }

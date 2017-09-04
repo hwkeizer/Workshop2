@@ -50,6 +50,9 @@ public class DatabaseConnection {
         return SingletonHolder.INSTANCE;
     }
 
+    public void closeDatabase() {
+        entityManagerFactory.close();
+    }
     
     public EntityManager getEntityManager() {
         return entityManagerFactory.createEntityManager();
