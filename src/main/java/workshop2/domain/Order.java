@@ -19,12 +19,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author hwkei
  */
 @Entity
+@Table(name = "`order`")
 public class Order {
     
     @Id
@@ -45,7 +47,7 @@ public class Order {
     // Default no-arg constructor will leave all member fields on their default
     // except for the id field which will be invalidated to a negative value
     public Order() {
-        this.id = -1L;
+        
     }
     
     // Constructor without id, id will be invalidated to a negative value
@@ -78,7 +80,7 @@ public class Order {
         return customer;
     }
 
-    public void setCustomerId(Customer customer) {
+    public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 

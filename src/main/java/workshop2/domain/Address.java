@@ -46,6 +46,7 @@ public class Address {
     @JoinColumn(name = "CUSTOMER_ID")
     private Customer customer;
     @Enumerated(EnumType.ORDINAL)
+    @Column(name = "ADDRESS_TYPE")
     private AddressType addressType;
     
     public Address(){
@@ -126,15 +127,14 @@ public class Address {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+    
     public AddressType getAddressType() {
         return addressType;
     }
 
-
-    public void setType(AddressType addressType) {
+    public void setAddressType(AddressType addressType) {
         this.addressType = addressType;
     }
-    
     
     @Override
     public String toString(){
@@ -177,7 +177,7 @@ public class Address {
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        if (this.addressType != other.addressType) {
+        if (!Objects.equals(this.addressType, other.addressType)) {
             return false;
         }
         if (this.number != other.number) {

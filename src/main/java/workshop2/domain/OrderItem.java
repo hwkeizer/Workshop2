@@ -13,20 +13,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author hwkei
  */
 @Entity
+@Table(name = "ORDER_ITEM")
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "ID")
     private int id;
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "ORDER_ID")
     private Order order;
     @OneToOne
@@ -40,7 +43,7 @@ public class OrderItem {
     // Default no-arg constructor will leave all member fields on their default
     // except for the id field which will be invalidated to a negative value
     public OrderItem() {
-        this.id = -1;
+        
     }
     
      // Constructor without id, id will be invalidated to a negative value
@@ -69,7 +72,7 @@ public class OrderItem {
         return order;
     }
 
-    public void setOrderId(Order order) {
+    public void setOrder(Order order) {
         this.order = order;
     }
 
@@ -77,7 +80,7 @@ public class OrderItem {
         return product;
     }
 
-    public void setProductId(Product product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 

@@ -36,7 +36,7 @@ public class Product {
     // Default no-arg constructor will leave all member fields on their default
     // except for the id field which will be invalidated to a negative value
     public Product() {
-        this.id = -1L;
+        
     }
 
     // Constructor without id, id will be invalidated to a negative value
@@ -55,10 +55,6 @@ public class Product {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
