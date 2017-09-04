@@ -27,6 +27,7 @@ public class DatabaseConnection {
     private static final Logger log = LoggerFactory.getLogger(DatabaseConnection.class);
     private final Configuration configuration;
     private String databaseType;
+    private String persistenceProvider;
     private boolean useConnectionPool;
     private HikariConfig config;
     private HikariDataSource ds;
@@ -38,6 +39,7 @@ public class DatabaseConnection {
         // The default configuration is created
         configuration = new Configuration();
         databaseType = configuration.getDatabaseType();
+        persistenceProvider = configuration.getPersistenceProvider();
         // Added for Hibernate
         entityManagerFactory = Persistence.createEntityManagerFactory("Hibernate");
     }    
@@ -74,6 +76,14 @@ public class DatabaseConnection {
      */
     public String getDatabaseType() {
         return this.databaseType;
+    }
+
+    public String getPersistenceProvider() {
+        return persistenceProvider;
+    }
+
+    public void setPersistenceProvider(String persistenceProvider) {
+        this.persistenceProvider = persistenceProvider;
     }
     
     /**
