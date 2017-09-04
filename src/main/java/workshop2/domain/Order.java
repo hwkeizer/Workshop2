@@ -9,39 +9,60 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author hwkei
  */
+@Entity
 public class Order {
-    private int id;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "ID")
+    private Long id;
+    @Column(name = "TOTAL_PRICE")
     private BigDecimal totalPrice;
-    private int customerId;
+    @ManyToOne
+    @JoinColumn(name = "CUSTOMER_ID")
+    private Customer customer;
+    @Column(name = "DATE_TIME")
     private LocalDateTime dateTime;
-    private int orderStatusId;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "ORDER_STATUS")
+    private OrderStatus orderStatus;
 
     // Default no-arg constructor will leave all member fields on their default
     // except for the id field which will be invalidated to a negative value
     public Order() {
-        this.id = -1;
+        this.id = -1L;
     }
     
     // Constructor without id, id will be invalidated to a negative value
-    public Order(BigDecimal totalPrice, Integer customerId, LocalDateTime dateTime, Integer orderStatusId) {
-        this(-1, totalPrice, customerId, dateTime, orderStatusId);
+    public Order(BigDecimal totalPrice, Integer customerId, LocalDateTime dateTime, OrderStatus orderStatus) {
+        this(-1L, totalPrice, customerId, dateTime, orderStatus);
     }
     
     // Constructor with all member fields
-    public Order(int id, BigDecimal totalPrice, Integer customerId, LocalDateTime dateTime, Integer orderStatusId) {
+    public Order(Long id, BigDecimal totalPrice, Integer customerId, LocalDateTime dateTime, OrderStatus orderStatus) {
         this.id = id;
         this.totalPrice = totalPrice;
-        this.customerId = customerId;
+        this.customer = customer;
         this.dateTime = dateTime;
-        this.orderStatusId = orderStatusId;
+        this.orderStatus = orderStatus;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -53,12 +74,12 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomerId(Customer customer) {
+        this.customer = customer;
     }
 
     public LocalDateTime getDate() {
@@ -69,52 +90,34 @@ public class Order {
         this.dateTime = date;
     }
 
-    public int getOrderStatusId() {
-        return orderStatusId;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
     
-    public String getOrderStatusIdWord() {
-        String orderStatusWord = "";
-        switch(orderStatusId){
-            case 1: {
-                orderStatusWord = "nieuw";
-                break;
-            }
-            case 2: {
-                orderStatusWord = "in behandeling";
-                break;
-            } 
-            case 3: {
-                orderStatusWord = "afgehandeld";
-                break;
-            }
-        }
-        return orderStatusWord;
-    }
-
-    public void setOrderStatusId(int orderStatusId) {
-        this.orderStatusId = orderStatusId;
+    
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
     
     @Override
     public String toString() {
-        return String.format("%-5d%-10.2f%-15s%-20s", this.getId(), this.getTotalPrice(), this.getDate().toLocalDate().toString(), this.getOrderStatusIdWord());
+        return String.format("%-5d%-10.2f%-15s%-20s", this.getId(), this.getTotalPrice(), this.getDate().toLocalDate().toString(), this.getOrderStatus().toString());
     }
 
     public String toStringNoId() {
-        return String.format("%-10.2f%-15s%-20s", this.getTotalPrice(), this.getDate().toLocalDate().toString(), this.getOrderStatusIdWord());
+        return String.format("%-10.2f%-15s%-20s", this.getTotalPrice(), this.getDate().toLocalDate().toString(), this.getOrderStatus().toString());
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 53 * hash + this.id;
+        hash = 53 * hash + Objects.hashCode(this.id);
         hash = 53 * hash + Objects.hashCode(this.totalPrice);
-        hash = 53 * hash + this.customerId;
+        hash = 53 * hash + Objects.hashCode(this.customer);
         hash = 53 * hash + Objects.hashCode(this.dateTime.getYear());
         hash = 53 * hash + Objects.hashCode(this.dateTime.getMonthValue());
         hash = 53 * hash + Objects.hashCode(this.dateTime.getDayOfMonth());
-        hash = 53 * hash + this.orderStatusId;
+        hash = 53 * hash + Objects.hashCode(this.orderStatus);
         return hash;
     }
 
@@ -133,10 +136,10 @@ public class Order {
         if (this.id != other.id) {
             return false;
         }
-        if (this.customerId != other.customerId) {
+        if (!Objects.equals(this.customer, other.customer)) {
             return false;
         }
-        if (this.orderStatusId != other.orderStatusId) {
+        if (!Objects.equals(this.orderStatus, other.orderStatus)) {
             return false;
         }
         if (!Objects.equals(this.totalPrice, other.totalPrice)) {
@@ -165,10 +168,10 @@ public class Order {
             return false;
         }
         final Order other = (Order) obj;
-        if (this.customerId != other.customerId) {
+        if (!Objects.equals(this.customer, other.customer)) {
             return false;
         }
-        if (this.orderStatusId != other.orderStatusId) {
+        if (!Objects.equals(this.orderStatus, other.orderStatus)) {
             return false;
         }
         if (!Objects.equals(this.totalPrice, other.totalPrice)) {
@@ -185,6 +188,5 @@ public class Order {
         }
         return true;
     }
-    
-    
+   
 }

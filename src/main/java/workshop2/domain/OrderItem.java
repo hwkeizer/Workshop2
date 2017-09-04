@@ -7,16 +7,34 @@ package workshop2.domain;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author hwkei
  */
+@Entity
 public class OrderItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "ID")
     private int id;
-    private int orderId;
-    private int productId;
+    @OneToMany
+    @JoinColumn(name = "ORDER_ID")
+    private Order order;
+    @OneToOne
+    @JoinColumn(name = "PRODUCT_ID")
+    private Product product;
+    @Column(name = "AMOUNT")
     private int amount;
+    @Column(name = "SUB_TOTAL")
     private BigDecimal subTotal;
     
     // Default no-arg constructor will leave all member fields on their default
@@ -26,19 +44,19 @@ public class OrderItem {
     }
     
      // Constructor without id, id will be invalidated to a negative value
-    public OrderItem(int orderId, int productId, int amount, BigDecimal subTotal) {
+    public OrderItem(Order order, Product product, int amount, BigDecimal subTotal) {
         this.id = -1;
-        this.orderId = orderId;
-        this.productId = productId;
+        this.order = order;
+        this.product = product;
         this.amount = amount;
         this.subTotal = subTotal;
     }
     
     // Constructor with all member fields
-    public OrderItem(int id, int orderId, int productId, int amount, BigDecimal subTotal) {
+    public OrderItem(Order order, Product product, int productId, int amount, BigDecimal subTotal) {
         this.id = id;
-        this.orderId = orderId;
-        this.productId = productId;
+        this.order = order;
+        this.product = product;
         this.amount = amount;
         this.subTotal = subTotal;
     }
@@ -47,20 +65,20 @@ public class OrderItem {
         return id;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrderId(Order order) {
+        this.order = order;
     }
 
-    public int getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setProductId(Product product) {
+        this.product = product;
     }
 
     public int getAmount() {
@@ -83,8 +101,8 @@ public class OrderItem {
     public int hashCode() {
         int hash = 7;
         hash = 83 * hash + this.id;
-        hash = 83 * hash + this.orderId;
-        hash = 83 * hash + this.productId;
+        hash = 83 * hash + Objects.hashCode(this.order);
+        hash = 83 * hash + Objects.hashCode(this.product);
         hash = 83 * hash + this.amount;
         hash = 83 * hash + Objects.hashCode(this.subTotal);
         return hash;
@@ -105,10 +123,10 @@ public class OrderItem {
         if (this.id != other.id) {
             return false;
         }
-        if (this.orderId != other.orderId) {
+        if (!Objects.equals(this.order, other.order)) {
             return false;
         }
-        if (this.productId != other.productId) {
+        if (!Objects.equals(this.product, other.product)) {
             return false;
         }
         if (this.amount != other.amount) {
@@ -119,6 +137,5 @@ public class OrderItem {
         }
         return true;
     }
-    
     
 }
