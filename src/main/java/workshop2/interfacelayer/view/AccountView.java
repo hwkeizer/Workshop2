@@ -61,7 +61,7 @@ public class AccountView {
         input.nextLine();
     }
     
-    public Integer requestAccountIdToUpdateInput(int accountListSize) {
+    public Long requestAccountIdToUpdateInput(int accountListSize) {
         printRequestForIdToUpdateInput();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -72,7 +72,7 @@ public class AccountView {
             if (respons.equals("!")) return null;  // User initiated abort
         }        
         //index of product in ArrayList<Product> productList
-        return Integer.parseInt(respons) - 1;
+        return Long.parseLong(respons) - 1;
     }
     
     public void showAccountToBeUpdated(Account account){
@@ -249,15 +249,15 @@ public class AccountView {
     
     /**
      * Returns a valid accountType or null if the user aborts
-     * @param types
      * @return Account type id
      */
-    public Integer requestUpdateAccountType(List<String> types) {
+    public AccountType requestUpdateAccountType() {
+        List<AccountType> enumTypes = new ArrayList<>(EnumSet.allOf(AccountType.class));
         System.out.println("De beschikbare account types zijn:");
         System.out.printf("%-5s%-20s\n", "ID", "Account Type");
         System.out.println("------------------------------");
-        for (int i = 0; i < types.size(); i++) {
-            System.out.printf("%-10s%-30s\n", i + 1, types.get(i));
+        for (int i = 0; i < enumTypes.size(); i++) {
+            System.out.printf("%-10s%-30s\n", i + 1, enumTypes.get(i));
         }
         printRequestForAccountType();
         String respons =  input.nextLine();
@@ -268,12 +268,7 @@ public class AccountView {
             respons = input.nextLine();
             if (respons.equals("*")) return null; // User initiated abort
         }
-        try {
-            types.get(Integer.parseInt(respons) - 1);
-            return Integer.parseInt(respons);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
+        return enumTypes.get(Integer.parseInt(respons) - 1);
     }
     
     public void showListOfAllAccounts(List<Account> accountList) {

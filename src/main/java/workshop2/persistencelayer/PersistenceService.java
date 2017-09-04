@@ -5,6 +5,7 @@
  */
 package workshop2.persistencelayer;
 
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -43,6 +44,38 @@ public class PersistenceService {
         }
     }
     
+    public void deleteAccount(Account account) {
+        try { 
+            entityManager.getTransaction().begin();       
+            accountDao.delete(account);            
+            entityManager.getTransaction().commit();            
+        } catch (Exception ex) {
+            entityManager.getTransaction().rollback();
+            log.error("Fout in de transactie. De transactie is teruggedraaid: {}", ex );           
+            // Exception doorgooien of FailedTransaction oid opgooien?
+        } finally {
+            // Always clear the persistence context to prevent increasing memory ????
+            entityManager.clear();
+        }
+    }
+    
+    public void updateAccount(Account account) {
+        try {
+            entityManager.getTransaction().begin();
+            accountDao.update(account);
+            entityManager.getTransaction().commit();
+        } catch (Exception ex) {
+            entityManager.getTransaction().rollback();
+            log.error("Fout in de transactie. De transactie is teruggedraaid: {}", ex );       
+            // Exception doorgooien of FailedTransaction oid opgooien?
+        } finally {
+            // Always clear the persistence context to prevent increasing memory ????
+            entityManager.clear();
+            System.out.println("ENTITYMANAGER CLEARED");
+        }
+    }
+            
+    
     public Optional<Account> findAccountByUserName(String userName) {
         Account resultAccount;
         try {
@@ -54,6 +87,14 @@ public class PersistenceService {
             return Optional.empty();
         }
         return Optional.ofNullable(resultAccount);
+    }
+    
+    public Optional<Account> findAccountById(Long id) {
+        return Optional.ofNullable((Account)accountDao.findById(id));
+    }
+    
+    public List<Account> findAllAccounts() {
+        return accountDao.findAll(Account.class);
     }
 
 }

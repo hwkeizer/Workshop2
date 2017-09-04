@@ -7,6 +7,7 @@ package workshop2;
 
 
 
+import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.controller.FrontEndController;
 
 /**
@@ -23,5 +24,8 @@ public class Applikaasie {
         }        
         FrontEndController frontEndController = new FrontEndController();
         frontEndController.login();
+        // De factory moet gesloten worden om het programma af te sluiten. 
+        //TODO: kijken of dit netter kan!!
+        DatabaseConnection.getInstance().closeDatabase();
     }
 }
