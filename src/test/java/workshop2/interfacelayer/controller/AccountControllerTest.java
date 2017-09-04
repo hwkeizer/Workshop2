@@ -84,7 +84,7 @@ public class AccountControllerTest {
     public void testUpdateAccount() {
         // Prepare update test values
         String testUserName = "fred";
-        String updateUserName = "treddie";
+        String updateUserName = "freddie";
         String updatePassword = "welkomTest";
         AccountType updateAccountType = MEDEWERKER;
         Optional<Account> optionalAccount = persistenceService.findAccountByUserName(testUserName);
@@ -102,8 +102,8 @@ public class AccountControllerTest {
         
         // Validate the updated values
         System.out.println("TESTID " + testId);
-        Optional<Account> optAccount = persistenceService.findAccountByUserName("treddie");
-        System.out.println("PRESENT? :" + optAccount.get().getUsername());
+        Optional<Account> optAccount = persistenceService.findAccountByUserName("freddie");
+        System.out.println("PRESENT? :" + optAccount.isPresent());
         Account resultAccount = optAccount.get();
         System.out.println("ACCOUNT: " + resultAccount.toString());
         System.out.println("LIST:" + accountController.listAllAccounts());
