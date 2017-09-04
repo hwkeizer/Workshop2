@@ -5,51 +5,78 @@
  */
 package workshop2.domain;
 
+import java.lang.ProcessBuilder.Redirect.Type;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SecondaryTable;
+import javax.persistence.Table;
 
 /**
  *
- * @author thoma
+ * @author Ahmed Al-alaaq(Egelantier)
  */
+@Entity
+@Table(name = "ADDRESS")
+/*@SecondaryTable(name = "ADDRESS_TYPE")*/
 public class Address {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "ID")
+    private Long id;
+    @Column(name = "STREET_NAME")
     private String streetName;
+    @Column(name = "NUMBER")
     private int number;
+    @Column(name = "ADDITION")
     private String addition;
+    @Column(name = "POSTAL_CODE")
     private String postalCode;
+    @Column(name = "CITY")
     private String city;
-    private Integer customerId;
-    private int addressTypeId;
+    @OneToOne
+    @JoinColumn(name = "CUSTOMER_ID")
+    private Customer customer;
+    @Enumerated(EnumType.ORDINAL)
+    private AddressType addressType;
+    
+    public Address(){
+        
+    }
 
     public Address(String streetName, int number, String addition, String postalCode, 
-            String city, Integer customerId, int addressTypeId) {
+            String city, Customer customer, AddressType addressType) {
         this.streetName = streetName;
         this.number = number;
         this.addition = addition;
         this.postalCode = postalCode;
         this.city = city;
-        this.customerId = customerId;
-        this.addressTypeId = addressTypeId;
+        this.customer = customer;
+        this.addressType = addressType;
     }
-
-    public Address(int id, String streetName, int number, String addition, String postalCode, 
-            String city, int customerId, int addressTypeId) {
+    
+    public Address(Long id, String streetName, Integer number, String addition, String postalCode, String city, Customer customer, AddressType addressType) {
         this.id = id;
         this.streetName = streetName;
         this.number = number;
         this.addition = addition;
         this.postalCode = postalCode;
         this.city = city;
-        this.customerId = customerId;
-        this.addressTypeId = addressTypeId;
+        this.customer = customer;
+        this.addressType = addressType;
     }
 
-    public int getId() {
+
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getStreetName() {
@@ -92,44 +119,46 @@ public class Address {
         this.city = city;
     }
 
-    public Integer getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+    public AddressType getAddressType() {
+        return addressType;
     }
 
-    public int getAddressTypeId() {
-        return addressTypeId;
-    }
 
-    public void setAddressTypeId(int addressTypeId) {
-        this.addressTypeId = addressTypeId;
+    public void setType(AddressType addressType) {
+        this.addressType = addressType;
     }
+    
     
     @Override
     public String toString(){
         return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-8d", getId(), getStreetName(), 
-                getNumber(), getAddition(), getPostalCode(), getCity(), getAddressTypeId());
+                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType().toString(), this.getCustomer().getFirstName(), " ", this.getCustomer().getLastName());
     }
     
+ 
     public String toStringNoId(){
-        return String.format("%-30s%-8d%-12s%-10s%-20s%-8d", getStreetName(), getNumber(), 
-                getAddition(), getPostalCode(), getCity(), getAddressTypeId());
+        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-8d", getStreetName(), 
+                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType().toString(), this.getCustomer().getFirstName(), " ", this.getCustomer().getLastName());
     }
     
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 73 * hash + this.id;
+        hash = 73 * hash + Objects.hashCode(this.id);
         hash = 73 * hash + Objects.hashCode(this.streetName);
         hash = 73 * hash + this.number;
         hash = 73 * hash + Objects.hashCode(this.addition);
         hash = 73 * hash + Objects.hashCode(this.postalCode);
         hash = 73 * hash + Objects.hashCode(this.city);
-        hash = 73 * hash + this.customerId;
-        hash = 73 * hash + this.addressTypeId;
+        hash = 73 * hash + Objects.hashCode(this.customer);
+        hash = 73 * hash + Objects.hashCode(this.addressType);
         return hash;
     }
 
@@ -145,10 +174,10 @@ public class Address {
             return false;
         }
         final Address other = (Address) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        if (this.addressTypeId != other.addressTypeId) {
+        if (this.addressType != other.addressType) {
             return false;
         }
         if (this.number != other.number) {
@@ -164,6 +193,9 @@ public class Address {
             return false;
         }
         if (!Objects.equals(this.city, other.city)) {
+            return false;
+        }
+        if (!Objects.equals(this.customer, other.customer)) {
             return false;
         }
         
