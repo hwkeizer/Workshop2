@@ -25,7 +25,7 @@ import workshop2.interfacelayer.dao.AddressDao;
  */
 public class AddressDaoMysql implements AddressDao {
  
-    private static final Logger log = LoggerFactory.getLogger(AccountDaoMysql.class);
+    private static final Logger log = LoggerFactory.getLogger(AddressDaoMysql.class);
     
     private static final String SQL_INSERT = "INSERT INTO address (street_name, number, addition, postal_code, city, customer_id, address_type_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_FIND_BY_CUSTOMER_ID = "SELECT * FROM address WHERE `customer_id` = ?";

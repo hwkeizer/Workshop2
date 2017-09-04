@@ -13,7 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.AccountType;
 import workshop2.interfacelayer.view.Validator;
-import workshop2.persistencelayer.PersistenceService;
+import workshop2.persistencelayer.AccountService;
+import workshop2.persistencelayer.AccountServiceFactory;
 
 /**
  *
@@ -26,13 +27,12 @@ public class AccountController {
     private Optional<Account> optionalAccount;
     
     // member field van maken voor latere injectie???
-    private final PersistenceService persistenceService;
+    private final AccountService accountService = AccountServiceFactory.getAccountService();
 
     
     // Public constructor only requires accountView parameter
     public AccountController(AccountView accountView) {
         this.accountView = accountView;
-        persistenceService = new PersistenceService();
     }
 
     
@@ -50,7 +50,7 @@ public class AccountController {
         
         // Prepare the account with the validated values and add it to the database
         account = new Account(name, password, accountType);
-        persistenceService.createAccount(account);
+        accountService.createAccount(account);
     }
        
     public void updateAccount() {
@@ -90,13 +90,13 @@ public class AccountController {
             account.setUsername(newName);
             account.setPassword(newPassword);
             account.setAccountType(newAccountType);
-            persistenceService.updateAccount(account);
+            accountService.updateAccount(account);
             
         }
     }
     
     public void changeOwnPassword(String userName) {
-        optionalAccount = persistenceService.findAccountByUserName(userName);
+        optionalAccount = accountService.findAccountByUserName(userName);
         if (!optionalAccount.isPresent()) {
             log.error("Gebruiker {} niet gevonden in de database!", userName);
             return;
@@ -109,7 +109,7 @@ public class AccountController {
                 // create a password hash from his password and store this in the database
                 newPassword = PasswordHash.generateHash(newPassword);
                 account.setPassword(newPassword);
-                persistenceService.updateAccount(account);
+                accountService.updateAccount(account);
             }
         } else {
             accountView.showInvalidOldPassword();
@@ -126,7 +126,7 @@ public class AccountController {
         Long id = accountList.get(index).getId();
         
         //Retreive the account to delete from the database
-        optionalAccount = persistenceService.findAccountById(id);
+        optionalAccount = accountService.findAccountById(id);
         if (optionalAccount.isPresent()) account = optionalAccount.get();
         
         //Promp for confirmation if this is indeed the account to delete
@@ -135,25 +135,25 @@ public class AccountController {
         if (confirmed == null || confirmed == 2){
         }
         else {
-            persistenceService.deleteAccount(account);
+            accountService.deleteAccount(account);
         }
     }
         
     public boolean validateAccount(String userName, String password) {
-        optionalAccount = persistenceService.findAccountByUserName(userName);
+        optionalAccount = accountService.findAccountByUserName(userName);
         if (!optionalAccount.isPresent()) return false;
         return PasswordHash.validatePassword(password, optionalAccount.get().getPassword());
     }
     
     public AccountType getUserRole(String userName) {
-       optionalAccount = persistenceService.findAccountByUserName(userName);
+       optionalAccount = accountService.findAccountByUserName(userName);
         if (optionalAccount.isPresent()) account = optionalAccount.get();
         return account.getAccountType();
     }
     
     public List<Account> listAllAccounts() {
         List<Account> accountList;
-        accountList = persistenceService.findAllAccounts();        
+        accountList = accountService.findAllAccounts();        
         accountView.showListOfAllAccounts(accountList);        
         return accountList;
     }

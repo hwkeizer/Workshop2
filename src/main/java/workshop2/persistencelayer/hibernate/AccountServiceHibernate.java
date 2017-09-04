@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package workshop2.persistencelayer;
+package workshop2.persistencelayer.hibernate;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,21 +14,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Account;
 import workshop2.interfacelayer.DatabaseConnection;
+import workshop2.persistencelayer.AccountService;
+import workshop2.persistencelayer.GenericDaoImpl;
 
 /**
  *
  * @author hwkei
  */
-public class PersistenceService {
-    private static final Logger log = LoggerFactory.getLogger(PersistenceService.class);
+public class AccountServiceHibernate implements AccountService {
+    private static final Logger log = LoggerFactory.getLogger(AccountServiceHibernate.class);
     private final EntityManager entityManager;
     private final GenericDaoImpl accountDao;
     
-    public PersistenceService() {
+    public AccountServiceHibernate() {
         entityManager = DatabaseConnection.getInstance().getEntityManager();
         accountDao = new GenericDaoImpl(Account.class, entityManager);
     }
     
+    @Override
     public void createAccount(Account account) {
         try {
             entityManager.getTransaction().begin();       
@@ -44,6 +47,7 @@ public class PersistenceService {
         }
     }
     
+    @Override
     public void deleteAccount(Account account) {
         try { 
             entityManager.getTransaction().begin();       
@@ -59,6 +63,7 @@ public class PersistenceService {
         }
     }
     
+    @Override
     public void updateAccount(Account account) {
         try {
             entityManager.getTransaction().begin();
@@ -71,11 +76,11 @@ public class PersistenceService {
         } finally {
             // Always clear the persistence context to prevent increasing memory ????
             entityManager.clear();
-            System.out.println("ENTITYMANAGER CLEARED");
+            log.debug("ENTITYMANAGER CLEARED");
         }
-    }
-            
+    }            
     
+    @Override
     public Optional<Account> findAccountByUserName(String userName) {
         Account resultAccount;
         try {
@@ -89,12 +94,13 @@ public class PersistenceService {
         return Optional.ofNullable(resultAccount);
     }
     
+    @Override
     public Optional<Account> findAccountById(Long id) {
         return Optional.ofNullable((Account)accountDao.findById(id));
     }
     
+    @Override
     public List<Account> findAllAccounts() {
         return accountDao.findAll(Account.class);
     }
-
 }

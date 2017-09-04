@@ -21,7 +21,7 @@ public class DaoFactoryMysql extends DaoFactory {
     
     @Override
     public AccountDao createAccountDao() {
-        return new AccountDaoMysql();
+        return null;
     }
 
     @Override
