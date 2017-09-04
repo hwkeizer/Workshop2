@@ -24,10 +24,12 @@ public class Configuration {
     private String user;   
     private String password;
     private String databaseType;
+    private String persistenceProvider;
     private String mySqlConnectionString;
     private String mongoDbConnectionString;
     
     Configuration() {
+        readPersistenceProviderXML();
         readDatabaseTypeXML();
         readMySqlXML();
         readMongoDbXML();
@@ -52,10 +54,35 @@ public class Configuration {
     public String getDatabaseType() {
         return databaseType;
     }
-
+ 
+    public String getPersistenceProvider() {
+        return persistenceProvider;
+    }
+    
     public String getDatabaseName() {
         return databaseName;
     }
+    
+    private void readPersistenceProviderXML(){
+        
+        SAXReader reader = new SAXReader();
+        File file = new File(dbSettingsFileName);
+        try{
+            Document document = reader.read(file);
+            
+            Node node;
+            node = document.selectSingleNode("/database_settings/persistenceProvider");
+            persistenceProvider = node.getText();
+            
+            
+            
+            log.debug("Default databasetype: {}", persistenceProvider);
+            
+        }
+        catch(DocumentException e){
+            log.debug("Probleem met het lezen van het configuratie document", e);
+        }        
+    }    
     
     private void readDatabaseTypeXML(){
         
