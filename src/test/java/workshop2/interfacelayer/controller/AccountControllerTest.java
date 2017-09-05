@@ -101,8 +101,9 @@ public class AccountControllerTest {
         // Update the account
         accountController.updateAccount();
         
-        // Validate the updated values        
-        Optional<Account> optAccount = accountService.findAccountById(testId);
+        // Validate the updated values    
+
+        Optional<Account> optAccount = accountService.<Account>fetchById(Account.class, testId);
         assertTrue("Same ID should exist after update test", optAccount.isPresent());
         Account resultAccount = optAccount.get();
         assertEquals("Username should equal the updated username", updateUserName, resultAccount.getUsername());

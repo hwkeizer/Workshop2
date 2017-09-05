@@ -126,7 +126,7 @@ public class AccountController {
         Long id = accountList.get(index).getId();
         
         //Retreive the account to delete from the database
-        optionalAccount = accountService.findAccountById(id);
+        optionalAccount = accountService.fetchById(Account.class, id);
         if (optionalAccount.isPresent()) account = optionalAccount.get();
         
         //Promp for confirmation if this is indeed the account to delete
@@ -153,7 +153,8 @@ public class AccountController {
     
     public List<Account> listAllAccounts() {
         List<Account> accountList;
-        accountList = accountService.findAllAccounts();        
+//        accountList = accountService.findAllAccounts();  
+        accountList = accountService.<Account>fetchAllAsList(Account.class);
         accountView.showListOfAllAccounts(accountList);        
         return accountList;
     }

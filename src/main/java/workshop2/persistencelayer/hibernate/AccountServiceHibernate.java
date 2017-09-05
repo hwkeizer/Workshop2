@@ -21,11 +21,9 @@ import workshop2.persistencelayer.GenericDaoImpl;
  *
  * @author hwkei
  */
-public class AccountServiceHibernate implements AccountService {
+public class AccountServiceHibernate extends GenericServiceHibernate implements AccountService {
     private static final Logger log = LoggerFactory.getLogger(AccountServiceHibernate.class);
-    
-
-    
+        
     @Override
     public void createAccount(Account account) {
         EntityManager em = DatabaseConnection.getInstance().getEntityManager();
@@ -94,33 +92,33 @@ public class AccountServiceHibernate implements AccountService {
         return Optional.ofNullable(resultAccount);
     }
     
-    @Override
-    public Optional<Account> findAccountById(Long id) {
-        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
-        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
-        Optional<Account> optionalAccount;
-        try {
-            optionalAccount = (Optional<Account>)accountDao.findById(id);
-        } catch(NoResultException ex) {
-            log.debug("Account with id {} is not found in the database", id);
-            return Optional.empty();
-        } finally {
-            em.close();
-        }
-        return optionalAccount;
-    }
-    
-    @Override
-    public List<Account> findAllAccounts() {
-        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
-        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
-        List<Account> allAccountList;
-        try {
-            allAccountList = accountDao.findAll();
-        } catch(NoResultException ex) {
-            log.debug("No accounts found in the database");
-            return null;
-        }
-        return allAccountList;
-    }
+//    @Override
+//    public Optional<Account> findAccountById(Long id) {
+//        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+//        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
+//        Optional<Account> optionalAccount;
+//        try {
+//            optionalAccount = (Optional<Account>)accountDao.findById(id);
+//        } catch(NoResultException ex) {
+//            log.debug("Account with id {} is not found in the database", id);
+//            return Optional.empty();
+//        } finally {
+//            em.close();
+//        }
+//        return optionalAccount;
+//    }
+//    
+//    @Override
+//    public List<Account> findAllAccounts() {
+//        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+//        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
+//        List<Account> allAccountList;
+//        try {
+//            allAccountList = accountDao.findAll();
+//        } catch(NoResultException ex) {
+//            log.debug("No accounts found in the database");
+//            return null;
+//        }
+//        return allAccountList;
+//    }
 }

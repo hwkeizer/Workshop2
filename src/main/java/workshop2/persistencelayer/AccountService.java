@@ -13,17 +13,17 @@ import workshop2.domain.Account;
  *
  * @author hwkei
  */
-public interface AccountService {
+public interface AccountService extends GenericService {
 
     public void updateAccount(Account account);
 
     public Optional<Account> findAccountByUserName(String userName);
 
-    public Optional<Account> findAccountById(Long id);
+//    public Optional<Account> findAccountById(Long id);
 
     public void deleteAccount(Account account);
 
-    public List<Account> findAllAccounts();
+//    public List<Account> findAllAccounts();
 
     public void createAccount(Account account);
     
