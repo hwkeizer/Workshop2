@@ -5,7 +5,6 @@
  */
 package workshop2.persistencelayer.hibernate;
 
-import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -45,9 +44,9 @@ public class AccountServiceHibernate extends GenericServiceHibernate implements 
     public void deleteAccount(Account account) {
         EntityManager em = DatabaseConnection.getInstance().getEntityManager();
         GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
-        try {           
-            em.getTransaction().begin();       
-            accountDao.delete(account);            
+        try {   
+            em.getTransaction().begin();   
+            accountDao.delete(em.find(Account.class, account.getId()));            
             em.getTransaction().commit();            
         } catch (Exception ex) {
             em.getTransaction().rollback();
@@ -92,33 +91,4 @@ public class AccountServiceHibernate extends GenericServiceHibernate implements 
         return Optional.ofNullable(resultAccount);
     }
     
-//    @Override
-//    public Optional<Account> findAccountById(Long id) {
-//        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
-//        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
-//        Optional<Account> optionalAccount;
-//        try {
-//            optionalAccount = (Optional<Account>)accountDao.findById(id);
-//        } catch(NoResultException ex) {
-//            log.debug("Account with id {} is not found in the database", id);
-//            return Optional.empty();
-//        } finally {
-//            em.close();
-//        }
-//        return optionalAccount;
-//    }
-//    
-//    @Override
-//    public List<Account> findAllAccounts() {
-//        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
-//        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
-//        List<Account> allAccountList;
-//        try {
-//            allAccountList = accountDao.findAll();
-//        } catch(NoResultException ex) {
-//            log.debug("No accounts found in the database");
-//            return null;
-//        }
-//        return allAccountList;
-//    }
 }

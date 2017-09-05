@@ -5,7 +5,6 @@
  */
 package workshop2.persistencelayer;
 
-import java.util.List;
 import java.util.Optional;
 import workshop2.domain.Account;
 
@@ -19,11 +18,7 @@ public interface AccountService extends GenericService {
 
     public Optional<Account> findAccountByUserName(String userName);
 
-//    public Optional<Account> findAccountById(Long id);
-
     public void deleteAccount(Account account);
-
-//    public List<Account> findAllAccounts();
 
     public void createAccount(Account account);
     

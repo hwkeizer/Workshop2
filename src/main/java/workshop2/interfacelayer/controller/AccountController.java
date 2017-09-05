@@ -117,14 +117,15 @@ public class AccountController {
     }
     
     public void deleteAccount() {
-        //Prompt for which account to delete
+        
+        // Collect the information from the user
         List<Account> accountList = listAllAccounts();
         int accountListSize = accountList.size();
         log.debug("accountListSize is " + accountListSize);
         Integer index = accountView.requestAccountIdInput(accountListSize);
         if (index == null) return;
         Long id = accountList.get(index).getId();
-        
+
         //Retreive the account to delete from the database
         optionalAccount = accountService.fetchById(Account.class, id);
         if (optionalAccount.isPresent()) account = optionalAccount.get();
@@ -152,8 +153,7 @@ public class AccountController {
     }
     
     public List<Account> listAllAccounts() {
-        List<Account> accountList;
-//        accountList = accountService.findAllAccounts();  
+        List<Account> accountList; 
         accountList = accountService.<Account>fetchAllAsList(Account.class);
         accountView.showListOfAllAccounts(accountList);        
         return accountList;

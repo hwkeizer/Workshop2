@@ -6,7 +6,6 @@
 package workshop2.interfacelayer.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -116,12 +115,18 @@ public class AccountControllerTest {
      */
     @Test
     public void testChangeOwnPassword() {
-        System.out.println("changeOwnPassword");
-        String userName = "";
-        AccountController instance = null;
-        instance.changeOwnPassword(userName);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Prepare password data values
+        String userName = "joost";
+        String oldPassword = "welkom";
+        String newPassword = "welkom01";
+        when(mockAccountView.requestOldPasswordInput()).thenReturn(oldPassword);
+        when(mockAccountView.requestNewPasswordInput()).thenReturn(newPassword);
+        
+        // Validate the change
+        assertTrue("Old password should be valid before changing", accountController.validateAccount(userName, oldPassword));
+        accountController.changeOwnPassword(userName);
+        assertFalse("Old password should be invalid after changing", accountController.validateAccount(userName, oldPassword));
+        assertTrue("New password should be valid after changing", accountController.validateAccount(userName, newPassword));
     }
 
     /**
@@ -129,27 +134,16 @@ public class AccountControllerTest {
      */
     @Test
     public void testDeleteAccount() {
-        System.out.println("deleteAccount");
-        AccountController instance = null;
-        instance.deleteAccount();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of validateAccount method, of class AccountController.
-     */
-    @Test
-    public void testValidateAccount() {
-        System.out.println("validateAccount");
-        String userName = "";
-        String password = "";
-        AccountController instance = null;
-        boolean expResult = false;
-        boolean result = instance.validateAccount(userName, password);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // prepare the testdata
+        String userName = "joost";
+        Optional<Account> account = accountService.findAccountByUserName(userName);
+        when(mockAccountView.requestAccountIdInput(6)).thenReturn(4);
+        when(mockAccountView.requestConfirmationToDelete(account.get())).thenReturn(1);        
+        
+        // Validate the deletion
+        assertEquals("Account should exist before deleting", userName, account.get().getUsername());
+        accountController.deleteAccount();
+        assertFalse("Account should not exist after deletion", accountService.findAccountByUserName(userName).isPresent());
     }
 
     /**
@@ -207,6 +201,7 @@ public class AccountControllerTest {
         em.persist(account6);
 
         // Customer
+        em.createNativeQuery("DELETE FROM customer").executeUpdate();
         Customer customer1 = new Customer("Piet", "Pietersen", null, account1);
         Customer customer2 = new Customer("Klaas", "Klaassen", "van", account2);
         Customer customer3 = new Customer("Jan", "Jansen", null, account3);
