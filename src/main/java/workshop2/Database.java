@@ -39,45 +39,42 @@ public class Database {
         
     void initializeDatabase() {
         // Quick en Dirty met een eigen EntityManager gedaan
-        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
-        try {            
-            EntityTransaction et = em.getTransaction();
-            et.begin();
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();          
+        EntityTransaction et = em.getTransaction();
+        et.begin();
 
-            // Account
-            String pass1 = PasswordHash.generateHash("welkom");
-            String pass2 = PasswordHash.generateHash("welkom");
-            String pass3 = PasswordHash.generateHash("welkom");
-            Account account1 = new Account("piet", pass1, ADMIN);
-            Account account2 = new Account("klaas", pass2, MEDEWERKER);
-            Account account3 = new Account("jan", pass3, KLANT);
-            Account account4 = new Account("fred", pass1, KLANT);
-            Account account5 = new Account("joost", pass2, KLANT);
-            Account account6 = new Account("jaap", pass3, KLANT);
-            em.persist(account1);
-            em.persist(account2);
-            em.persist(account3);
-            em.persist(account4);
-            em.persist(account5);
-            em.persist(account6);
+        // Account
+        String pass1 = PasswordHash.generateHash("welkom");
+        String pass2 = PasswordHash.generateHash("welkom");
+        String pass3 = PasswordHash.generateHash("welkom");
+        Account account1 = new Account("piet", pass1, ADMIN);
+        Account account2 = new Account("klaas", pass2, MEDEWERKER);
+        Account account3 = new Account("jan", pass3, KLANT);
+        Account account4 = new Account("fred", pass1, KLANT);
+        Account account5 = new Account("joost", pass2, KLANT);
+        Account account6 = new Account("jaap", pass3, KLANT);
+        em.persist(account1);
+        em.persist(account2);
+        em.persist(account3);
+        em.persist(account4);
+        em.persist(account5);
+        em.persist(account6);
 
-            // Customer
-            Customer customer1 = new Customer("Piet", "Pietersen", null, account1);
-            Customer customer2 = new Customer("Klaas", "Klaassen", "van", account2);
-            Customer customer3 = new Customer("Jan", "Jansen", null, account3);
-            Customer customer4 = new Customer("Fred", "Horst", "ter", account4);
-            Customer customer5 = new Customer("Joost", "Draaier", "den", account5);
-            em.persist(customer1);
-            em.persist(customer2);
-            em.persist(customer3);
-            em.persist(customer4);
-            em.persist(customer5);
-            et.commit();
-        } finally {              
-            em.close();
-        }
-            
+        // Customer
+        Customer customer1 = new Customer("Piet", "Pietersen", null, account1);
+        Customer customer2 = new Customer("Klaas", "Klaassen", "van", account2);
+        Customer customer3 = new Customer("Jan", "Jansen", null, account3);
+        Customer customer4 = new Customer("Fred", "Horst", "ter", account4);
+        Customer customer5 = new Customer("Joost", "Draaier", "den", account5);
+        em.persist(customer1);
+        em.persist(customer2);
+        em.persist(customer3);
+        em.persist(customer4);
+        em.persist(customer5);
+        et.commit();
 
+        // Clear the persistency context
+        em.clear();
     }
 //        // Prepare the SQL statements to create the DATABASE and recreate it
 //        String createDatabase = "CREATE DATABASE IF NOT EXISTS " + databaseName;

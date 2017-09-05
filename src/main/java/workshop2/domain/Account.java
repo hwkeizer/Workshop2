@@ -82,7 +82,7 @@ public class Account implements Serializable {
     
      @Override
     public String toString(){
-        return String.format("%-5d%-20s%-20s%-20s", this.getId(), this.getUsername(), "********", this.getAccountType().toString());
+        return String.format("%-5d%-20s%-20s%-20s\n", this.getId(), this.getUsername(), "********", this.getAccountType().toString());
     }
     
     public String toStringNoId(){

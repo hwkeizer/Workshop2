@@ -23,84 +23,104 @@ import workshop2.persistencelayer.GenericDaoImpl;
  */
 public class AccountServiceHibernate implements AccountService {
     private static final Logger log = LoggerFactory.getLogger(AccountServiceHibernate.class);
-    private final EntityManager entityManager;
-    private final GenericDaoImpl accountDao;
     
-    public AccountServiceHibernate() {
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
-        accountDao = new GenericDaoImpl(Account.class, entityManager);
-    }
+
     
     @Override
     public void createAccount(Account account) {
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
         try {
-            entityManager.getTransaction().begin();       
+            em.getTransaction().begin();       
             accountDao.persist(account);            
-            entityManager.getTransaction().commit();            
+            em.getTransaction().commit();            
         } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-            System.out.println("Transactie is niet uitgevoerd!");            
-            // Exception doorgooien of FailedTransaction oid opgooien?
+            em.getTransaction().rollback();
+            log.error("Fout in de transactie. De transactie is teruggedraaid: {}", ex );           
+            // TODO: besluiten of we exception verder doorgooien
         } finally {
-            // Always clear the persistence context to prevent increasing memory ????
-            entityManager.clear();
+            em.close();
         }
     }
     
     @Override
     public void deleteAccount(Account account) {
-        try { 
-            entityManager.getTransaction().begin();       
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
+        try {           
+            em.getTransaction().begin();       
             accountDao.delete(account);            
-            entityManager.getTransaction().commit();            
+            em.getTransaction().commit();            
         } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
+            em.getTransaction().rollback();
             log.error("Fout in de transactie. De transactie is teruggedraaid: {}", ex );           
-            // Exception doorgooien of FailedTransaction oid opgooien?
+            // TODO: besluiten of we exception verder doorgooien
         } finally {
-            // Always clear the persistence context to prevent increasing memory ????
-            entityManager.clear();
+            em.close();
         }
     }
     
     @Override
     public void updateAccount(Account account) {
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
         try {
-            entityManager.getTransaction().begin();
+            em.getTransaction().begin();
             accountDao.update(account);
-            entityManager.getTransaction().commit();
+            em.getTransaction().commit();
         } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
+            em.getTransaction().rollback();
             log.error("Fout in de transactie. De transactie is teruggedraaid: {}", ex );       
-            // Exception doorgooien of FailedTransaction oid opgooien?
+            // TODO: besluiten of we exception verder doorgooien
         } finally {
-            // Always clear the persistence context to prevent increasing memory ????
-            entityManager.clear();
-            log.debug("ENTITYMANAGER CLEARED");
+            em.close();
         }
     }            
     
     @Override
     public Optional<Account> findAccountByUserName(String userName) {
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
         Account resultAccount;
         try {
-            Query queryAccountByUserName = entityManager.createNamedQuery("findAccountByUserName");
+            Query queryAccountByUserName = em.createNamedQuery("findAccountByUserName");
             queryAccountByUserName.setParameter("username", userName);
             resultAccount = (Account)queryAccountByUserName.getSingleResult();
         } catch(NoResultException ex) {
-            log.debug("Username {} is not found in the database", userName);
+            log.debug("Account with username {} is not found in the database", userName);
             return Optional.empty();
+        } finally {
+            em.close();
         }
         return Optional.ofNullable(resultAccount);
     }
     
     @Override
     public Optional<Account> findAccountById(Long id) {
-        return Optional.ofNullable((Account)accountDao.findById(id));
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
+        Optional<Account> optionalAccount;
+        try {
+            optionalAccount = (Optional<Account>)accountDao.findById(id);
+        } catch(NoResultException ex) {
+            log.debug("Account with id {} is not found in the database", id);
+            return Optional.empty();
+        } finally {
+            em.close();
+        }
+        return optionalAccount;
     }
     
     @Override
     public List<Account> findAllAccounts() {
-        return accountDao.findAll(Account.class);
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
+        List<Account> allAccountList;
+        try {
+            allAccountList = accountDao.findAll();
+        } catch(NoResultException ex) {
+            log.debug("No accounts found in the database");
+            return null;
+        }
+        return allAccountList;
     }
 }

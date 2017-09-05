@@ -6,6 +6,7 @@
 package workshop2.persistencelayer;
 
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 
@@ -51,18 +52,17 @@ public class GenericDaoImpl<T> {
      * @param id
      * @return
      */
-    public T findById(Long id) {
-        return entityManager.find(entityClass, id);
+    public Optional<T> findById(Long id) {
+        return Optional.ofNullable(entityManager.find(entityClass, id));
     }
 
     /**
      *
-     * @param type
      * @return
      */
-    public List<T> findAll(Class<T> type) {
-        CriteriaQuery<T> c = entityManager.getCriteriaBuilder().createQuery(type);
-        c.select(c.from(type));
+    public List<T> findAll() {
+        CriteriaQuery<T> c = entityManager.getCriteriaBuilder().createQuery(entityClass);
+        c.select(c.from(entityClass));
         return entityManager.createQuery(c).getResultList();
     }
 

@@ -6,10 +6,10 @@
 package workshop2.interfacelayer.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -23,7 +23,8 @@ import static workshop2.domain.AccountType.MEDEWERKER;
 import workshop2.domain.Customer;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.view.AccountView;
-import workshop2.persistencelayer.PersistenceService;
+import workshop2.persistencelayer.AccountService;
+import workshop2.persistencelayer.AccountServiceFactory;
 
 /**
  *
@@ -32,7 +33,7 @@ import workshop2.persistencelayer.PersistenceService;
 public class AccountControllerTest {
     AccountView mockAccountView;
     AccountController accountController;
-    PersistenceService persistenceService = new PersistenceService();
+    AccountService accountService = AccountServiceFactory.getAccountService();;
     List<Account> allAccountList = new ArrayList<>();
     
     public AccountControllerTest() {
@@ -63,14 +64,14 @@ public class AccountControllerTest {
         when(mockAccountView.requestAccountType()).thenReturn(testAccountType);
         
         // Validate user does not exist before creation
-        Optional<Account> optionalAccount = persistenceService.findAccountByUserName(testUserName);
+        Optional<Account> optionalAccount = accountService.findAccountByUserName(testUserName);
         assertFalse("Account does not exist before creation", optionalAccount.isPresent());
         
         // Create the account
         accountController.createAccount();
         
         // Find the created user back and validate
-        optionalAccount = persistenceService.findAccountByUserName(testUserName);
+        optionalAccount = accountService.findAccountByUserName(testUserName);
         assertTrue("Account does exist after creation", optionalAccount.isPresent());
         assertEquals("Created account has correct username", testUserName, optionalAccount.get().getUsername());
         assertTrue("Created account has valid password", PasswordHash.validatePassword(testPassword, optionalAccount.get().getPassword()));
@@ -87,7 +88,7 @@ public class AccountControllerTest {
         String updateUserName = "freddie";
         String updatePassword = "welkomTest";
         AccountType updateAccountType = MEDEWERKER;
-        Optional<Account> optionalAccount = persistenceService.findAccountByUserName(testUserName);
+        Optional<Account> optionalAccount = accountService.findAccountByUserName(testUserName);
         Long testId = optionalAccount.get().getId();
         when(mockAccountView.requestAccountIdToUpdateInput(6)).thenReturn(3L);
         when(mockAccountView.requestUpdateUsernameInput()).thenReturn(updateUserName);
@@ -100,16 +101,13 @@ public class AccountControllerTest {
         // Update the account
         accountController.updateAccount();
         
-        // Validate the updated values
-        System.out.println("TESTID " + testId);
-        Optional<Account> optAccount = persistenceService.findAccountByUserName("freddie");
-        System.out.println("PRESENT? :" + optAccount.isPresent());
+        // Validate the updated values        
+        Optional<Account> optAccount = accountService.findAccountById(testId);
+        assertTrue("Same ID should exist after update test", optAccount.isPresent());
         Account resultAccount = optAccount.get();
-        System.out.println("ACCOUNT: " + resultAccount.toString());
-        System.out.println("LIST:" + accountController.listAllAccounts());
         assertEquals("Username should equal the updated username", updateUserName, resultAccount.getUsername());
         assertTrue("Updated password should validate correctly", PasswordHash.validatePassword(updatePassword, resultAccount.getPassword()));
-        assertEquals("AccountType should equal the updated accountType", updateAccountType, resultAccount.getAccountType());
+        assertEquals("AccountType should equal the updated accountType", updateAccountType, resultAccount.getAccountType());        
     }
 
     /**
