@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Scanner;
 import workshop2.domain.Address;
 import workshop2.domain.Address.AddressType;
-import static workshop2.domain.Address_.customer;
 import workshop2.domain.Customer;
 
 /**

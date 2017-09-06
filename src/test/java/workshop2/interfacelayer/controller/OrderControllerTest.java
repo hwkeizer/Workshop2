@@ -73,18 +73,17 @@ public class OrderControllerTest {
         
         //select customer
         CustomerService customerService = CustomerServiceFactory.getCustomerService();
-        Optional<Customer> optionalCustomer = customerService.<Customer>fetchById(Customer.class, 8L);
+        Optional<Customer> optionalCustomer = customerService.<Customer>fetchById(Customer.class, 9L);
         when(mockCustomerController.selectCustomerByUser()).thenReturn(optionalCustomer);
 
         // create orderItemList
         List<OrderItem> orderItemList = new ArrayList<OrderItem>();
         orderItemList.add(new OrderItem(null, productList.get(2), 10, new BigDecimal("20.25")));
-        orderItemList.add(new OrderItem(null, productList.get(4), 10, new BigDecimal("9.50")));
+        orderItemList.add(new OrderItem(null, productList.get(4), 15, new BigDecimal("9.50")));
         when(mockOrderItemView.createOrderItemListForNewOrder(productList)).thenReturn(orderItemList);
         
         // get confirmation
         when(mockOrderView.requestConfirmationToCreate()).thenReturn(1);
-        
 
         // assert this order did not exist before
         assertFalse("Order should not exist before inserting in database", orderService.<Order>fetchById(Order.class, 49L).isPresent());
@@ -95,15 +94,89 @@ public class OrderControllerTest {
         
         // check if order does exist
         Optional<Order> optionalOrder = orderService.<Order>fetchById(Order.class, 49L);
+        Order order = optionalOrder.get();
+        Customer customer = orderService.<Customer>fetchById(Customer.class, order.getCustomer().getId()).get();
         assertTrue("Order should exist after inserting in database", orderService.<Order>fetchById(Order.class, 49L).isPresent());
         assertEquals("Order total price should equal 29.75", optionalOrder.get().getTotalPrice(), new BigDecimal("29.75"));
+        assertEquals("Customer firstName is Jan", customer.getFirstName(), "Jan");
         
         // check if OrderItems exist
         List<OrderItem> orderItemListAfterInsert = orderService.findAllOrderItemsAsListByOrder(optionalOrder.get());
         assertEquals("retrieved orderItemList should contain 2 orderItems", orderItemListAfterInsert.size(), 2);
         assertEquals("OrderItem1 should have subtotal 20.25", orderItemListAfterInsert.get(0).getSubTotal(), new BigDecimal("20.25"));
-        assertEquals("OrderItem2 should have subtotal 9.50", orderItemListAfterInsert.get(0).getSubTotal(), new BigDecimal("9.50"));
-  
+        assertEquals("OrderItem2 should have subtotal 9.50", orderItemListAfterInsert.get(1).getSubTotal(), new BigDecimal("9.50"));
+    }
+    
+    @Test
+    public void testCreateOrderCustomer(){
+        
+        String username = "fred";
+        
+        // create orderItemList
+        List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+        orderItemList.add(new OrderItem(null, productList.get(2), 10, new BigDecimal("30.25")));
+        orderItemList.add(new OrderItem(null, productList.get(4), 15, new BigDecimal("19.50")));
+        when(mockOrderItemView.createOrderItemListForNewOrder(productList)).thenReturn(orderItemList);
+        
+        // get confirmation
+        when(mockOrderView.requestConfirmationToCreate()).thenReturn(1);
+        
+        // Create the order by customer
+        orderController.createOrderCustomer(username);
+        
+        // check if order does exist
+        Optional<Order> optionalOrder = orderService.<Order>fetchById(Order.class, 49L);
+        Order order = optionalOrder.get();
+        Customer customer = orderService.<Customer>fetchById(Customer.class, order.getCustomer().getId()).get();
+        assertTrue("Order should exist after inserting in database", orderService.<Order>fetchById(Order.class, 49L).isPresent());
+        assertEquals("Order total price should equal 29.75", order.getTotalPrice(), new BigDecimal("49.75"));
+        assertEquals("Customer firstName is Fred", customer.getFirstName(), "Fred");
+        
+        // check if OrderItems exist
+        List<OrderItem> orderItemListAfterInsert = orderService.findAllOrderItemsAsListByOrder(optionalOrder.get());
+        assertEquals("retrieved orderItemList should contain 2 orderItems", orderItemListAfterInsert.size(), 2);
+        assertEquals("OrderItem1 should have subtotal 20.25", orderItemListAfterInsert.get(0).getSubTotal(), new BigDecimal("30.25"));
+        assertEquals("OrderItem2 should have subtotal 9.50", orderItemListAfterInsert.get(1).getSubTotal(), new BigDecimal("19.50"));
+    }
+    
+    @Test
+    public void testUpdateProductStockAfterCreatingOrder(){
+        // get productlist before updatestock
+        List<Product> productListBefore = orderService.<Product>fetchAllAsList(Product.class);
+        List<OrderItem> orderItemList = new ArrayList<>();
+        
+        // create orderItemList for updating stock
+        orderItemList.add(new OrderItem(null, productList.get(0), 15, new BigDecimal("289.89")));
+        orderItemList.add(new OrderItem(null, productList.get(1), 100, new BigDecimal("289.89")));
+        
+        // perform the update
+        orderController.updateProductStockAfterCreatingOrder(orderItemList);
+        
+        // get productList after updateStock
+        List<Product> productListAfter = orderService.<Product>fetchAllAsList(Product.class);
+        
+        assertEquals("ProductStock for first product should be reduced by 15", productListAfter.get(0).getStock(), productListBefore.get(0).getStock() - 15);
+        assertEquals("ProductStock for second product should be reduced by 100", productListAfter.get(1).getStock(), productListBefore.get(1).getStock() - 100);
+    }
+    
+    @Test
+    public void testUpdateProductStockAfterDeletingOrder(){
+        // get productlist before updatestock
+        List<Product> productListBefore = orderService.<Product>fetchAllAsList(Product.class);
+        List<OrderItem> orderItemList = new ArrayList<>();
+        
+        // create orderItemList for updating stock
+        orderItemList.add(new OrderItem(null, productList.get(0), 35, new BigDecimal("289.89")));
+        orderItemList.add(new OrderItem(null, productList.get(1), 100, new BigDecimal("289.89")));
+        
+        // perform the update
+        orderController.updateProductStockAfterDeletingOrder(orderItemList);
+        
+        // get productList after updateStock
+        List<Product> productListAfter = orderService.<Product>fetchAllAsList(Product.class);
+        
+        assertEquals("ProductStock for first product should be raised by 35", productListAfter.get(0).getStock(), productListBefore.get(0).getStock() + 35);
+        assertEquals("ProductStock for second product should be raised by 100", productListAfter.get(1).getStock(), productListBefore.get(1).getStock() + 100);
     }
     
 

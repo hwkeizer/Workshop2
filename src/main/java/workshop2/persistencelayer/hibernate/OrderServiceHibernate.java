@@ -56,10 +56,9 @@ public class OrderServiceHibernate extends GenericServiceHibernate implements Or
         EntityManager em = DatabaseConnection.getInstance().getEntityManager();
         List<OrderItem> orderItemList;
         try {
-            TypedQuery<OrderItem> query = em.createNamedQuery("findAllOrderItemsAsListByOrder", OrderItem.class);
-
-            orderItemList = query.setParameter("oder_id", order.getId()).getResultList();
-            
+            Query query = em.createNamedQuery("findAllOrderItemsAsListByOrder");
+            query.setParameter("order", order);
+            orderItemList = query.getResultList();
         } catch(NoResultException ex) {
             log.debug("No OrderItems found for order: {}", order.toString());
             return null;

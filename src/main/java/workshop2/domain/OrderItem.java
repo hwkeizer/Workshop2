@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -27,7 +29,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(
         name = "findAllOrderItemsAsListByOrder",
-        query = "select i from OrderItem i where Order.id = :order_id"
+        query = "select i from OrderItem i where i.order = :order"
     )
 })
 @Entity
@@ -97,7 +99,12 @@ public class OrderItem {
     public void setSubTotal(BigDecimal subTotal) {
         this.subTotal = subTotal;
     }
-
+    
+    @Override
+    public String toString(){
+        return "ID: " + this.id.toString() + "   amount: " + this.amount + "    subTotal: " + this.subTotal.toString();
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;
