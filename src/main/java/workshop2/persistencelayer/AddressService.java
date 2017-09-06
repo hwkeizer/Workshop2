@@ -22,8 +22,8 @@ public interface AddressService extends GenericService {
 
     public void deleteAddress(Address address);
 
-    public Optional<Address> findAddressByCustomerId(int id);
+    public Optional<Address> findAddressByCustomerId(Long id);
 
-    public List<Address> findAllAddressByCustomerId(int id);
+    public List<Address> findAllAddressByCustomerId(Long id);
 
 }
