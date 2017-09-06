@@ -16,10 +16,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import workshop2.domain.Address;
 
-/**
- *
- * @author hwkei
- */
+// @author Al-Alaaq(Egelantier)
 public class AddressViewTest {
     private ByteArrayOutputStream outContent;
     private PrintStream originalOutput;
