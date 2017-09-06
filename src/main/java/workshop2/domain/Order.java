@@ -51,13 +51,7 @@ public class Order {
     }
     
     // Constructor without id, id will be invalidated to a negative value
-    public Order(BigDecimal totalPrice, Integer customerId, LocalDateTime dateTime, OrderStatus orderStatus) {
-        this(-1L, totalPrice, customerId, dateTime, orderStatus);
-    }
-    
-    // Constructor with all member fields
-    public Order(Long id, BigDecimal totalPrice, Integer customerId, LocalDateTime dateTime, OrderStatus orderStatus) {
-        this.id = id;
+    public Order(BigDecimal totalPrice, Customer customer, LocalDateTime dateTime, OrderStatus orderStatus) {
         this.totalPrice = totalPrice;
         this.customer = customer;
         this.dateTime = dateTime;
