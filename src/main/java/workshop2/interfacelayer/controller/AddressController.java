@@ -14,9 +14,8 @@ import org.slf4j.LoggerFactory;
 import workshop2.domain.Address;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.dao.DaoFactory;
-import workshop2.interfacelayer.persistencelayer.AddressService;
-import workshop2.interfacelayer.persistencelayer.AddressServiceFactory;
-import workshop2.interfacelayer.persistencelayer.GenericDaoImpl;
+import workshop2.persistencelayer.AddressService;
+import workshop2.persistencelayer.AddressServiceFactory;
 import workshop2.interfacelayer.view.AddressView;
 
 /**
@@ -27,7 +26,7 @@ public class AddressController {
     private static final Logger log = LoggerFactory.getLogger(AddressController.class);
     private final AddressView addressView;
     private Address address;
-    private final AddressService addressService = AddressServiceFactory.getAddressService();
+    private final  AddressService addressService = AddressServiceFactory.getAddressService();
   
     
     public AddressController(AddressView addressView) {       
@@ -41,7 +40,7 @@ public class AddressController {
     public void createAddress(CustomerController customerController) {        
         // We first need a valid customer to link to the new address
         addressView.showConstructAddressStartScreen();
-        Integer customerId = customerController.selectCustomerIdByUser();
+        Long customerId = customerController.selectCustomerIdByUser();
         if (customerId == null) {
             // No customer selected so we skip creating the address
             return;
@@ -68,7 +67,7 @@ public class AddressController {
     public void deleteAddress(CustomerController customerController) {
         // We first need a valid customer to find the address to be deleted
         addressView.showDeleteAddressStartScreen();
-        Integer customerId = customerController.selectCustomerIdByUser();
+        Long customerId = customerController.selectCustomerIdByUser();
         if (customerId == null) {
             // No customer selected so we skip deleting the address
             return;
@@ -83,7 +82,7 @@ public class AddressController {
     public void updateAddress(CustomerController customerController) {
         // We first need a valid customer to find the address to be deleted
         addressView.showUpdateAddressStartScreen();
-        Integer customerId = customerController.selectCustomerIdByUser();
+        Long customerId = customerController.selectCustomerIdByUser();
         if (customerId == null) {
             // No customer selected so we skip deleting the address
             return;
@@ -98,7 +97,7 @@ public class AddressController {
     
    
     
-    List<Address> listAllAddressesFromCustomer(int customerId) {
+    List<Address> listAllAddressesFromCustomer(Long customerId) {
 
         return addressService.findAllAddressByCustomerId(customerId);
         
