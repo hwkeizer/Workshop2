@@ -13,12 +13,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
 /**
  *
  * @author thoma
  */
+@NamedQueries({
+    @NamedQuery(
+        name = "findCustomerByLastName",
+        query = "select i from Customer i where i.lastName = :lastName"
+    )
+})
 @Entity
 public class Customer implements Serializable {
     @Id

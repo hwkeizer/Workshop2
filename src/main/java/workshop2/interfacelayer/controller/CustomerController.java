@@ -15,6 +15,8 @@ import workshop2.interfacelayer.dao.CustomerDao;
 import workshop2.interfacelayer.dao.DaoFactory;
 import workshop2.interfacelayer.view.CustomerView;
 import workshop2.interfacelayer.view.Validator;
+import workshop2.persistencelayer.CustomerService;
+import workshop2.persistencelayer.CustomerServiceFactory;
 
 /**
  *
@@ -24,17 +26,17 @@ public class CustomerController {
     private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
     private final CustomerView customerView;
     private Customer customer;
-    private final CustomerDao customerDao;
+    private Optional<Customer> optionalCustomer;
+    private final CustomerService customerService = CustomerServiceFactory.getCustomerService();
     
     public CustomerController(CustomerView customerView) {
         this.customerView = customerView;
-        customerDao = DaoFactory.getDaoFactory().createCustomerDao();
     }
     
     public void createCustomer(){        
-        Optional<Customer> optionalCustomer = customerView.constructCustomer();
+        optionalCustomer = customerView.constructCustomer();
         if (optionalCustomer.isPresent()) {
-            customerDao.insertCustomer(optionalCustomer.get());
+            customerService.createCustomer(optionalCustomer.get());
         }
     }
     
@@ -47,11 +49,16 @@ public class CustomerController {
         customerView.showLinkAccountToCustomerScreen();
         
         // Select the customer
-        Optional<Customer> optionalCustomer = selectCustomerByUser();
+        optionalCustomer = selectCustomerByUser();
         if (!optionalCustomer.isPresent()) return; // No customer selected so abort
-        if (Validator.isValidId(optionalCustomer.get().getAccountId())) {
-            customerView.showCustomerHasAlreadyAccount();
-            return;
+        // Check if Customer has already an account
+        if (optionalCustomer.get().getAccount() != null) {
+            Optional<Account> optionalAccount = customerService.fetchById(Account.class, 
+                    optionalCustomer.get().getAccount().getId());
+            if (optionalAccount.isPresent()) {
+                customerView.showCustomerHasAlreadyAccount();
+                return;
+            }
         }
         
         // Select the account
@@ -64,9 +71,9 @@ public class CustomerController {
         }
         
         // if all is ok link customer and account
-        optionalCustomer.get().setAccountId(optionalAccount.get().getId());
+        optionalCustomer.get().setAccount(optionalAccount.get());
         log.debug("Linking customer {} to account {}", optionalCustomer.get().getLastName(), optionalAccount.get().getUsername());
-        customerDao.updateCustomer(optionalCustomer.get());
+        customerService.updateCustomer(optionalCustomer.get());
     }
     
     public void deleteCustomer() {
@@ -83,11 +90,11 @@ public class CustomerController {
         }        
     }
     
-    public Optional<Customer> searchCustomerByAccount(Integer accountId) {
+    public Optional<Customer> searchCustomerByAccount(Long accountId) {
         List<Customer> customerList = listAllCustomers();
         for (Customer cust : customerList) {
-            if (Validator.isValidId(cust.getAccountId())) {
-                if (cust.getAccountId().equals(accountId)) {
+            if (Validator.isValidId(cust.getAccount().getId())) {
+                if (cust.getAccount().getId().equals(accountId)) {
                     return Optional.ofNullable(cust);
                 }
             }            
@@ -97,11 +104,11 @@ public class CustomerController {
     
     List<Customer> listAllCustomers() {
         List<Customer> customerList;
-        customerList = customerDao.getAllCustomersAsList();               
+        customerList = customerService.fetchAllAsList(Customer.class);               
         return customerList;
     }
     
-    Integer selectCustomerIdByUser() {
+    Long selectCustomerIdByUser() {
         Optional<Customer> optionalCustomer = customerView.selectCustomer(listAllCustomers());
         if (optionalCustomer.isPresent()) {
             return optionalCustomer.get().getId();

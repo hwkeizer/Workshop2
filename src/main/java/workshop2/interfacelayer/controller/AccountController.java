@@ -24,9 +24,7 @@ public class AccountController {
     private static final Logger log = LoggerFactory.getLogger(AccountController.class);   
     private final AccountView accountView;
     private Account account;
-    private Optional<Account> optionalAccount;
-    
-    // member field van maken voor latere injectie???
+    private Optional<Account> optionalAccount;    
     private final AccountService accountService = AccountServiceFactory.getAccountService();
 
     
