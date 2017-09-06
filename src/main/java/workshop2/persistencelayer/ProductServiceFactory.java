@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package workshop2.interfacelayer.persistencelayer;
+package workshop2.persistencelayer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.interfacelayer.DatabaseConnection;
-import workshop2.interfacelayer.persistencelayer.hibernate.ProductServiceHibernate;
+import workshop2.persistencelayer.hibernate.ProductServiceHibernate;
 
 /**
  *
