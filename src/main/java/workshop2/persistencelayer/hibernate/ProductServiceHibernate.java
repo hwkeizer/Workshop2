@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package workshop2.interfacelayer.persistencelayer.hibernate;
+package workshop2.persistencelayer.hibernate;
 
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -12,8 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Product;
 import workshop2.interfacelayer.DatabaseConnection;
-import workshop2.interfacelayer.persistencelayer.GenericDaoImpl;
+import workshop2.persistencelayer.GenericDaoImpl;
 import workshop2.interfacelayer.persistencelayer.ProductService;
+
 
 /**
  *
