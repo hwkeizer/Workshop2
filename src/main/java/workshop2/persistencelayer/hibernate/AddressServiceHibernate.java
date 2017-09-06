@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Address;
 import workshop2.interfacelayer.DatabaseConnection;
-import workshop2.interfacelayer.persistencelayer.AddressService;
+import workshop2.persistencelayer.AddressService;
 import workshop2.persistencelayer.GenericDaoImpl;
 
 
