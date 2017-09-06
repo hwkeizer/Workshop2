@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import workshop2.domain.Product;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.persistencelayer.GenericDaoImpl;
-import workshop2.interfacelayer.persistencelayer.ProductService;
+import workshop2.persistencelayer.ProductService;
 
 
 /**
