@@ -16,8 +16,8 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.interfacelayer.DatabaseConnection;
-import workshop2.interfacelayer.persistencelayer.ProductService;
-import workshop2.interfacelayer.persistencelayer.ProductServiceFactory;
+import workshop2.persistencelayer.ProductService;
+import workshop2.persistencelayer.ProductServiceFactory;
 
 /**
  *
