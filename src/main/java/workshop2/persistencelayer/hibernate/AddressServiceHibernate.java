@@ -116,7 +116,7 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
     }
 
     @Override
-    public Optional<Address> findAddressByCustomerId(int id) {
+    public Optional<Address> findAddressByCustomerId(Long id) {
 
         Address adres;
         String sql = "select i from Address i  where Customer.id = :id";
@@ -144,7 +144,7 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
     }
 
     @Override
-    public List<Address> findAllAddressByCustomerId(int id) {
+    public List<Address> findAllAddressByCustomerId(Long id) {
 
         List<Address> addresses = null;
         String sql = "select i from Address i  where Customer.id = :id";
