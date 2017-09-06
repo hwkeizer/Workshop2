@@ -115,9 +115,14 @@ public class ProductServiceHibernate extends GenericServiceHibernate implements 
 @Override
     public List<Product> getAllProductsAsList() {
         List<Product> products = null;
-        String sql = "Select * FROM Product ORDER BY name asc";
+        String sql = "Select i FROM Product i ORDER BY name asc";
+        try {
         Query query = entityManager.createNamedQuery(sql);
         return products = (List<Product>) query.getResultList();
+        }catch (NoResultException ex) {
+            log.debug("There are no products yet");
+            return null;
+        }
 
     }
 
