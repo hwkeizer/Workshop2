@@ -204,7 +204,7 @@ public class ProductView {
     }
     
     public Product constructUpdateProduct(Product productBeforeUpdate) {
-        int id = productBeforeUpdate.getId();
+        Long id = productBeforeUpdate.getId();
         String newName = requestNewNameInput(); 
         if (newName == null) {
             newName = productBeforeUpdate.getName();
