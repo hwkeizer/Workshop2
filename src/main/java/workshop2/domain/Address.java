@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @Table(name = "ADDRESS")
 public class Address {
 
-    public enum Type {
+    public enum AddressType {
         POSTADRES, FACTUURADRES, BEZORGADRES
     }
 
@@ -47,14 +47,14 @@ public class Address {
     @OneToOne
     private Customer customer;
     @Enumerated(EnumType.ORDINAL)
-    private Type addressType;
+    private AddressType addressType;
 
     public Address() {
 
     }
 
     public Address(String streetName, int number, String addition, String postalCode,
-            String city, Customer customer, Type addressType) {
+            String city, Customer customer, AddressType addressType) {
         this.streetName = streetName;
         this.number = number;
         this.addition = addition;
@@ -65,7 +65,7 @@ public class Address {
     }
 
     public Address(Long id, String streetName, Integer number, String addition,
-            String postalCode, String city, Customer customer, Type addressType) {
+            String postalCode, String city, Customer customer, AddressType addressType) {
         this.id = id;
         this.streetName = streetName;
         this.number = number;
@@ -128,11 +128,11 @@ public class Address {
         this.customer = customer;
     }
 
-    public Type getAddressType() {
+    public AddressType getAddressType() {
         return addressType;
     }
 
-    public void setType(Type addressType) {
+    public void setAddressType(AddressType addressType) {
         this.addressType = addressType;
     }
 
