@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import workshop2.domain.Address;
-import workshop2.domain.Address.Type;
+import workshop2.domain.Address.AddressType;
 import static workshop2.domain.Address_.customer;
 import workshop2.domain.Customer;
 
@@ -60,16 +60,16 @@ public class AddressView {
         String city = requestCityInput();
         if (city == null) return Optional.empty();  // User interupted createAddress proces
         Integer addressTypeId = requestAddressType(addressTypes);
-        Type addressType = null;
+        AddressType addressType = null;
         if (addressTypeId == 0){
-           address.setType(Type.POSTADRES);
+           address.setAddressType(AddressType.POSTADRES);
         addressType = address.getAddressType();}
         else if (addressTypeId == 1){
-            address.setType(Type.FACTUURADRES);
+            address.setAddressType(AddressType.FACTUURADRES);
             addressType = address.getAddressType();
         }
           else if (addressTypeId == 2){
-            address.setType(Type.BEZORGADRES);
+            address.setAddressType(AddressType.BEZORGADRES);
             addressType = address.getAddressType();
         }
         if (addressType == null) return Optional.empty();  // User interupted createAccount proces
