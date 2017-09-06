@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package workshop2.interfacelayer.persistencelayer;
+package workshop2.persistencelayer;
 
 import java.util.List;
 import workshop2.domain.Product;
