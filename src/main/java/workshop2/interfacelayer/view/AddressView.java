@@ -42,7 +42,7 @@ public class AddressView {
         input.nextLine();
     }
     
-    public Optional<Address> constructAddress(int customerId, List<String> addressTypes) {
+    public Optional<Address> constructAddress(Long customerId, List<String> addressTypes) {
         Customer customer = null;
         System.out.println("Vul nu de gevraagde adresgegevens in. Let op dat u slechts één adres\n"
                 + "van elk type per klant kunt hebben. Als u een uitroepteken invult\n"
@@ -518,4 +518,6 @@ public class AddressView {
         System.out.println("\ngeef het gewenste adrestype ");
         System.out.print("> ");
     }
+
+   
 }
