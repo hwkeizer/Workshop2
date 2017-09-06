@@ -50,7 +50,8 @@ public class CustomerControllerTest {
     public void setupMocks() {
         mockCustomerView = mock(CustomerView.class);
         mockAccountController = mock(AccountController.class);
-        customerController = new CustomerController(mockCustomerView);        
+        customerController = new CustomerController(mockCustomerView); 
+        
     }
 
     /**
@@ -66,6 +67,9 @@ public class CustomerControllerTest {
         assertFalse("Customer should not exist before creation", customerService.findCustomerByLastName("Willemsen").isPresent());
         customerController.createCustomer();
         assertTrue("Customer should exist after creation", customerService.findCustomerByLastName("Willemsen").isPresent());
+        
+        // Complete the allCustomerList to add this user
+        allCustomerList.add(customerService.findCustomerByLastName("Willemsen").get());
     }
 
     /**
@@ -73,8 +77,8 @@ public class CustomerControllerTest {
      */
     @Test
     public void testLinkAccountToCustomer() {
-        Optional<Customer> optionalCustomer = Optional.ofNullable(new Customer("Wouter", "Wielewaal", null, null));
-        Optional<Account> optionalAccount = Optional.ofNullable(new Account("wouter", "testen01", KLANT));
+        Optional<Customer> optionalCustomer = customerService.findCustomerByLastName("Wielewaal");
+        Optional<Account> optionalAccount = customerService.fetchById(Account.class, 7L);
         when(mockCustomerView.selectCustomer(allCustomerList)).thenReturn(optionalCustomer);
         when(mockAccountController.selectAccountByUser()).thenReturn(optionalAccount);
         customerController.linkAccountToCustomer(mockAccountController);
@@ -85,11 +89,17 @@ public class CustomerControllerTest {
      */
     @Test
     public void testDeleteCustomer() {
-        System.out.println("deleteCustomer");
-        CustomerController instance = null;
-        instance.deleteCustomer();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // prepare the testdata
+        String testLastName = "Draaier";
+        Optional<Customer> customer = customerService.findCustomerByLastName(testLastName);
+        when(mockCustomerView.selectCustomerToDelete(customerService.fetchAllAsList(Customer.class))).thenReturn(customer);
+        when(mockCustomerView.requestConfirmationToDelete()).thenReturn(customer.get().getId());        
+        
+        // Validate the deletion
+        assertEquals("Account should exist before deleting", testLastName, customer.get().getLastName());
+        customerController.deleteCustomer();
+        assertFalse("Account should not exist after deletion", customerService.findCustomerByLastName(testLastName).isPresent());
+
     }
 
     /**
@@ -97,11 +107,32 @@ public class CustomerControllerTest {
      */
     @Test
     public void testUpdateCustomer() {
-        System.out.println("updateCustomer");
-        CustomerController instance = null;
-        instance.updateCustomer();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Prepare update test values
+        String testLastName = "Horst";
+        String updateFirstName = "Ted";
+        String updatePrefix = "ter";
+        String updateLastName = "Braak";
+        Optional<Customer> optionalCustomer = customerService.findCustomerByLastName(testLastName);
+        Long testId = optionalCustomer.get().getId();
+        optionalCustomer.get().setFirstName(updateFirstName);
+        optionalCustomer.get().setLastName(updateLastName);
+        optionalCustomer.get().setLastNamePrefix(updatePrefix);
+        when(mockCustomerView.selectCustomerToUpdate(customerService.fetchAllAsList(Customer.class))).thenReturn(optionalCustomer);
+        when(mockCustomerView.requestConfirmationToUpdate()).thenReturn(1);
+        
+        assertTrue("Account should exist before update test", optionalCustomer.isPresent());
+        
+        // Update the account
+        customerController.updateCustomer();
+        
+        // Validate the updated values    
+
+        Optional<Customer> optCustomer = customerService.<Customer>fetchById(Customer.class, testId);
+        assertTrue("Same ID should exist after update test", optCustomer.isPresent());
+        Customer resultCustomer = optCustomer.get();
+        assertEquals("FirstName should equal the updated firstName", updateFirstName, resultCustomer.getFirstName());
+        assertEquals("LastName should equal the updated lastName", updateLastName, resultCustomer.getLastName());
+        assertEquals("Prefix should equal the updated prefix", updatePrefix, resultCustomer.getLastNamePrefix()); 
     }
 
     /**
@@ -109,9 +140,9 @@ public class CustomerControllerTest {
      */
     @Test
     public void testSearchCustomerByAccount() {
-        Optional<Customer> optionalCustomer = customerController.searchCustomerByAccount(4L);
+        Optional<Customer> optionalCustomer = customerController.searchCustomerByAccount(1L);
         assertTrue("SearchCustomerByAccount should return true", optionalCustomer.isPresent());
-        assertEquals("Searched customer should have correct lastname", "Horst", optionalCustomer.get().getLastName());
+        assertEquals("Searched customer should have correct lastname", "Pietersen", optionalCustomer.get().getLastName());
     }
 
     /**
@@ -119,13 +150,10 @@ public class CustomerControllerTest {
      */
     @Test
     public void testListAllCustomers() {
-        System.out.println("listAllCustomers");
-        CustomerController instance = null;
-        List<Customer> expResult = null;
-        List<Customer> result = instance.listAllCustomers();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        List<Customer> customerList = customerController.listAllCustomers();
+        System.out.println(allCustomerList);
+        System.out.println(customerList);
+        assertEquals("ListAllCustomers should return all customers", allCustomerList.toString(), customerList.toString());
     }
 
     /**
@@ -171,7 +199,7 @@ public class CustomerControllerTest {
         Account account4 = new Account("fred", pass1, KLANT);
         Account account5 = new Account("joost", pass2, KLANT);
         Account account6 = new Account("jaap", pass3, KLANT);
-        Account account7 = new Account("wouter", pass1, KLANT);
+        Account account7 = new Account("johan", pass1, KLANT);
         em.persist(account1);
         em.persist(account2);
         em.persist(account3);
@@ -188,7 +216,7 @@ public class CustomerControllerTest {
         Customer customer3 = new Customer("Jan", "Jansen", null, account3);
         Customer customer4 = new Customer("Fred", "Horst", "ter", account4);
         Customer customer5 = new Customer("Joost", "Draaier", "den", account5);
-        Customer customer6 = new Customer("Wouter", "Wielewaal", null, null);
+        Customer customer6 = new Customer("Johan", "Wielewaal", null, null);
         allCustomerList.add(customer1);
         allCustomerList.add(customer2);
         allCustomerList.add(customer3);

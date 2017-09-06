@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  *
@@ -28,6 +29,7 @@ import javax.persistence.OneToOne;
     )
 })
 @Entity
+@Table(name = "CUSTOMER")
 public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -107,11 +109,11 @@ public class Customer implements Serializable {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 83 * hash + Objects.hashCode(this.id);
-        hash = 83 * hash + Objects.hashCode(this.firstName);
-        hash = 83 * hash + Objects.hashCode(this.lastName);
-        hash = 83 * hash + Objects.hashCode(this.lastNamePrefix);
-        hash = 83 * hash + Objects.hashCode(this.account);
+        hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 89 * hash + Objects.hashCode(this.firstName);
+        hash = 89 * hash + Objects.hashCode(this.lastName);
+        hash = 89 * hash + Objects.hashCode(this.lastNamePrefix);
+        hash = 89 * hash + Objects.hashCode(this.account);
         return hash;
     }
 
@@ -143,6 +145,6 @@ public class Customer implements Serializable {
             return false;
         }
         return true;
-    }
+    }    
         
 }

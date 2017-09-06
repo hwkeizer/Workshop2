@@ -77,27 +77,29 @@ public class CustomerController {
     }
     
     public void deleteCustomer() {
-        Optional<Customer> optionalCustomer = customerView.selectCustomerToDelete(listAllCustomers());
+        optionalCustomer = customerView.selectCustomerToDelete(listAllCustomers());
         if (optionalCustomer.isPresent()) {
-            customerDao.deleteCustomer(optionalCustomer.get());
+            customerService.deleteCustomer(optionalCustomer.get());
         }        
     }
     
     public void updateCustomer() {
-        Optional<Customer> optionalCustomer = customerView.selectCustomerToUpdate(listAllCustomers());
+        optionalCustomer = customerView.selectCustomerToUpdate(listAllCustomers());
         if (optionalCustomer.isPresent()) {
-            customerDao.updateCustomer(optionalCustomer.get());
-        }        
+            customerService.updateCustomer(optionalCustomer.get());
+        }      
     }
     
     public Optional<Customer> searchCustomerByAccount(Long accountId) {
         List<Customer> customerList = listAllCustomers();
         for (Customer cust : customerList) {
-            if (Validator.isValidId(cust.getAccount().getId())) {
-                if (cust.getAccount().getId().equals(accountId)) {
-                    return Optional.ofNullable(cust);
+            if (cust.getAccount() != null) {
+                if (Validator.isValidId(cust.getAccount().getId())) {
+                    if (cust.getAccount().getId().equals(accountId)) {
+                        return Optional.ofNullable(cust);
+                    }
                 }
-            }            
+            }
         }
         return Optional.empty();
     }

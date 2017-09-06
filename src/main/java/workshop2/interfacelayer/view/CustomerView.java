@@ -57,7 +57,7 @@ public class CustomerView {
                 + "naar het menu. Al ingevulde gegevens worden dan niet bewaard!\n\n ");
     }
 
-    String requestFirstNameInput() {
+    public String requestFirstNameInput() {
         printRequestForFirstNameInput();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -70,7 +70,7 @@ public class CustomerView {
         return respons;
     }
 
-    String requestLastNameInput() {
+    public String requestLastNameInput() {
         printRequestForLastNameInput();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -83,7 +83,7 @@ public class CustomerView {
         return respons;
     }
 
-    String requestPrefixInput() {
+    public String requestPrefixInput() {
         printRequestForPrefixInput();
         String respons =  input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort 
@@ -189,7 +189,7 @@ public class CustomerView {
         return Integer.parseInt(respons) - 1;
     }
     
-    Integer requestConfirmationToDelete() {
+    public Long requestConfirmationToDelete() {
         printRequestForDeleteConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -201,7 +201,7 @@ public class CustomerView {
             if (respons.equals("!")) return null;  // User initiated abort
         }
         
-        return Integer.parseInt(respons);
+        return Long.parseLong(respons);
     }
     
     void printRequestForIdToDeleteInput() {
@@ -224,33 +224,36 @@ public class CustomerView {
         showListOfAllCustomers(customerList);
         Integer index = requestCustomerIdToUpdateInput(customerList.size());
         if (index == null) return Optional.empty();        
-        Customer customerBeforeUpdate = customerList.get(index);        
-        showCustomerToBeUpdated(customerBeforeUpdate);
+        Customer customer = customerList.get(index);        
+        showCustomerToBeUpdated(customer);
         
         // request the user for values to update
         String newFirstName = requestUpdateFirstNameInput(); 
         if (newFirstName == null) {
-            newFirstName = customerBeforeUpdate.getFirstName();
+            newFirstName = customer.getFirstName();
         } 
         String newLastName = requestUpdateLastNameInput();
         if (newLastName == null){
-            newLastName = customerBeforeUpdate.getLastName();
+            newLastName = customer.getLastName();
         } 
         String newPrefix = requestUpdatePrefixInput();
         if (newPrefix == null){
-            newPrefix = customerBeforeUpdate.getLastNamePrefix();
+            newPrefix = customer.getLastNamePrefix();
         }
         // The Id and accountId will not be updated       
-        Customer customerAfterUpdate = new Customer(customerBeforeUpdate.getId(), 
-                newFirstName, newLastName, newPrefix, customerBeforeUpdate.getAccountId());
+        Customer tmpCustomer = new Customer(newFirstName, newLastName, newPrefix, customer.getAccount());
         
         //Promp for confirmation of the selected update
-        showCustomerUpdateChanges(customerBeforeUpdate, customerAfterUpdate);
+        showCustomerUpdateChanges(customer, tmpCustomer);
         Integer confirmed = requestConfirmationToUpdate();
         if (confirmed == null || confirmed == 2){
             return Optional.empty();
         }
-        return Optional.ofNullable(customerAfterUpdate);
+        // Change the values except for Id and accountId
+        customer.setFirstName(tmpCustomer.getFirstName());
+        customer.setLastName(tmpCustomer.getLastName());
+        customer.setLastNamePrefix(tmpCustomer.getLastNamePrefix());
+        return Optional.ofNullable(customer);
     }
     
     void showCustomerToBeUpdated(Customer customer) {
@@ -294,7 +297,7 @@ public class CustomerView {
         return Integer.parseInt(respons) - 1;
     }
     
-    Integer requestConfirmationToUpdate() {
+    public Integer requestConfirmationToUpdate() {
         printRequestForUpdateConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort

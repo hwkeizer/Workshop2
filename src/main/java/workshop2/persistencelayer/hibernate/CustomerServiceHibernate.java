@@ -60,7 +60,19 @@ public class CustomerServiceHibernate extends GenericServiceHibernate implements
 
     @Override
     public void deleteCustomer(Customer customer) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        GenericDaoImpl customerDao = new GenericDaoImpl(Customer.class, em);
+        try {   
+            em.getTransaction().begin();   
+            customerDao.delete(em.find(Customer.class, customer.getId()));            
+            em.getTransaction().commit();            
+        } catch (Exception ex) {
+            em.getTransaction().rollback();
+            log.error("Fout in de transactie. De transactie is teruggedraaid: {}", ex );           
+            // TODO: besluiten of we exception verder doorgooien
+        } finally {
+            em.close();
+        }
     }
 
     @Override

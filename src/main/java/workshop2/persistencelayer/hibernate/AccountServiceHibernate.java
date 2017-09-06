@@ -22,6 +22,7 @@ import workshop2.persistencelayer.GenericDaoImpl;
  */
 public class AccountServiceHibernate extends GenericServiceHibernate implements AccountService {
     private static final Logger log = LoggerFactory.getLogger(AccountServiceHibernate.class);
+    
         
     @Override
     public void createAccount(Account account) {
