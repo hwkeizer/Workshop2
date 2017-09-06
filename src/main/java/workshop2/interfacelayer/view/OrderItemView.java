@@ -47,7 +47,7 @@ public class OrderItemView {
             int amount = requestAmountOfProductToAddToOrder(product);
             BigDecimal subTotal = product.getPrice().multiply(new BigDecimal(amount));
             
-            orderItemList.add(new OrderItem(-1, product.getId(), amount, subTotal));
+            orderItemList.add(new OrderItem(null, product, amount, subTotal));
             
             //No more products, so breaking the loop to add orderItems to the orderItemList
             if(productList.isEmpty()){

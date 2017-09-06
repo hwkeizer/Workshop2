@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -22,13 +24,19 @@ import javax.persistence.Table;
  *
  * @author hwkei
  */
+@NamedQueries({
+    @NamedQuery(
+        name = "findAllOrderItemsAsListByOrder",
+        query = "select i from OrderItem i where Order.id = :order_id"
+    )
+})
 @Entity
 @Table(name = "ORDER_ITEM")
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "ID")
-    private int id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "ORDER_ID")
     private Order order;
@@ -48,23 +56,13 @@ public class OrderItem {
     
      // Constructor without id, id will be invalidated to a negative value
     public OrderItem(Order order, Product product, int amount, BigDecimal subTotal) {
-        this.id = -1;
         this.order = order;
         this.product = product;
         this.amount = amount;
         this.subTotal = subTotal;
     }
     
-    // Constructor with all member fields
-    public OrderItem(Order order, Product product, int productId, int amount, BigDecimal subTotal) {
-        this.id = id;
-        this.order = order;
-        this.product = product;
-        this.amount = amount;
-        this.subTotal = subTotal;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -103,7 +101,7 @@ public class OrderItem {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 83 * hash + this.id;
+        hash = 83 * hash + Objects.hashCode(this.id);
         hash = 83 * hash + Objects.hashCode(this.order);
         hash = 83 * hash + Objects.hashCode(this.product);
         hash = 83 * hash + this.amount;
@@ -123,7 +121,7 @@ public class OrderItem {
             return false;
         }
         final OrderItem other = (OrderItem) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         if (!Objects.equals(this.order, other.order)) {

@@ -5,14 +5,23 @@
  */
 package workshop2.persistencelayer;
 
+import java.util.List;
+import java.util.Optional;
+import workshop2.domain.Order;
+import workshop2.domain.OrderItem;
+import workshop2.domain.Product;
 import workshop2.interfacelayer.controller.OrderController;
 
 /**
  *
  * @author thoma
  */
-public interface OrderService {
+public interface OrderService extends GenericService {
     
+    public void createOrder(Order order, List<OrderItem> orderItemList);
     
+    public List<OrderItem> findAllOrderItemsAsListByOrder(Order order);
+    
+    public void updateProductStock(Product product);
     
 }

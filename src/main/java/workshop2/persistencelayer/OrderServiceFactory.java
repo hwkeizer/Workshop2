@@ -16,9 +16,9 @@ import workshop2.persistencelayer.hibernate.OrderServiceHibernate;
  */
 public class OrderServiceFactory {
     private static final Logger log = LoggerFactory.getLogger(OrderServiceFactory.class);
-    String persistenceProvider;
+    private static String persistenceProvider;
     
-    public OrderService getOrderService(){
+    public static OrderService getOrderService(){
         persistenceProvider = DatabaseConnection.getInstance().getPersistenceProvider();
         
         switch(persistenceProvider){
