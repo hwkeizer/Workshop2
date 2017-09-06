@@ -15,10 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author hwkei
- */
+// @author Al-Alaaq(Egelantier)
+
 public class ProductViewTest {
     private ByteArrayOutputStream outContent;
     private PrintStream originalOutput;
