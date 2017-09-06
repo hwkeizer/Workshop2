@@ -7,27 +7,36 @@ package workshop2.interfacelayer.controller;
 
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityManager;
+import static org.hibernate.internal.util.collections.CollectionHelper.arrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Address;
-import workshop2.interfacelayer.dao.AddressDao;
+import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.dao.DaoFactory;
+import workshop2.interfacelayer.persistencelayer.AddressService;
+import workshop2.interfacelayer.persistencelayer.AddressServiceFactory;
+import workshop2.interfacelayer.persistencelayer.GenericDaoImpl;
 import workshop2.interfacelayer.view.AddressView;
 
 /**
  *
- * @author hwkei
+ * @author Ahmed Al-alaaq(Egelantier)
  */
 public class AddressController {
     private static final Logger log = LoggerFactory.getLogger(AddressController.class);
     private final AddressView addressView;
     private Address address;
-    private final AddressDao addressDao;
+    private final AddressService addressService = AddressServiceFactory.getAddressService();
+  
     
-    public AddressController(AddressView addressView) {
-        this.addressView = addressView;
-        addressDao = DaoFactory.getDaoFactory().createAddressDao();
+    public AddressController(AddressView addressView) {       
+        
+          this.addressView = addressView;
+
+       
     }
+    
     
     public void createAddress(CustomerController customerController) {        
         // We first need a valid customer to link to the new address
@@ -47,12 +56,12 @@ public class AddressController {
         if (optionalAddress.isPresent()) {
             // If the address type already exists we have to abort
             for (Address address : listAddresses) {
-                if (optionalAddress.get().getAddressTypeId() == address.getAddressTypeId()) {
+                if (optionalAddress.get().getAddressType() == address.getAddressType()) {
                     addressView.showAddressTypeExists();
                     return;
                 }
             }
-            addressDao.insertAddress(optionalAddress.get());
+            addressService.createAddress(optionalAddress.get());
         }       
     }
     
@@ -67,7 +76,7 @@ public class AddressController {
         List<Address> listAddresses = listAllAddressesFromCustomer(customerId);
         Optional<Address> optionalAddress = addressView.selectAddressToDelete(listAddresses);
         if (optionalAddress.isPresent()) {
-            addressDao.deleteAddress(optionalAddress.get());
+            addressService.deleteAddress(optionalAddress.get());
         }            
     }
     
@@ -82,21 +91,27 @@ public class AddressController {
         List<Address> listAddresses = listAllAddressesFromCustomer(customerId);
         Optional<Address> optionalAddress = addressView.selectAddressToUpdate(listAddresses);
         if (optionalAddress.isPresent()) {
-            addressDao.updateAddress(optionalAddress.get());
+            addressService.updateAddress(optionalAddress.get());
         }            
         
     }
     
-    public void searchAddress() {
-        
-    }
+   
     
     List<Address> listAllAddressesFromCustomer(int customerId) {
-        return addressDao.findAddressesByCustomerId(customerId);
+
+        return addressService.findAllAddressByCustomerId(customerId);
+        
+               
     }
     
     List<String> getAvailableAddressTypes() {
-        return addressDao.getAllAddressTypesAsList();
+        List<String> addressType = null;
+        addressType.add("POSTADRES");
+        addressType.add("FACTUURADRES");
+        addressType.add("BEZORGADRES");
+        
+        return addressType;
     }
     
 }

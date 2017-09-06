@@ -13,7 +13,7 @@ import workshop2.domain.Product;
 
 /**
  *
- * @author hwkei
+ * @author Ahmed-Al-Alaaq(Egelantier)
  */
 public class ProductView {
     Scanner input;

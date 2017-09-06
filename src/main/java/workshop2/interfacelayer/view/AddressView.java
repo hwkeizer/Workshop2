@@ -9,14 +9,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import workshop2.domain.Address;
+import workshop2.domain.Address.Type;
+import static workshop2.domain.Address_.customer;
+import workshop2.domain.Customer;
 
 /**
  *
- * @author hwkei
+ * @author Ahmed Al-alaaq(Egelantier)
  */
 public class AddressView {
     Scanner input;
-    
+    Address address = new Address();
     // Default public constructor will use System.in
     public AddressView() {
         input = new Scanner(System.in);
@@ -40,6 +43,7 @@ public class AddressView {
     }
     
     public Optional<Address> constructAddress(int customerId, List<String> addressTypes) {
+        Customer customer = null;
         System.out.println("Vul nu de gevraagde adresgegevens in. Let op dat u slechts één adres\n"
                 + "van elk type per klant kunt hebben. Als u een uitroepteken invult\n"
                 + "wordt het toevoegen van een nieuwe adres afgebroken en gaat u terug\n"
@@ -55,12 +59,24 @@ public class AddressView {
         if (postalCode == null) return Optional.empty();  // User interupted createAddress proces
         String city = requestCityInput();
         if (city == null) return Optional.empty();  // User interupted createAddress proces
-        Integer addressType = requestAddressType(addressTypes);
+        Integer addressTypeId = requestAddressType(addressTypes);
+        Type addressType = null;
+        if (addressTypeId == 0){
+           address.setType(Type.POSTADRES);
+        addressType = address.getAddressType();}
+        else if (addressTypeId == 1){
+            address.setType(Type.FACTUURADRES);
+            addressType = address.getAddressType();
+        }
+          else if (addressTypeId == 2){
+            address.setType(Type.BEZORGADRES);
+            addressType = address.getAddressType();
+        }
         if (addressType == null) return Optional.empty();  // User interupted createAccount proces
         
         // Prepare the address with the validated values and add to the database
         // The customerID is set to null initially, this must be added later
-        Address address = new Address(streetName, number, addition, postalCode, city, customerId, addressType);
+        Address address = new Address(streetName, number, addition, postalCode, city, customer, addressType);
         showAddressToBeConstructed(address);
         Integer confirmed = requestConfirmationToCreate();
         if (confirmed == null || confirmed == 2){
@@ -313,7 +329,7 @@ public class AddressView {
         // The Id, customerId and address type Id will not be updated       
         Address addressAfterUpdate = new Address(addressBeforeUpdate.getId(), 
                 newStreetName, newNumber, newAddition, newPostalCode, newCity,
-                addressBeforeUpdate.getCustomerId(), addressBeforeUpdate.getAddressTypeId());
+                addressBeforeUpdate.getCustomer(), addressBeforeUpdate.getAddressType());
         
         //Promp for confirmation of the selected update
         showAddressUpdateChanges(addressBeforeUpdate, addressAfterUpdate);        

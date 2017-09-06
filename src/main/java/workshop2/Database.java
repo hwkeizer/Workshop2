@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import workshop2.domain.Account;
 import static workshop2.domain.AccountType.*;
 import workshop2.domain.Address;
-import static workshop2.domain.AddressType.*;
+import static workshop2.domain.Address.AddressType.*;
 import workshop2.domain.Customer;
 import workshop2.domain.Order;
 import workshop2.domain.OrderItem;

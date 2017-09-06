@@ -14,7 +14,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
@@ -25,35 +24,36 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "ADDRESS")
-/*@SecondaryTable(name = "ADDRESS_TYPE")*/
 public class Address {
+
+    public enum AddressType {
+        POSTADRES, FACTUURADRES, BEZORGADRES
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "ID")
     private Long id;
-    @Column(name = "STREET_NAME")
+    @Column(name = "STREETNAME")
     private String streetName;
     @Column(name = "NUMBER")
     private int number;
     @Column(name = "ADDITION")
     private String addition;
-    @Column(name = "POSTAL_CODE")
+    @Column(name = "POSTALCODE")
     private String postalCode;
     @Column(name = "CITY")
     private String city;
     @OneToOne
-    @JoinColumn(name = "CUSTOMER_ID")
     private Customer customer;
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "ADDRESS_TYPE")
     private AddressType addressType;
-    
-    public Address(){
-        
+
+    public Address() {
+
     }
 
-    public Address(String streetName, int number, String addition, String postalCode, 
+    public Address(String streetName, int number, String addition, String postalCode,
             String city, Customer customer, AddressType addressType) {
         this.streetName = streetName;
         this.number = number;
@@ -63,8 +63,9 @@ public class Address {
         this.customer = customer;
         this.addressType = addressType;
     }
-    
-    public Address(Long id, String streetName, Integer number, String addition, String postalCode, String city, Customer customer, AddressType addressType) {
+
+    public Address(Long id, String streetName, Integer number, String addition,
+            String postalCode, String city, Customer customer, AddressType addressType) {
         this.id = id;
         this.streetName = streetName;
         this.number = number;
@@ -74,7 +75,6 @@ public class Address {
         this.customer = customer;
         this.addressType = addressType;
     }
-
 
     public Long getId() {
         return id;
@@ -127,7 +127,7 @@ public class Address {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
-    
+
     public AddressType getAddressType() {
         return addressType;
     }
@@ -135,19 +135,18 @@ public class Address {
     public void setAddressType(AddressType addressType) {
         this.addressType = addressType;
     }
-    
+
     @Override
-    public String toString(){
-        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-8d", getId(), getStreetName(), 
-                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType().toString(), this.getCustomer().getFirstName(), " ", this.getCustomer().getLastName());
+    public String toString() {
+        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-8d", getId(), getStreetName(),
+                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType(), this.getCustomer().getFirstName(), " ", this.getCustomer().getLastName());
     }
-    
- 
-    public String toStringNoId(){
-        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-8d", getStreetName(), 
-                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType().toString(), this.getCustomer().getFirstName(), " ", this.getCustomer().getLastName());
+
+    public String toStringNoId() {
+        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-8d", getStreetName(),
+                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType(), this.getCustomer().getFirstName(), " ", this.getCustomer().getLastName());
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -157,7 +156,6 @@ public class Address {
         hash = 73 * hash + Objects.hashCode(this.addition);
         hash = 73 * hash + Objects.hashCode(this.postalCode);
         hash = 73 * hash + Objects.hashCode(this.city);
-        hash = 73 * hash + Objects.hashCode(this.customer);
         hash = 73 * hash + Objects.hashCode(this.addressType);
         return hash;
     }
@@ -174,10 +172,10 @@ public class Address {
             return false;
         }
         final Address other = (Address) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        if (this.id != other.id) {
             return false;
         }
-        if (!Objects.equals(this.addressType, other.addressType)) {
+        if (this.addressType != other.addressType) {
             return false;
         }
         if (this.number != other.number) {
@@ -195,11 +193,8 @@ public class Address {
         if (!Objects.equals(this.city, other.city)) {
             return false;
         }
-        if (!Objects.equals(this.customer, other.customer)) {
-            return false;
-        }
-        
+
         return true;
     }
-    
+
 }
