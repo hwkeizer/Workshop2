@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Account;
 import workshop2.domain.Customer;
-import workshop2.interfacelayer.dao.CustomerDao;
-import workshop2.interfacelayer.dao.DaoFactory;
 import workshop2.interfacelayer.view.CustomerView;
 import workshop2.interfacelayer.view.Validator;
 import workshop2.persistencelayer.CustomerService;

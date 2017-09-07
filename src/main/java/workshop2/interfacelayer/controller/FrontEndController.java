@@ -132,22 +132,22 @@ public class FrontEndController {
                     break;
                 }
                 
-                //Database settings
-                case SET_DATABASE_TYPE : {
-                    if (accountController.setDatabaseType()) {
-                        // refresh the controllers with the new choosen databasetype
-                        accountController = new AccountController(new AccountView());
-                        productController = new ProductController(new ProductView());
-                        customerController = new CustomerController(new CustomerView());
-                        orderController = new OrderController(new OrderView(), new OrderItemView());
-                        addressController = new AddressController(new AddressView());
-                    }
-                    break;
-                }
-                case SET_CONNECTION_POOL : {
-                    accountController.setConnectionPool();
-                    break;
-                } 
+//                //Database settings
+//                case SET_DATABASE_TYPE : {
+//                    if (accountController.setDatabaseType()) {
+//                        // refresh the controllers with the new choosen databasetype
+//                        accountController = new AccountController(new AccountView());
+//                        productController = new ProductController(new ProductView());
+//                        customerController = new CustomerController(new CustomerView());
+//                        orderController = new OrderController(new OrderView(), new OrderItemView());
+//                        addressController = new AddressController(new AddressView());
+//                    }
+//                    break;
+//                }
+//                case SET_CONNECTION_POOL : {
+//                    accountController.setConnectionPool();
+//                    break;
+//                } 
             }
             currentAction = menuController.getMenuAction() ;
         }

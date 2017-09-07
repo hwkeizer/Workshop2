@@ -7,13 +7,9 @@ package workshop2.interfacelayer.controller;
 
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityManager;
-import static org.hibernate.internal.util.collections.CollectionHelper.arrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Address;
-import workshop2.interfacelayer.DatabaseConnection;
-import workshop2.interfacelayer.dao.DaoFactory;
 import workshop2.persistencelayer.AddressService;
 import workshop2.persistencelayer.AddressServiceFactory;
 import workshop2.interfacelayer.view.AddressView;
