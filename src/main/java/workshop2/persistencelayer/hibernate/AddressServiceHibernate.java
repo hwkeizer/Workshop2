@@ -30,16 +30,11 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
 
     private GenericDaoImpl addressDao;
 
-    public AddressServiceHibernate() {
-
+    @Override
+    public void createAddress(Address adres) {
         entityManager = DatabaseConnection.getInstance().getEntityManager();
 
         addressDao = new GenericDaoImpl(Address.class, entityManager);
-
-    }
-
-    @Override
-    public void createAddress(Address adres) {
 
         try {
 
@@ -67,6 +62,9 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
 
     @Override
     public void deleteAddress(Address adres) {
+        entityManager = DatabaseConnection.getInstance().getEntityManager();
+
+        addressDao = new GenericDaoImpl(Address.class, entityManager);
         try {
 
             entityManager.getTransaction().begin();
@@ -92,6 +90,9 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
 
     @Override
     public void updateAddress(Address adres) {
+        entityManager = DatabaseConnection.getInstance().getEntityManager();
+
+        addressDao = new GenericDaoImpl(Address.class, entityManager);
         try {
 
             entityManager.getTransaction().begin();
@@ -117,7 +118,7 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
 
     @Override
     public Optional<Address> findAddressByCustomerId(Long id) {
-
+        entityManager = DatabaseConnection.getInstance().getEntityManager();
         Address adres;
         String sql = "select i from Address i  where Customer.id = :id";
 
@@ -145,6 +146,7 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
 
     @Override
     public List<Address> findAllAddressByCustomerId(Long id) {
+        entityManager = DatabaseConnection.getInstance().getEntityManager();
 
         List<Address> addresses = null;
         String sql = "select i from Address i  where Customer.id = :id";
