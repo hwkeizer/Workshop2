@@ -108,7 +108,7 @@ public class ProductController {
     public List<Product> listAllProducts() {
         List<Product> productList;
 
-        productList = productService.getAllProductsAsList();
+        productList = productService.fetchAllAsList(Product.class);
 
         productView.showListOfAllProducts(productList);
 

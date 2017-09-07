@@ -20,6 +20,6 @@ public interface ProductService extends GenericService {
 
     public void deleteProduct(Product product);
 
-    public List<Product> getAllProductsAsList();
+//    public List<Product> getAllProductsAsList();
 
 }

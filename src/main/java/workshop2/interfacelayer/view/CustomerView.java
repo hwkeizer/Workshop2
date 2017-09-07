@@ -161,7 +161,7 @@ public class CustomerView {
         Customer customer = customerList.get(index);
         //Promp for confirmation if this is indeed the customer to delete
         showCustomerToBeDeleted(customer);
-        Integer confirmed = requestConfirmationToDelete();
+        Long confirmed = requestConfirmationToDelete();
         if (confirmed == null || confirmed == 2){
             return Optional.empty();
         }

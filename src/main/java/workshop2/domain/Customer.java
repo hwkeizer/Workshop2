@@ -7,6 +7,7 @@ package workshop2.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -41,7 +42,7 @@ public class Customer implements Serializable {
     private String lastName;
     @Column(name = "LAST_NAME_PREFIX")
     private String lastNamePrefix;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
     

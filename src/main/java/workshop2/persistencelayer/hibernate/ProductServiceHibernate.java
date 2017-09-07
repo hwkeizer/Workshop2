@@ -7,6 +7,7 @@ package workshop2.persistencelayer.hibernate;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,109 +22,56 @@ import workshop2.persistencelayer.ProductService;
  * @author Al-Alaaq(Egelantier)
  */
 public class ProductServiceHibernate extends GenericServiceHibernate implements ProductService {
-
     private static final Logger log = LoggerFactory.getLogger(ProductServiceHibernate.class);
-
-    private EntityManager entityManager;
-
-    private GenericDaoImpl productDao;
-
-    public ProductServiceHibernate() {
-
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
-
-        productDao = new GenericDaoImpl(Product.class, entityManager);
-
-    }
 
     @Override
     public void createProduct(Product product) {
-
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        GenericDaoImpl productDao = new GenericDaoImpl(Product.class, em);
         try {
-
-            entityManager.getTransaction().begin();
-
+            em.getTransaction().begin();
             productDao.persist(product);
-
-            entityManager.getTransaction().commit();
-
+            em.getTransaction().commit();
         } catch (Exception ex) {
-
-            entityManager.getTransaction().rollback();
-
+            em.getTransaction().rollback();
             System.out.println("Transactie is niet uitgevoerd!");
-
             // Exception doorgooien of FailedTransaction oid opgooien?
         } finally {
-
-            // Always clear the persistence context to prevent increasing memory ????
-            entityManager.close();
-
+            em.close();
         }
-
     }
 
     @Override
     public void deleteProduct(Product product) {
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        GenericDaoImpl productDao = new GenericDaoImpl(Product.class, em);
         try {
-
-            entityManager.getTransaction().begin();
-
-            productDao.delete(product);
-
-            entityManager.getTransaction().commit();
+            em.getTransaction().begin();
+            productDao.delete(em.find(Product.class, product.getId()));
+            em.getTransaction().commit();
         } catch (Exception ex) {
-
-            entityManager.getTransaction().rollback();
-
+            em.getTransaction().rollback();
             System.out.println("Transactie is niet uitgevoerd!");
-
             // Exception doorgooien of FailedTransaction oid opgooien?
         } finally {
-
-            // Always clear the persistence context to prevent increasing memory ????
-            entityManager.close();
-
+            em.close();
         }
-
     }
 
     @Override
     public void updateProduct(Product product) {
+        EntityManager em = DatabaseConnection.getInstance().getEntityManager();
+        GenericDaoImpl productDao = new GenericDaoImpl(Product.class, em);
         try {
-
-            entityManager.getTransaction().begin();
-
+            em.getTransaction().begin();
             productDao.update(product);
-
-            entityManager.getTransaction().commit();
+            em.getTransaction().commit();
         } catch (Exception ex) {
-
-            entityManager.getTransaction().rollback();
-
-            System.out.println("Transactie is niet uitgevoerd!");
-
+            em.getTransaction().rollback();
+            log.error("Fout in de transactie. De transactie is teruggedraaid: {}", ex );
             // Exception doorgooien of FailedTransaction oid opgooien?
         } finally {
-
-            // Always clear the persistence context to prevent increasing memory ????
-            entityManager.close();
-
+            em.close();
         }
-
     }
-@Override
-    public List<Product> getAllProductsAsList() {
-        List<Product> products = null;
-        String sql = "Select i FROM Product i ORDER BY name asc";
-        try {
-        Query query = entityManager.createNamedQuery(sql);
-        return products = (List<Product>) query.getResultList();
-        }catch (NoResultException ex) {
-            log.debug("There are no products yet");
-            return null;
-        }
-
-    }
-
 }
