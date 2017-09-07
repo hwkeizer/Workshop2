@@ -117,18 +117,22 @@ public class OrderController {
     public void showOrderToCustomer(String username) {
         orderView.showOrderListCustomerStartScreen();
         
-        Account customerAccount = accountDao.findAccountByUserName(username).get();
-        int customerId = customerDao.findCustomerByAccountId(customerAccount.getId()).get().getId();
+        AccountService accountService = AccountServiceFactory.getAccountService();
+        Account customerAccount = accountService.findAccountByUserName(username).get();
+        
+        CustomerView customerView = new CustomerView();
+        CustomerController customerController = new CustomerController(customerView);
+        Customer customer = customerController.searchCustomerByAccount(customerAccount.getId()).get();
 
-        List<Order> orderList = orderDao.getAllOrdersAsListByCustomerId(customerId);
-        List<Product> productList = productDao.getAllProductsAsList();
+        List<Order> orderList = orderService.findAllOrdersAsListByCustomer(customer);
+        List<Product> productList = orderService.<Product>fetchAllAsList(Product.class);
         
         if(orderList.size() == 0) {
             orderView.showCustomerNoOrdersWereFound();
         }
         else if(orderList.size() == 1) {
             Order order = orderList.get(0);
-            List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(order.getId());
+            List<OrderItem> orderItemList = orderService.findAllOrderItemsAsListByOrder(order);
             orderView.showOneOrderWasFound();
             orderView.showOrderToCustomer(order, orderItemList, productList);
         }
@@ -136,7 +140,7 @@ public class OrderController {
             orderView.showCustomerListOfFoundOrders(orderList);
             int index = orderView.requestOrderIdToSelectFromList(orderList);
             Order order = orderList.get(index);
-            List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(order.getId());
+            List<OrderItem> orderItemList = orderService.findAllOrderItemsAsListByOrder(order);
             orderView.showCustomerThatOrderWasSelected();
             orderView.showOrderToCustomer(order, orderItemList, productList);
         }
@@ -146,9 +150,9 @@ public class OrderController {
         
 
     public void deleteOrderEmployee(CustomerController customerController) {
-        List<Order> orderList = orderDao.getAllOrdersAsList();
+        List<Order> orderList = orderService.<Order>fetchAllAsList(Order.class);
         
-        List<Customer> customerList = customerDao.getAllCustomersAsList();
+        List<Customer> customerList = orderService.<Customer>fetchAllAsList(Customer.class);
         
         //obtain the id of order to delete
         orderView.showDeleteOrderEmployeeStartScreen();
@@ -158,9 +162,9 @@ public class OrderController {
             return;
         Order selectedOrder = orderList.get(index);
         
-        List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(selectedOrder.getId());
-
-        List<Product> productList = productDao.getAllProductsAsList();
+        List<OrderItem> orderItemList = orderService.findAllOrderItemsAsListByOrder(selectedOrder);
+               
+        List<Product> productList = orderService.<Product>fetchAllAsList(Product.class);
         
         orderView.showOrderToBeDeleted(orderItemList, selectedOrder, customerList, productList);
         
@@ -170,7 +174,7 @@ public class OrderController {
             return;
         }
         else {
-            orderDao.deleteOrder(selectedOrder);
+            orderService.deleteOrder(selectedOrder);
             
             //Update the stock after placing the order
             updateProductStockAfterDeletingOrder(orderItemList);
@@ -191,9 +195,9 @@ public class OrderController {
 //    }
     
     public void setOrderStatus() {
-        List<Order> orderList = orderDao.getAllOrdersAsList();
+        List<Order> orderList = orderService.<Order>fetchAllAsList(Order.class);
         
-        List<Customer> customerList = customerDao.getAllCustomersAsList();
+        List<Customer> customerList = orderService.<Customer>fetchAllAsList(Customer.class);
         
         //obtain the id of order to delete
         orderView.showSetOrderStatusStartScreen();
@@ -203,30 +207,36 @@ public class OrderController {
             return;
         Order selectedOrder = orderList.get(index);
         
-        List<OrderItem> orderItemList = orderItemDao.findAllOrderItemsAsListByOrderId(selectedOrder.getId());
-        List<Product> productList = productDao.getAllProductsAsList();
+        List<OrderItem> orderItemList = orderService.findAllOrderItemsAsListByOrder(selectedOrder);
+        List<Product> productList = orderService.<Product>fetchAllAsList(Product.class);
         
         orderView.showOrderToSetOrderStatus(orderItemList, selectedOrder, customerList, productList);
         Integer newOrderStatusId = orderView.requestInputForNewOrderStatus(selectedOrder);
         if(newOrderStatusId == null)
             return;
         
-        
+        OrderStatus newOrderStatus = null;
+        switch(newOrderStatusId){
+            case 1: newOrderStatus = NIEUW; break;
+            case 2: newOrderStatus = IN_BEHANDELING; break;
+            case 3: newOrderStatus = AFGEHANDELD; break;
+        }
+
         orderView.showOrderToSetNewOrderStatusId(selectedOrder, newOrderStatusId, customerList, productList);
         
-        selectedOrder.setOrderStatusId(newOrderStatusId);
+        selectedOrder.setOrderStatus(newOrderStatus);
         
         Integer confirmed = orderView.requestConfirmationToSetNewOrderStatusId();
         if (confirmed == null || confirmed == 2){
             return;
         }
         else {
-            orderDao.updateOrder(selectedOrder);
+            orderService.updateOrder(selectedOrder);
         }
     }
     
     
-    void updateProductStockAfterCreatingOrder(List<OrderItem> orderItemList) {
+    protected void updateProductStockAfterCreatingOrder(List<OrderItem> orderItemList) {
         
         for(OrderItem orderItem: orderItemList) {
                 Optional<Product> optionalProduct = orderService.<Product>fetchById(Product.class, orderItem.getProduct().getId());
@@ -238,7 +248,7 @@ public class OrderController {
         }
     }
 
-    void updateProductStockAfterDeletingOrder(List<OrderItem> orderItemList) {
+    protected void updateProductStockAfterDeletingOrder(List<OrderItem> orderItemList) {
         
         for(OrderItem orderItem: orderItemList) {
             Optional<Product> optionalProduct = orderService.<Product>fetchById(Product.class, orderItem.getProduct().getId());
@@ -250,7 +260,7 @@ public class OrderController {
         }
     }
     
-    private BigDecimal calculateOrderPrice(List<OrderItem> orderItemList) {
+    protected BigDecimal calculateOrderPrice(List<OrderItem> orderItemList) {
         BigDecimal price = new BigDecimal("0.00");
         for(OrderItem orderItem: orderItemList){
             price = price.add(orderItem.getSubTotal());

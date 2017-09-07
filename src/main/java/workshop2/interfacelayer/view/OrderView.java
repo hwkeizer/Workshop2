@@ -6,11 +6,11 @@
 package workshop2.interfacelayer.view;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 import workshop2.domain.Customer;
 import workshop2.domain.Order;
 import workshop2.domain.OrderItem;
+import workshop2.domain.OrderStatus;
 import workshop2.domain.Product;
 
 /**
@@ -56,7 +56,7 @@ public class OrderView {
         for(OrderItem orderItem: orderItemList) {
             String productName = null;
             for(Product product: productList) {
-                if(product.getId() == orderItem.getProductId())
+                if(product.getId().equals(orderItem.getProduct().getId()))
                     productName = product.getName();
                 }
             System.out.printf("%-30s%10d%15s\n", productName, orderItem.getAmount(), orderItem.getSubTotal().toString());
@@ -125,7 +125,7 @@ public class OrderView {
         System.out.println("-------------------------------------------------------");
         int i = 1;
         for(Order order: orderList) {
-            System.out.printf("%-5s%10s%5s%-15s%-20s\n", i, order.getTotalPrice().toString(), "", order.getDate().toLocalDate().toString(), order.getOrderStatusIdWord());
+            System.out.printf("%-5s%10s%5s%-15s%-20s\n", i, order.getTotalPrice().toString(), "", order.getDate().toLocalDate().toString(), order.getOrderStatus().toString());
             i++;
         }
     }
@@ -142,7 +142,7 @@ public class OrderView {
         for(OrderItem orderItem: orderItemList) {
             String productName = null;
             for(Product product: productList) {
-                if(product.getId() == orderItem.getProductId())
+                if(product.getId().equals(orderItem.getProduct().getId()))
                     productName = product.getName();
                 }
             System.out.printf("%-30s%10d%15s\n", productName, orderItem.getAmount(), orderItem.getSubTotal().toString());
@@ -174,14 +174,14 @@ public class OrderView {
         System.out.printf("%-5s%-20s%10s%5s%-15s%-20s\n", "ID", "Naam klant", "Prijs", "", "Besteldatum", "Bestelstatus");
         System.out.println("--------------------------------------------------------------------------------");
         for(Order order: orderList) {
-            int customerId = order.getCustomerId();
+            Long customerId = order.getCustomer().getId();
             String customerLastName = null;
             for(Customer customer: customerList) {
-                if(customer.getId() == customerId) {
+                if(customer.getId().equals(customerId)) {
                     customerLastName = customer.getLastName();
                 }
             }
-            System.out.printf("%-5s%-20s%10.2f%5s%-15s%-20s\n", i, customerLastName, order.getTotalPrice(), "", order.getDate().toLocalDate().toString(), order.getOrderStatusIdWord());
+            System.out.printf("%-5s%-20s%10.2f%5s%-15s%-20s\n", i, customerLastName, order.getTotalPrice(), "", order.getDate().toLocalDate().toString(), order.getOrderStatus().toString());
             i++;
         }
     }
@@ -212,13 +212,13 @@ public class OrderView {
         System.out.println("-----------------------------------------------------------------");
         
         String customerLastName = null;
-        int customerId = order.getCustomerId();
+        Long customerId = order.getCustomer().getId();
         for(Customer customer: customerList) {
-            if(customer.getId() == customerId) {
+            if(customer.getId().equals(customerId)) {
                     customerLastName = customer.getLastName();
             }
         }
-        System.out.printf("%-20s%10.2f%5s%-15s%-20s\n", customerLastName, order.getTotalPrice(), "", order.getDate().toLocalDate().toString(), order.getOrderStatusIdWord());
+        System.out.printf("%-20s%10.2f%5s%-15s%-20s\n", customerLastName, order.getTotalPrice(), "", order.getDate().toLocalDate().toString(), order.getOrderStatus().toString());
         
         System.out.println("\nDeze bestelling bevat de volgende producten:\n");
         System.out.printf("%-30s%10s%15s\n", "Product", "Aantal", "Subtotaal");
@@ -227,7 +227,7 @@ public class OrderView {
         for(OrderItem orderItem: orderItemList) {
             String productName = null;
             for(Product product: productList) {
-                if(product.getId() == orderItem.getProductId())
+                if(product.getId().equals(orderItem.getProduct().getId()))
                     productName = product.getName();
                 }
             System.out.printf("%-30s%10d%15s\n", productName, orderItem.getAmount(), orderItem.getSubTotal().toString());
@@ -285,14 +285,14 @@ public class OrderView {
         System.out.printf("%-5s%-20s%10s%5s%-15s%-20s\n", "ID", "Naam klant", "Prijs", "", "Besteldatum", "Bestelstatus");
         System.out.println("--------------------------------------------------------------------------------");
         for(Order order: orderList) {
-            int customerId = order.getCustomerId();
+            Long customerId = order.getCustomer().getId();
             String customerLastName = null;
             for(Customer customer: customerList) {
-                if(customer.getId() == customerId) {
+                if(customer.getId().equals(customerId)) {
                     customerLastName = customer.getLastName();
                 }
             }
-            System.out.printf("%-5s%-20s%10.2f%5s%-15s%-20s\n", i, customerLastName, order.getTotalPrice(), "", order.getDate().toLocalDate().toString(), order.getOrderStatusIdWord());
+            System.out.printf("%-5s%-20s%10.2f%5s%-15s%-20s\n", i, customerLastName, order.getTotalPrice(), "", order.getDate().toLocalDate().toString(), order.getOrderStatus().toString());
             i++;
         }
     }
@@ -304,13 +304,13 @@ public class OrderView {
         System.out.println("-----------------------------------------------------------------");
         
         String customerLastName = null;
-        int customerId = order.getCustomerId();
+        Long customerId = order.getCustomer().getId();
         for(Customer customer: customerList) {
-            if(customer.getId() == customerId) {
+            if(customer.getId().equals(customerId)) {
                     customerLastName = customer.getLastName();
             }
         }
-        System.out.printf("%-20s%10.2f%5s%-15s%-20s\n", customerLastName, order.getTotalPrice(), "", order.getDate().toLocalDate().toString(), order.getOrderStatusIdWord());
+        System.out.printf("%-20s%10.2f%5s%-15s%-20s\n", customerLastName, order.getTotalPrice(), "", order.getDate().toLocalDate().toString(), order.getOrderStatus().toString());
         
         System.out.println("\nDeze bestelling bevat de volgende producten:\n");
         System.out.printf("%-30s%10s%15s\n", "Product", "Aantal", "Subtotaal");
@@ -319,7 +319,7 @@ public class OrderView {
         for(OrderItem orderItem: orderItemList) {
             String productName = null;
             for(Product product: productList) {
-                if(product.getId() == orderItem.getProductId())
+                if(product.getId().equals(orderItem.getProduct().getId()))
                     productName = product.getName();
                 }
             System.out.printf("%-30s%10d%15s\n", productName, orderItem.getAmount(), orderItem.getSubTotal().toString());
@@ -341,11 +341,11 @@ public class OrderView {
     }
     
     private String printRequestForNewOrderStatusId(Order order) {
-        int orderStatusId = order.getOrderStatusId();
+        OrderStatus orderStatus = order.getOrderStatus();
         int respons;
         Integer newOrderStatusId = null;
-        switch(orderStatusId) {
-            case 1: {
+        switch(orderStatus) {
+            case NIEUW: {
                 System.out.println("\nHuidige bestelstatus is: Nieuw");
                 System.out.println("Geef hier onder aan in welke bestelstatus u dit wilt veranderen:");
                 System.out.println("1) In behandeling");
@@ -360,7 +360,7 @@ public class OrderView {
                     }
                 break;
             }
-            case 2: {
+            case IN_BEHANDELING: {
                 System.out.println("\nHuidige bestelstatus is: In behandeling");
                 System.out.println("Geef hier onder aan in welke bestelstatus u dit wilt veranderen:");
                 System.out.println("1) Nieuw");
@@ -375,7 +375,7 @@ public class OrderView {
                 }
                     break;
             }
-            case 3: {
+            case AFGEHANDELD: {
                 System.out.println("\nHuidige bestelstatus is: Afgehandeld");
                 System.out.println("Geef hier onder aan in welke bestelstatus u dit wilt veranderen:");
                 System.out.println("1) Nieuw");
@@ -401,13 +401,13 @@ public class OrderView {
         System.out.println("-----------------------------------------------------------------");
         
         String customerLastName = null;
-        int customerId = selectedOrder.getCustomerId();
+        Long customerId = selectedOrder.getCustomer().getId();
         for(Customer customer: customerList) {
-            if(customer.getId() == customerId) {
+            if(customer.getId().equals(customerId)) {
                     customerLastName = customer.getLastName();
             }
         }
-        System.out.printf("%-20s%10.2f%5s%-15s%-20s\n\n", customerLastName, selectedOrder.getTotalPrice(), "", selectedOrder.getDate().toLocalDate().toString(), selectedOrder.getOrderStatusIdWord());
+        System.out.printf("%-20s%10.2f%5s%-15s%-20s\n\n", customerLastName, selectedOrder.getTotalPrice(), "", selectedOrder.getDate().toLocalDate().toString(), selectedOrder.getOrderStatus().toString());
         
         String newOrderStatus = "";
         switch(newOrderStatusId) {

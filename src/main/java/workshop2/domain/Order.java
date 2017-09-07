@@ -6,7 +6,6 @@
 package workshop2.domain;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -18,13 +17,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
  *
  * @author hwkei
  */
+@NamedQueries({
+    @NamedQuery(
+        name = "findAllOrdersAsListByCustomer",
+        query = "select i from Order i where i.customer = :customer"
+    )
+})
 @Entity
 @Table(name = "`order`")
 public class Order {

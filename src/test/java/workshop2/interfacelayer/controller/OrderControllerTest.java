@@ -5,6 +5,8 @@
  */
 package workshop2.interfacelayer.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import javax.persistence.EntityManager;
 import org.junit.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import org.slf4j.Logger;
@@ -26,11 +29,13 @@ import static workshop2.domain.Address.AddressType.*;
 import workshop2.domain.Customer;
 import workshop2.domain.Order;
 import workshop2.domain.OrderItem;
+import workshop2.domain.OrderStatus;
 import static workshop2.domain.OrderStatus.AFGEHANDELD;
 import static workshop2.domain.OrderStatus.IN_BEHANDELING;
 import static workshop2.domain.OrderStatus.NIEUW;
 import workshop2.domain.Product;
 import workshop2.interfacelayer.DatabaseConnection;
+import workshop2.interfacelayer.view.CustomerView;
 import workshop2.interfacelayer.view.OrderItemView;
 import workshop2.interfacelayer.view.OrderView;
 import workshop2.persistencelayer.CustomerService;
@@ -109,6 +114,7 @@ public class OrderControllerTest {
     
     @Test
     public void testCreateOrderCustomer(){
+        System.out.println("testCreateOrderCustomer");
         
         String username = "fred";
         
@@ -139,8 +145,93 @@ public class OrderControllerTest {
         assertEquals("OrderItem2 should have subtotal 9.50", orderItemListAfterInsert.get(1).getSubTotal(), new BigDecimal("19.50"));
     }
     
+//    @Test
+//    public void showOrderToCustomerCaseNoOrder(){
+//        System.out.println("showOrderToCustomerCaseNoOrder");
+//
+//        // Change output to ByteArrayOutputStream
+//        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+//        System.setOut(new PrintStream(outContent));
+//        
+//        // Call the method
+//        String username = "joost";
+//        orderController.showOrderToCustomer(username);
+//        
+//        String output = outContent.toString();
+//        log.debug("output: " + output);
+//        log.debug("Method was called, waiting for first output check");
+//        assertTrue("Intro message", 
+//                outContent.toString().contains("Druk op <enter> om terug te keren naar het menu."));
+//        
+//        assertTrue("If no orders found, this is shown in a message", 
+//                outContent.toString().contains("Er zijn geen bestellingen van u gevonden in het systeem"));
+//        
+//        
+//        // Restore output to System.out
+//        System.setOut(System.out);
+//        System.out.flush();
+//    }
+    
+    @Test
+    public void testDeleteOrderEmployee(){
+        List<Order> orderList = orderService.<Order>fetchAllAsList(Order.class);
+        
+        // Prepare the required input
+        when(mockOrderView.requestOrderIdToSelectFromList(orderList)).thenReturn(2);
+        when(mockOrderView.requestConfirmationToDelete()).thenReturn(1);
+        
+        // Test if order is in database before deletion
+        Long selectedOrderId = orderList.get(2).getId();
+        Order order = orderService.<Order>fetchById(Order.class, selectedOrderId).get();
+        assertEquals("The total price of this order should be 144.12", order.getTotalPrice(), new BigDecimal("144.12"));
+        
+        // Call the method
+        CustomerController customerController = new CustomerController(new CustomerView());
+        orderController.deleteOrderEmployee(customerController);
+        
+        // Test if order is still present
+        Optional optionalOrderAfterDelete = orderService.<Order>fetchById(Order.class, selectedOrderId);
+        assertFalse("This order should not be found", optionalOrderAfterDelete.isPresent());
+    }
+    
+    @Test
+    public void testSetOrderStatus(){
+        List<Order> orderList = orderService.<Order>fetchAllAsList(Order.class);
+        
+        // Prepare the required input
+        when(mockOrderView.requestOrderIdToSelectFromList(orderList)).thenReturn(6);
+        when(mockOrderView.requestConfirmationToDelete()).thenReturn(1);
+        
+        // Test if order does exist in the database
+        Long selectedOrderId = orderList.get(6).getId();
+        Order selectedOrder = orderService.<Order>fetchById(Order.class, selectedOrderId).get();
+        OrderStatus oldOrderStatus = selectedOrder.getOrderStatus();
+        log.debug("selected order price is " + selectedOrder.getTotalPrice());
+        assertEquals("The total price of this order should be 46.08", selectedOrder.getTotalPrice(), new BigDecimal("46.08"));
+        assertEquals("OrderStatus before update should be IN_BEHANDELING", selectedOrder.getOrderStatus(), IN_BEHANDELING);
+        
+        // Choose the new OrderStatus
+        when(mockOrderView.requestInputForNewOrderStatus(selectedOrder)).thenReturn(3);
+        when(mockOrderView.requestConfirmationToSetNewOrderStatusId()).thenReturn(1);
+        
+        // Call the method
+        orderController.setOrderStatus();
+        
+        // Retrieve the order after the update
+        Order orderAfterSetStatus = orderService.<Order>fetchById(Order.class, selectedOrderId).get();
+        
+        // Assert that total price is the same as a check if it's the same order
+        assertEquals("The total price of this order should be 46.08", orderAfterSetStatus.getTotalPrice(), new BigDecimal("46.08"));
+        assertEquals("OrderStatus after update should be AFGEHANDELD", orderAfterSetStatus.getOrderStatus(), AFGEHANDELD);
+        assertNotEquals("The new orderStatus should be unequal to the old orderStatus", oldOrderStatus, orderAfterSetStatus.getOrderStatus());
+        
+        
+        
+    }
+    
     @Test
     public void testUpdateProductStockAfterCreatingOrder(){
+        System.out.println("testUpdateProductStockAfterCreatingOrder");
         // get productlist before updatestock
         List<Product> productListBefore = orderService.<Product>fetchAllAsList(Product.class);
         List<OrderItem> orderItemList = new ArrayList<>();
@@ -161,6 +252,7 @@ public class OrderControllerTest {
     
     @Test
     public void testUpdateProductStockAfterDeletingOrder(){
+        System.out.println("testUpdateProductStockAfterDeletingOrder");
         // get productlist before updatestock
         List<Product> productListBefore = orderService.<Product>fetchAllAsList(Product.class);
         List<OrderItem> orderItemList = new ArrayList<>();
@@ -179,12 +271,34 @@ public class OrderControllerTest {
         assertEquals("ProductStock for second product should be raised by 100", productListAfter.get(1).getStock(), productListBefore.get(1).getStock() + 100);
     }
     
+    @Test
+    public void testCalculateOrderPrice(){
+        // create orderItemList
+        List<OrderItem> orderItemList = new ArrayList<>();
+        orderItemList.add(new OrderItem(null, productList.get(0), 15, new BigDecimal("5.25")));
+        orderItemList.add(new OrderItem(null, productList.get(1), 100, new BigDecimal("10.50")));
+        orderItemList.add(new OrderItem(null, productList.get(2), 100, new BigDecimal("50.00")));
+        
+        BigDecimal calculatedPrice = orderController.calculateOrderPrice(orderItemList);
+        
+        assertEquals("Total of all order items should equal 65.75", calculatedPrice, new BigDecimal("65.75"));
+    }
+    
 
     private void dropAndInsert() {
         EntityManager em = DatabaseConnection.getInstance().getEntityManager();
         em.getTransaction().begin();
 //        em.createNativeQuery("DELETE FROM account").executeUpdate();
         
+        //general
+        em.createNativeQuery("DELETE FROM hibernate_sequence").executeUpdate();
+        em.createNativeQuery("insert into hibernate_sequence (next_val) values (1)").executeUpdate();
+        em.createNativeQuery("insert into hibernate_sequence (next_val) values (1)").executeUpdate();
+        em.createNativeQuery("insert into hibernate_sequence (next_val) values (1)").executeUpdate();
+        em.createNativeQuery("insert into hibernate_sequence (next_val) values (1)").executeUpdate();
+        em.createNativeQuery("insert into hibernate_sequence (next_val) values (1)").executeUpdate();
+        em.createNativeQuery("insert into hibernate_sequence (next_val) values (1)").executeUpdate();
+
         // Account
         em.createNativeQuery("DELETE FROM account").executeUpdate();
         String pass1 = PasswordHash.generateHash("welkom");
@@ -243,7 +357,7 @@ public class OrderControllerTest {
         Order order6 = new Order(new BigDecimal("324.65"), customer3, LocalDateTime.now(), AFGEHANDELD);
         Order order7 = new Order(new BigDecimal("46.08"), customer3, LocalDateTime.now(), IN_BEHANDELING);
         Order order8 = new Order(new BigDecimal("99.56"), customer4, LocalDateTime.now(), NIEUW);
-        Order order9 = new Order(new BigDecimal("23.23"), customer5, LocalDateTime.now(), AFGEHANDELD);
+        Order order9 = new Order(new BigDecimal("23.23"), customer4, LocalDateTime.now(), AFGEHANDELD);
         em.persist(order1);
         em.persist(order2);
         em.persist(order3);
