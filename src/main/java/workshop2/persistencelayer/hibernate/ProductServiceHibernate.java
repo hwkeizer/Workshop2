@@ -5,10 +5,7 @@
  */
 package workshop2.persistencelayer.hibernate;
 
-import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Product;

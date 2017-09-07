@@ -5,6 +5,7 @@
  */
 package workshop2.persistencelayer.hibernate;
 
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -12,6 +13,7 @@ import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Account;
+import workshop2.domain.Customer;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.persistencelayer.AccountService;
 import workshop2.persistencelayer.GenericDaoImpl;
@@ -45,8 +47,16 @@ public class AccountServiceHibernate extends GenericServiceHibernate implements 
     public void deleteAccount(Account account) {
         EntityManager em = DatabaseConnection.getInstance().getEntityManager();
         GenericDaoImpl accountDao = new GenericDaoImpl(Account.class, em);
-        try {   
-            em.getTransaction().begin();   
+        try {              
+            em.getTransaction().begin();
+            // Check if there is a customer reference that has this account and set it to null
+            List<Customer> customerList = fetchAllAsList(Customer.class);
+            for (Customer customer : customerList) {
+                if (customer.getAccount().getId().equals(account.getId())) {
+                    customer.setAccount(null);
+                    em.merge(customer);
+                }
+            }
             accountDao.delete(em.find(Account.class, account.getId()));            
             em.getTransaction().commit();            
         } catch (Exception ex) {
