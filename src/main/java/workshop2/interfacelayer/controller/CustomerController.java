@@ -38,7 +38,7 @@ public class CustomerController {
         }
     }
     
-    /**
+    /*
      * Link an account to a customer
      * A customer can only have one account.
      * @param accountController 
