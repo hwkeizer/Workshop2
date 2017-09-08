@@ -7,13 +7,16 @@ package workshop2.domain;
 
 import java.lang.ProcessBuilder.Redirect.Type;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
@@ -22,6 +25,7 @@ import javax.persistence.Table;
  *
  * @author Ahmed Al-alaaq(Egelantier)
  */
+
 @Entity
 @Table(name = "ADDRESS")
 public class Address {
@@ -44,7 +48,8 @@ public class Address {
     private String postalCode;
     @Column(name = "CITY")
     private String city;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "CUSTOMER_ID")
     private Customer customer;
     @Enumerated(EnumType.ORDINAL)
     private AddressType addressType;
@@ -138,13 +143,13 @@ public class Address {
 
     @Override
     public String toString() {
-        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-8d", getId(), getStreetName(),
-                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType(), this.getCustomer().getFirstName(), " ", this.getCustomer().getLastName());
+        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-15s", getId(), getStreetName(),
+                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType().toString());
     }
 
     public String toStringNoId() {
-        return String.format("%-5d%-30s%-8d%-12s%-10s%-20s%-8d", getStreetName(),
-                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType(), this.getCustomer().getFirstName(), " ", this.getCustomer().getLastName());
+        return String.format("%-30s%-8d%-12s%-10s%-20s%-15s", getStreetName(),
+                getNumber(), getAddition(), getPostalCode(), getCity(), this.getAddressType().toString());
     }
 
     @Override
