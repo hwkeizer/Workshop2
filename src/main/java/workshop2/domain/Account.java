@@ -29,6 +29,7 @@ import javax.persistence.Table;
         query = "select i from Account i where i.username = :username"
     )
 })
+
 @Entity
 @Table(name = "ACCOUNT")
 public class Account implements Serializable {
