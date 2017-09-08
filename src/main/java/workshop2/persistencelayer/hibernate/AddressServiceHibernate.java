@@ -120,11 +120,11 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
     public Optional<Address> findAddressByCustomerId(Long id) {
         entityManager = DatabaseConnection.getInstance().getEntityManager();
         Address adres;
-        String sql = "select i from Address i  where Customer.id = :id";
+        String sql = "select i from Address i where customer.id = :id";
 
         try {
-            Query query = entityManager.createNamedQuery(sql);
-            query.setParameter("Customer.id", id);
+            Query query = entityManager.createQuery(sql);
+            query.setParameter("id", id);
 
             adres = (Address) query.getSingleResult();
 
@@ -145,15 +145,15 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
     }
 
     @Override
-    public List<Address> findAllAddressByCustomerId(Long id) {
+    public List<Address> findAllAddressesByCustomerId(Long id) {
         entityManager = DatabaseConnection.getInstance().getEntityManager();
 
         List<Address> addresses = null;
-        String sql = "select i from Address i  where Customer.id = :id";
+        String sql = "select i from Address i where customer.id = :id"; 
 
         try {
-            Query query = entityManager.createNamedQuery(sql);
-            query.setParameter("Customer.id", id);
+            Query query = entityManager.createQuery(sql);
+            query.setParameter("id", id);
 
             return addresses = (List<Address>) query.getResultList();
 
