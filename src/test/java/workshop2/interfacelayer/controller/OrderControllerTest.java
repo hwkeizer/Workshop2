@@ -177,13 +177,18 @@ public class OrderControllerTest {
         List<Order> orderList = orderService.<Order>fetchAllAsList(Order.class);
         
         // Prepare the required input
-        when(mockOrderView.requestOrderIdToSelectFromList(orderList)).thenReturn(2);
+        when(mockOrderView.requestOrderIdToSelectFromList(orderList)).thenReturn(0);
         when(mockOrderView.requestConfirmationToDelete()).thenReturn(1);
         
         // Test if order is in database before deletion
-        Long selectedOrderId = orderList.get(2).getId();
+        Long selectedOrderId = orderList.get(0).getId();
         Order order = orderService.<Order>fetchById(Order.class, selectedOrderId).get();
-        assertEquals("The total price of this order should be 144.12", order.getTotalPrice(), new BigDecimal("144.12"));
+        assertEquals("The total price of this order should be 230.78", order.getTotalPrice(), new BigDecimal("230.78"));
+        
+        // OrderItems related to the order before deleting it
+        List<OrderItem> orderItemListBefore = orderService.<OrderItem>fetchAllAsList(OrderItem.class);
+        assertEquals("orderItem OrderId should match orderId", orderItemListBefore.get(0).getOrder().getId(), selectedOrderId);
+        Long selectedOrderItemId = orderItemListBefore.get(0).getId();
         
         // Call the method
         CustomerController customerController = new CustomerController(new CustomerView());
@@ -192,6 +197,11 @@ public class OrderControllerTest {
         // Test if order is still present
         Optional optionalOrderAfterDelete = orderService.<Order>fetchById(Order.class, selectedOrderId);
         assertFalse("This order should not be found", optionalOrderAfterDelete.isPresent());
+        
+        // Test if orderItem is still present
+        Optional optionalOrderItemAfterDelete = orderService.<OrderItem>fetchById(OrderItem.class, selectedOrderItemId);
+        assertFalse("This orderItem should not be found after delete", optionalOrderItemAfterDelete.isPresent());
+
     }
     
     @Test

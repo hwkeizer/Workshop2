@@ -23,7 +23,7 @@ public interface OrderService extends GenericService {
     
     public void updateOrder(Order order);
     
-    public void deleteOrder(Order order);
+    public void deleteOrder(Order order, List<OrderItem> orderItemList);
     
     public List<OrderItem> findAllOrderItemsAsListByOrder(Order order);
     

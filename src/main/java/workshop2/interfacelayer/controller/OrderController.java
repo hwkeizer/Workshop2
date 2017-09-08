@@ -174,7 +174,7 @@ public class OrderController {
             return;
         }
         else {
-            orderService.deleteOrder(selectedOrder);
+            orderService.deleteOrder(selectedOrder, orderItemList);
             
             //Update the stock after placing the order
             updateProductStockAfterDeletingOrder(orderItemList);

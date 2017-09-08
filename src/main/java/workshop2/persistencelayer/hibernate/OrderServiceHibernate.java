@@ -66,12 +66,16 @@ public class OrderServiceHibernate extends GenericServiceHibernate implements Or
     }
     
     @Override
-    public void deleteOrder(Order order){
+    public void deleteOrder(Order order, List<OrderItem> orderItemList){
         EntityManager em = DatabaseConnection.getInstance().getEntityManager();
         GenericDaoImpl orderDao = new GenericDaoImpl(Order.class, em);
+        GenericDaoImpl orderItemDao = new GenericDaoImpl(OrderItem.class, em);
         try {
             em.getTransaction().begin();
             orderDao.delete(em.find(Order.class, order.getId()));
+            for(OrderItem orderItem: orderItemList){
+                orderItemDao.delete(em.find(OrderItem.class, orderItem.getId()));
+            }
             em.getTransaction().commit();            
         } catch (Exception ex) {
             em.getTransaction().rollback();
