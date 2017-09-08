@@ -5,6 +5,7 @@
  */
 package workshop2.interfacelayer.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -95,13 +96,13 @@ public class AddressController {
     
     List<Address> listAllAddressesFromCustomer(Long customerId) {
 
-        return addressService.findAllAddressByCustomerId(customerId);
+        return addressService.findAllAddressesByCustomerId(customerId);
         
                
     }
     
     List<String> getAvailableAddressTypes() {
-        List<String> addressType = null;
+        List<String> addressType = new ArrayList<>();
         addressType.add("POSTADRES");
         addressType.add("FACTUURADRES");
         addressType.add("BEZORGADRES");
