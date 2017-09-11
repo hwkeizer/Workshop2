@@ -24,6 +24,6 @@ public interface AddressService extends GenericService {
 
     public Optional<Address> findAddressByCustomerId(Long id);
 
-    public List<Address> findAllAddressByCustomerId(Long id);
+    public List<Address> findAllAddressesByCustomerId(Long id);
 
 }

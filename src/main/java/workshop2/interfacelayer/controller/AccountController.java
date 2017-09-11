@@ -16,7 +16,7 @@ import workshop2.interfacelayer.view.Validator;
 import workshop2.persistencelayer.AccountService;
 import workshop2.persistencelayer.AccountServiceFactory;
 
-/*
+/**
  *
  * @author hwkei
  */
