@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
@@ -48,7 +49,7 @@ public class Address {
     private String postalCode;
     @Column(name = "CITY")
     private String city;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "CUSTOMER_ID")
     private Customer customer;
     @Enumerated(EnumType.ORDINAL)
