@@ -55,7 +55,6 @@ public class OrderItem {
     public OrderItem() {
         
     }
-    
      // Constructor without id, id will be invalidated to a negative value
     public OrderItem(Order order, Product product, int amount, BigDecimal subTotal) {
         this.order = order;
