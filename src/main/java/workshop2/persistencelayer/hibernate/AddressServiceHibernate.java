@@ -69,14 +69,14 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
 
             entityManager.getTransaction().begin();
 
-            addressDao.delete(adres);
+            addressDao.delete(entityManager.find(Address.class, adres.getId()));
 
             entityManager.getTransaction().commit();
         } catch (Exception ex) {
 
             entityManager.getTransaction().rollback();
 
-            System.out.println("Transactie is niet uitgevoerd!");
+            System.out.println("Transactie is niet uitgevoerd!" + ex);
 
             // Exception doorgooien of FailedTransaction oid opgooien?
         } finally {
