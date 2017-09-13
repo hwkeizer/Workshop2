@@ -7,6 +7,8 @@ package workshop2.persistencelayer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.persistencelayer.AddressService;
 import workshop2.persistencelayer.hibernate.AddressServiceHibernate;
@@ -15,12 +17,13 @@ import workshop2.persistencelayer.hibernate.AddressServiceHibernate;
  *
  * @author Ahmed-Al-Alaaq(Egelantier)
  */
+@Component
 public class AddressServiceFactory {
 
     private static final Logger log = LoggerFactory.getLogger(AddressServiceFactory.class);
 
     private static String persistenceProvider;
-
+ @Bean
     public static AddressService getAddressService() {
 
         persistenceProvider = DatabaseConnection.getInstance().getPersistenceProvider();
