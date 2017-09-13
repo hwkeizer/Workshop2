@@ -11,6 +11,8 @@ import workshop2.domain.Account;
 import workshop2.interfacelayer.view.AccountView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import workshop2.domain.AccountType;
 import workshop2.interfacelayer.view.Validator;
 import workshop2.persistencelayer.AccountService;
@@ -20,18 +22,21 @@ import workshop2.persistencelayer.AccountServiceFactory;
  *
  * @author hwkei
  */
+@Component
 public class AccountController {
     private static final Logger log = LoggerFactory.getLogger(AccountController.class);   
-    private final AccountView accountView;
+    @Autowired
+    private  AccountView accountView;
     private Account account;
-    private Optional<Account> optionalAccount;    
-    private final AccountService accountService = AccountServiceFactory.getAccountService();
+    private Optional<Account> optionalAccount;   
+    @Autowired
+    private AccountService accountService;// = AccountServiceFactory.getAccountService();
 
     
     // Public constructor only requires accountView parameter
-    public AccountController(AccountView accountView) {
-        this.accountView = accountView;
-    }
+   // public AccountController(AccountView accountView) {
+     //   this.accountView = accountView;
+  //  }
 
     
     public void createAccount() {

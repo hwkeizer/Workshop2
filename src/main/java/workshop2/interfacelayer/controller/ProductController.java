@@ -15,6 +15,8 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.persistencelayer.ProductService;
 import workshop2.persistencelayer.ProductServiceFactory;
@@ -23,17 +25,26 @@ import workshop2.persistencelayer.ProductServiceFactory;
  *
  * @author Ahmed-Al-Alaaq(Egelantier)
  */
+@Component
 public class ProductController {
 
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
-    private final ProductView productView;
+    @Autowired
+    private ProductView productView;
     private Product product;
-    private final ProductService productService = ProductServiceFactory.getAddressService();
+    @Autowired
+    private ProductService productService;// = ProductServiceFactory.getProductService();
 
-    public ProductController(ProductView productView) {
-        this.productView = productView;
-
+    public ProductController(){
+        
     }
+    
+//    public ProductController(ProductView productView, ProductService productService) {
+//        this.productView = productView;
+//        this.productService = productService;
+//
+//    }
+
 
     public void createProduct() {
         productView.showNewProductScreen();

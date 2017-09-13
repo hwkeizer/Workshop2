@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import workshop2.domain.Address;
 import workshop2.domain.Customer;
 import workshop2.persistencelayer.AddressService;
@@ -20,19 +22,22 @@ import workshop2.interfacelayer.view.AddressView;
  *
  * @author Ahmed Al-alaaq(Egelantier)
  */
+@Component
 public class AddressController {
 
     private static final Logger log = LoggerFactory.getLogger(AddressController.class);
-    private final AddressView addressView;
+    @Autowired
+    private AddressView addressView;
     private Address address;
-    private final AddressService addressService = AddressServiceFactory.getAddressService();
+     @Autowired
+    private AddressService addressService;// = AddressServiceFactory.getAddressService();
 
     //private final CustomerService customerService = CustomerServiceFactory.getCustomerService();
-    public AddressController(AddressView addressView) {
+   // public AddressController(AddressView addressView) {
 
-        this.addressView = addressView;
+    //    this.addressView = addressView;
 
-    }
+   // }
 
     public void createAddress(CustomerController customerController) {
         // We first need a valid customer to link to the new address
