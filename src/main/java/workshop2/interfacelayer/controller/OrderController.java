@@ -54,11 +54,11 @@ public class OrderController {
     public void createOrderEmployee(CustomerController customerController) {
         orderView.showConstructOrderEmployeeStartScreen();
         Optional<Customer> optionalCustomer = customerController.selectCustomerByUser();
-        Customer customer = optionalCustomer.get();
-        if (customer == null) {
+        if (!optionalCustomer.isPresent()) {
             // No customer selected so we skip creating the order
             return;
         }
+        Customer customer = optionalCustomer.get();
         
         List<Product> productList = orderService.<Product>fetchAllAsList(Product.class);
         List<OrderItem> orderItemList = orderItemView.createOrderItemListForNewOrder(productList);

@@ -400,10 +400,9 @@ public class CustomerView {
         printRequestForSelectConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
-        while (!Validator.isValidInt(respons) &&
-                (Integer.parseInt(respons) == 1 || Integer.parseInt(respons) == 2)) {
+        while (!Validator.isValidConfirmation(respons)) {
             showInvalidRespons();
-            printRequestForDeleteConfirmation();
+            printRequestForSelectConfirmation();
             respons = input.nextLine();
             if (respons.equals("!")) return null;  // User initiated abort
         }

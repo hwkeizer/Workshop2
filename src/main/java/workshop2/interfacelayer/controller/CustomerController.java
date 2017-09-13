@@ -124,6 +124,7 @@ public class CustomerController {
     Optional<Customer> selectCustomerByUser() {
         return customerView.selectCustomer(listAllCustomers());
     }
+    
     // Terug krijgen van een klant door zijn id
         Optional<Customer> searchCustomerById(Long id) {
         List<Customer> customerList = listAllCustomers();
