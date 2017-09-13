@@ -9,12 +9,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 import workshop2.domain.Product;
 
 /**
  *
  * @author Ahmed-Al-Alaaq(Egelantier)
  */
+@Component
 public class ProductView {
     Scanner input;
     

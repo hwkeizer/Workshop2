@@ -8,6 +8,7 @@ package workshop2.interfacelayer.view;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 import workshop2.domain.Address;
 import workshop2.domain.Address.AddressType;
 import workshop2.domain.Customer;
@@ -16,6 +17,7 @@ import workshop2.domain.Customer;
  *
  * @author Ahmed Al-alaaq(Egelantier)
  */
+@Component
 public class AddressView {
     Scanner input;
     Address address = new Address();

@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import workshop2.domain.Account;
 import workshop2.domain.AccountType;
 
@@ -19,6 +20,7 @@ import workshop2.domain.AccountType;
  *
  * @author hwkei
  */
+@Component("AccountView")
 public class AccountView {
     private static final Logger log = LoggerFactory.getLogger(AccountView.class);
     Scanner input;
