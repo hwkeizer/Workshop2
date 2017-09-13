@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import workshop2.domain.Account;
 import workshop2.domain.Customer;
 import workshop2.interfacelayer.view.CustomerView;
@@ -20,12 +22,15 @@ import workshop2.persistencelayer.CustomerServiceFactory;
  *
  * @author hwkei
  */
+@Component
 public class CustomerController {
     private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
-    private final CustomerView customerView;
+    @Autowired
+    private CustomerView customerView;
     private Customer customer;
     private Optional<Customer> optionalCustomer;
-    private final CustomerService customerService = CustomerServiceFactory.getCustomerService();
+    @Autowired
+    private CustomerService customerService;// = CustomerServiceFactory.getCustomerService();
     
     public CustomerController(CustomerView customerView) {
         this.customerView = customerView;

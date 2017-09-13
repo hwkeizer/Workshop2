@@ -8,12 +8,14 @@ package workshop2.interfacelayer.view;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 import workshop2.domain.Customer;
 
 /**
  *
  * @author hwkei
  */
+@Component
 public class CustomerView {
     Scanner input;
     

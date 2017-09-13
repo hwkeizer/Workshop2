@@ -7,6 +7,8 @@ package workshop2.interfacelayer.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import workshop2.domain.AccountType;
 import workshop2.interfacelayer.MenuAction;
 import workshop2.interfacelayer.MenuItem;
@@ -17,12 +19,15 @@ import workshop2.interfacelayer.view.MenuView;
  *
  * @author hwkei
  */
+@Component
 public class MenuController {
     private static final Logger log = LoggerFactory.getLogger(MenuController.class);
     
     MenuItem currentMenu;
-    
-    private final MenuView menuView;
+    @Autowired
+    private MenuView menuView;
+    @Autowired
+    AccountController accountController;
     private String userName;
     
     public MenuController(MenuView menuView) {
@@ -31,7 +36,7 @@ public class MenuController {
     
     public boolean login() {
         // Show welcome and get the user credentials
-        AccountController accountController = new AccountController(new AccountView());
+        //AccountController accountController = new AccountController(new AccountView());
         menuView.showWelcome();
         Integer respons =  menuView.requestLoginMethod();
         if (respons == null) return false;

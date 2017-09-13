@@ -7,6 +7,8 @@ package workshop2.persistencelayer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.persistencelayer.hibernate.CustomerServiceHibernate;
 
@@ -14,10 +16,12 @@ import workshop2.persistencelayer.hibernate.CustomerServiceHibernate;
  *
  * @author hwkei
  */
+@Component
 public class CustomerServiceFactory {
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceFactory.class);
     private static String persistenceProvider;
     
+    @Bean
     public static CustomerService getCustomerService(){
         persistenceProvider = DatabaseConnection.getInstance().getPersistenceProvider();
         

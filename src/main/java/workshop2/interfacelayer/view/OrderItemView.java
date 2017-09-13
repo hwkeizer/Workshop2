@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 import workshop2.domain.OrderItem;
 import workshop2.domain.Product;
 
@@ -16,6 +17,7 @@ import workshop2.domain.Product;
  *
  * @author thoma
  */
+@Component
 public class OrderItemView {
     Scanner input;
     

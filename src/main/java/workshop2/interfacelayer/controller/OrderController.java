@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import workshop2.domain.Account;
 import workshop2.domain.Customer;
 import workshop2.domain.Order;
@@ -30,17 +32,23 @@ import workshop2.persistencelayer.OrderServiceFactory;
  *
  * @author thoma
  */
+@Component
 public class OrderController {
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
+    @Autowired
     private OrderView orderView;
+    @Autowired
     private OrderItemView orderItemView;
-    private final OrderService orderService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private CustomerController customerController;
     
     
-    OrderController(OrderView orderView, OrderItemView orderItemView) {
-        this.orderView = orderView;
-        this.orderItemView = orderItemView;
-        orderService = OrderServiceFactory.getOrderService();
+    OrderController() {
+
     }
 
     public void createOrderEmployee(CustomerController customerController) {
@@ -81,11 +89,11 @@ public class OrderController {
     public void createOrderCustomer(String username) {
         orderView.showConstructOrderCustomerStartScreen();
         
-        AccountService accountService = AccountServiceFactory.getAccountService();
+        //AccountService accountService = AccountServiceFactory.getAccountService();
         Account customerAccount = accountService.findAccountByUserName(username).get();
         
-        CustomerView customerView = new CustomerView();
-        CustomerController customerController = new CustomerController(customerView);
+//        CustomerView customerView = new CustomerView();
+//        CustomerController customerController = new CustomerController(customerView);
         Customer customer = customerController.searchCustomerByAccount(customerAccount.getId()).get();
 
         List<Product> productList = orderService.<Product>fetchAllAsList(Product.class);
@@ -117,11 +125,11 @@ public class OrderController {
     public void showOrderToCustomer(String username) {
         orderView.showOrderListCustomerStartScreen();
         
-        AccountService accountService = AccountServiceFactory.getAccountService();
+        //AccountService accountService = AccountServiceFactory.getAccountService();
         Account customerAccount = accountService.findAccountByUserName(username).get();
         
-        CustomerView customerView = new CustomerView();
-        CustomerController customerController = new CustomerController(customerView);
+        //CustomerView customerView = new CustomerView();
+        //CustomerController customerController = new CustomerController(customerView);
         Customer customer = customerController.searchCustomerByAccount(customerAccount.getId()).get();
 
         List<Order> orderList = orderService.findAllOrdersAsListByCustomer(customer);

@@ -6,6 +6,7 @@
 package workshop2.interfacelayer.view;
 
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 import workshop2.interfacelayer.MenuAction;
 import workshop2.interfacelayer.MenuItem;
 
@@ -13,6 +14,7 @@ import workshop2.interfacelayer.MenuItem;
  *
  * @author hwkei
  */
+@Component
 public class MenuView {
     Scanner input = new Scanner(System.in);
     

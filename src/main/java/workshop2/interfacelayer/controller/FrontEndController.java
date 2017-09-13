@@ -5,6 +5,8 @@
  */
 package workshop2.interfacelayer.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import workshop2.interfacelayer.MenuAction;
 import workshop2.interfacelayer.view.AccountView;
 import workshop2.interfacelayer.view.AddressView;
@@ -18,21 +20,23 @@ import workshop2.interfacelayer.view.ProductView;
  *
  * @author hwkei
  */
+@Component
 public class FrontEndController {
-    private final MenuController menuController;
+    @Autowired
+    private MenuController menuController;
+    @Autowired
     private AccountController accountController;
+    @Autowired
     private ProductController productController;
+    @Autowired
     private CustomerController customerController;
+    @Autowired
     private OrderController orderController;
+    @Autowired
     private AddressController addressController;
     
     public FrontEndController() {
-        menuController = new MenuController(new MenuView());
-        accountController = new AccountController(new AccountView());
-        productController = new ProductController(new ProductView());
-        customerController = new CustomerController(new CustomerView());
-        orderController = new OrderController(new OrderView(), new OrderItemView());
-        addressController = new AddressController(new AddressView());
+
     }
     
     public void login() {

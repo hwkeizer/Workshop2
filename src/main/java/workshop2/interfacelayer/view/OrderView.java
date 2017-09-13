@@ -7,6 +7,7 @@ package workshop2.interfacelayer.view;
 
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 import workshop2.domain.Customer;
 import workshop2.domain.Order;
 import workshop2.domain.OrderItem;
@@ -17,6 +18,7 @@ import workshop2.domain.Product;
  *
  * @author thoma
  */
+@Component
 public class OrderView {
     Scanner input;
     
@@ -451,9 +453,5 @@ public class OrderView {
     private void showInvalidRespons() {
         System.out.println("\n\n\nOngeldige waarde, probeer het opnieuw of geef !<enter> om af te breken.\n");
     }
-
-    
-
-    
 
 }
