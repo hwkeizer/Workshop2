@@ -6,20 +6,14 @@
 package workshop2.interfacelayer.controller;
 
 import workshop2.domain.Product;
-import workshop2.interfacelayer.dao.DuplicateProductException;
 import workshop2.interfacelayer.view.ProductView;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.persistencelayer.ProductService;
-import workshop2.persistencelayer.ProductServiceFactory;
 
 /**
  *
@@ -32,7 +26,7 @@ public class ProductController {
     @Autowired
     private ProductView productView;
     private Product product;
-    @Autowired
+    @Autowired @Qualifier("ProductServiceBean")
     private ProductService productService;// = ProductServiceFactory.getProductService();
 
     public ProductController(){

@@ -5,39 +5,23 @@
  */
 package workshop2;
 
-
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.controller.FrontEndController;
+import workshop2.javaconfig.PersistenceConfig;
 
 /**
  *
  * @author hwkei
  */
-@Configuration
-@ComponentScan(basePackages = "workshop2")
 public class Applikaasie {
-    @Autowired
-    FrontEndController frontEndController;
     
     public static void main(String[] args) { 
         
-        ApplicationContext context = new AnnotationConfigApplicationContext(Applikaasie.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(PersistenceConfig.class);
         
-        Applikaasie app = context.getBean(Applikaasie.class);
-        app.run();
-
-    }
-    
-    void run(){
+        FrontEndController frontEndController = context.getBean(FrontEndController.class);
         Database database = new Database();
         if (!database.init()) {
             System.out.println("Database kan niet worden gevonden, raadpleeg de applicatie beheerder");
