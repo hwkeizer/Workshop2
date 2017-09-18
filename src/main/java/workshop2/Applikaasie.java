@@ -9,8 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.interfacelayer.controller.FrontEndController;
-import workshop2.javaconfig.PersistenceConfig;
-
+//import workshop2.javaconfig.PersistenceConfig;
+import workshop2.javaconfig.ConfiguratieFile;
 /**
  *
  * @author hwkei
@@ -19,7 +19,8 @@ public class Applikaasie {
     
     public static void main(String[] args) { 
         
-        ApplicationContext context = new AnnotationConfigApplicationContext(PersistenceConfig.class);
+       // ApplicationContext context = new AnnotationConfigApplicationContext(PersistenceConfig.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(ConfiguratieFile.class);
         
         FrontEndController frontEndController = context.getBean(FrontEndController.class);
         Database database = new Database();
