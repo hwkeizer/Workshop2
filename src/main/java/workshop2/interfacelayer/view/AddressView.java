@@ -224,7 +224,7 @@ public class AddressView {
         Address address = addressList.get(index);
         //Promp for confirmation if this is indeed the address to delete
         showAddressToBeDeleted(address);
-        Integer confirmed = requestConfirmationToDelete();
+        Long confirmed = requestConfirmationToDelete();
         if (confirmed == null || confirmed == 2){
             return Optional.empty();
         }
@@ -241,8 +241,9 @@ public class AddressView {
             printRequestForIdToDeleteInput();
             respons = input.nextLine();
             if (respons.equals("!")) return null;  // User initiated abort
+            
         }        
-        //index of product in ArrayList<Product> productList
+        //index of Address in ArrayList<Address> AddressList
         return Integer.parseInt(respons) - 1;
     }
     
@@ -258,7 +259,7 @@ public class AddressView {
         System.out.println(address.toStringNoId());
     }
      
-    Integer requestConfirmationToDelete() {
+    Long requestConfirmationToDelete() {
         printRequestForDeleteConfirmation();
         String respons = input.nextLine();
         if (respons.equals("!")) return null; // User initiated abort
@@ -270,7 +271,7 @@ public class AddressView {
             if (respons.equals("!")) return null;  // User initiated abort
         }
         
-        return Integer.parseInt(respons);
+         return Long.parseLong(respons);
     }
    
     void printRequestForDeleteConfirmation() {
