@@ -1,4 +1,4 @@
-/**
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -9,116 +9,115 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import javax.persistence.Query;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.slf4j.LoggerFactory;
 import workshop2.domain.Address;
 import workshop2.interfacelayer.DatabaseConnection;
 import workshop2.persistencelayer.AddressService;
 import workshop2.persistencelayer.GenericDaoImpl;
 
-
 /**
  *
  * @author Al-Alaaq(Egelantier)
  */
+@Repository
+@Component("AddressServiceHibernateImplementation")
 public class AddressServiceHibernate extends GenericServiceHibernate implements AddressService {
 
     private static final Logger log = LoggerFactory.getLogger(AddressServiceHibernate.class);
-
+    @PersistenceContext
     private EntityManager entityManager;
 
     private GenericDaoImpl addressDao;
 
     @Override
+    @Transactional
     public void createAddress(Address adres) {
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
+        // entityManager = DatabaseConnection.getInstance().getEntityManager();
 
         addressDao = new GenericDaoImpl(Address.class, entityManager);
 
         try {
 
-            entityManager.getTransaction().begin();
-
+            //entityManager.getTransaction().begin();
             addressDao.persist(adres);
 
-            entityManager.getTransaction().commit();
-
+            //entityManager.getTransaction().commit();
         } catch (Exception ex) {
 
-            entityManager.getTransaction().rollback();
-
+            // entityManager.getTransaction().rollback();
             System.out.println("Transactie is niet uitgevoerd!");
 
+            // System.out.println("Transactie is niet uitgevoerd!");
             // Exception doorgooien of FailedTransaction oid opgooien?
         } finally {
 
             // Always clear the persistence context to prevent increasing memory ????
-            entityManager.close();
-
+            //entityManager.close();
         }
 
     }
 
     @Override
+    @Transactional
     public void deleteAddress(Address adres) {
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
+        // entityManager = DatabaseConnection.getInstance().getEntityManager();
 
         addressDao = new GenericDaoImpl(Address.class, entityManager);
         try {
 
-            entityManager.getTransaction().begin();
-
+            //entityManager.getTransaction().begin();
             addressDao.delete(entityManager.find(Address.class, adres.getId()));
 
-            entityManager.getTransaction().commit();
+            // entityManager.getTransaction().commit();
         } catch (Exception ex) {
 
-            entityManager.getTransaction().rollback();
-
-            System.out.println("Transactie is niet uitgevoerd!" + ex);
+            // entityManager.getTransaction().rollback();
+            System.out.println("Transactie is niet uitgevoerd!");
 
             // Exception doorgooien of FailedTransaction oid opgooien?
         } finally {
 
-            // Always clear the persistence context to prevent increasing memory ????
-            entityManager.close();
-
+            // entityManager.close();
         }
 
     }
 
     @Override
+    @Transactional
     public void updateAddress(Address adres) {
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
+        //entityManager = DatabaseConnection.getInstance().getEntityManager();
 
         addressDao = new GenericDaoImpl(Address.class, entityManager);
         try {
 
-            entityManager.getTransaction().begin();
-
+            //  entityManager.getTransaction().begin();
             addressDao.update(adres);
 
-            entityManager.getTransaction().commit();
+            // entityManager.getTransaction().commit();
         } catch (Exception ex) {
 
-            entityManager.getTransaction().rollback();
-
+            // entityManager.getTransaction().rollback();
             System.out.println("Transactie is niet uitgevoerd!");
 
             // Exception doorgooien of FailedTransaction oid opgooien?
         } finally {
 
             // Always clear the persistence context to prevent increasing memory ????
-            entityManager.close();
-
+            // entityManager.close();
         }
 
     }
 
     @Override
+    @Transactional
     public Optional<Address> findAddressByCustomerId(Long id) {
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
+        //entityManager = DatabaseConnection.getInstance().getEntityManager();
         Address adres;
         String sql = "select i from Address i where customer.id = :id";
 
@@ -136,8 +135,7 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
 
         } finally {
 
-            entityManager.close();
-
+            //  entityManager.close();
         }
 
         return Optional.ofNullable(adres);
@@ -145,11 +143,12 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
     }
 
     @Override
+    @Transactional
     public List<Address> findAllAddressesByCustomerId(Long id) {
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
+        // entityManager = DatabaseConnection.getInstance().getEntityManager();
 
         List<Address> addresses = null;
-        String sql = "select i from Address i where customer.id = :id"; 
+        String sql = "select i from Address i where customer.id = :id";
 
         try {
             Query query = entityManager.createQuery(sql);
